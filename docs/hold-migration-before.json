@@ -1,0 +1,325 @@
+{
+  "positions": [
+    -0.0373674992851986,
+    0.18399260974524223,
+    -0.5830970497987855,
+    0.9051277500842593,
+    0.0702669556852917,
+    1.1521616524115366
+  ],
+  "velocities": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "efforts": [
+    0.033075,
+    2.418609375,
+    -5.3865,
+    -1.511911088352,
+    0.038938505760000006,
+    0.0015575402304
+  ],
+  "enabled": true,
+  "connected": true,
+  "feedback_age": 0.0055676984338788316,
+  "errors": [],
+  "extra": {
+    "can_port": "can1",
+    "namespace": "/arm_2",
+    "command_gains": {
+      "kp": [
+        51.0,
+        16.0,
+        15.0,
+        64.0,
+        3.0,
+        3.0
+      ],
+      "kd": [
+        10.375,
+        6.06,
+        3.16,
+        4.0,
+        0.3,
+        0.08
+      ]
+    },
+    "driver": {
+      "configuration": {
+        "id": "arm_2",
+        "name": "\u673a\u68b0\u81c2 2",
+        "namespace": "/arm_2",
+        "can_port": "can1",
+        "end_effector": "gripper_with_wrench",
+        "gravity_scale": 1.0,
+        "mounting": "upright",
+        "kp": [
+          17.0,
+          16.0,
+          15.0,
+          4.0,
+          3.0,
+          3.0
+        ],
+        "kd": [
+          5.99,
+          6.06,
+          3.16,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "s_a": 2.0,
+        "friction_scale": 0.88,
+        "friction_config": "/home/robot/Documents/Piper_workspace/config/calibration/arm_2_friction.yaml",
+        "gravity_config": "/home/robot/Documents/Piper_workspace/config/calibration/arm_2_gravity.yaml",
+        "friction_error_epsilon": 0.05,
+        "friction_velocity_epsilon": 0.02,
+        "target_velocity_cutoff_hz": 5.0,
+        "adaptive_stiffness_b": 0.08,
+        "adaptive_stiffness_power": 3.0,
+        "offset_ramp_s": 2.0,
+        "config_file": "/home/robot/Documents/Piper_workspace/config/arms",
+        "debug_kp": [
+          17.0,
+          16.0,
+          15.0,
+          4.0,
+          3.0,
+          3.0
+        ],
+        "debug_kd": [
+          5.99,
+          6.06,
+          3.16,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "adaptive_stiffness_scale": 2.0,
+        "effector": {
+          "label": "PX6D-75A \u529b\u4f20\u611f\u5668\u4e0e\u5939\u722a",
+          "mass_kg": 0.6855045871929664,
+          "com_m": [
+            -5.705747031984055e-07,
+            -0.0002296167577485186,
+            0.05371977993793518
+          ],
+          "source": "uniform-density mesh volumes at URDF component masses, transformed to the driver original link6 frame",
+          "model": "piper_description_with_wrench.urdf"
+        },
+        "effectors": {
+          "gripper": {
+            "label": "\u6807\u51c6\u5939\u722a",
+            "mass_kg": 0.54,
+            "com_m": [
+              1.822434565775221e-05,
+              -9.521502789096145e-05,
+              0.03953134028382456
+            ],
+            "source": "agilexrobotics/agx_arm_urdf@680fa925cd00db7e2628563d2edc5540963045de; PiPER-X empty stock gripper",
+            "model": "piper_description.urdf"
+          },
+          "gripper_with_wrench": {
+            "label": "PX6D-75A \u529b\u4f20\u611f\u5668\u4e0e\u5939\u722a",
+            "mass_kg": 0.6855045871929664,
+            "com_m": [
+              -5.705747031984055e-07,
+              -0.0002296167577485186,
+              0.05371977993793518
+            ],
+            "source": "uniform-density mesh volumes at URDF component masses, transformed to the driver original link6 frame",
+            "model": "piper_description_with_wrench.urdf"
+          },
+          "teaching_handle": {
+            "label": "\u793a\u6559\u624b\u67c4",
+            "mass_kg": 0.54,
+            "com_m": [
+              -5.555019470278029e-05,
+              0.007963485290706084,
+              0.03788358878334557
+            ],
+            "source": "piper_description/urdf/piper_description_with_teach.urdf; combined terminal inertials in link6; CAD assumed accurate, not hardware calibrated",
+            "model": "piper_description_with_teach.urdf"
+          }
+        },
+        "gravity_payload": {
+          "added_mass_kg": 0.0,
+          "total_mass_kg": 0.6855045871929664,
+          "com_m": [
+            -5.705747031984055e-07,
+            -0.0002296167577485186,
+            0.05371977993793518
+          ],
+          "inertia_kg_m2": [
+            [
+              0.0008096560672438823,
+              -3.5805225260903614e-07,
+              -9.488250219416901e-08
+            ],
+            [
+              -3.5805225260903445e-07,
+              0.0009992348849083908,
+              2.499093453016109e-06
+            ],
+            [
+              -9.488250219416892e-08,
+              2.4990934530161057e-06,
+              0.0005179118824786329
+            ]
+          ]
+        }
+      },
+      "mode": "mit",
+      "mit_ready": true,
+      "cartesian_mit_active": false,
+      "mit_target": [
+        -0.0373674992851986,
+        0.18399260974524223,
+        -0.5830970497987855,
+        0.9054419093496183,
+        0.0702669556852917,
+        1.1521616524115366
+      ],
+      "joint_lower": [
+        -2.6179938779914944,
+        0.0,
+        -2.9670597283903604,
+        -1.5533430342749535,
+        -1.5533430342749535,
+        -2.9670597283903604
+      ],
+      "joint_upper": [
+        2.6179938779914944,
+        3.141592653589793,
+        0.0,
+        1.5533430342749535,
+        1.5533430342749535,
+        2.9670597283903604
+      ],
+      "gravity_torque": [
+        0.0,
+        2.3388172943865553,
+        -7.481844190778022,
+        -1.9475937219839425,
+        0.01830587886904721,
+        -0.0013099759877380109
+      ],
+      "friction_torque": [
+        0.0,
+        0.0,
+        0.0,
+        0.0009458267014370185,
+        0.0,
+        0.0
+      ],
+      "gripper_friction": 0.0,
+      "gripper_velocity": 0.0,
+      "gripper_force": -0.003,
+      "output_torque": [
+        0.0,
+        0.0,
+        0.0,
+        0.0009458267014370185,
+        0.0,
+        0.0
+      ],
+      "applied_kp": [
+        153.0,
+        48.0,
+        45.0,
+        191.99999224843128,
+        9.0,
+        9.0
+      ],
+      "applied_kd": [
+        17.9700271285271,
+        10.496227893867395,
+        5.473280551917652,
+        6.928203090420187,
+        0.5196152422706631,
+        0.13856406460551018
+      ],
+      "wrench_estimation_enabled": false,
+      "wrench_estimate_available": false,
+      "inertia_torque": null,
+      "external_torque": null,
+      "end_wrench": null,
+      "end_force": null,
+      "end_torque": null,
+      "gravity_scale_applied": 1.0,
+      "friction_scale_applied": 0.88,
+      "s_a_applied": 2.0,
+      "adaptive_stiffness_scale_applied": 2.0,
+      "holding": false,
+      "hold_reason": "",
+      "calibration_active": false,
+      "calibration_blocked_reason": "Stop MIT/other controllers and select standby before calibration",
+      "last_error": "",
+      "rates": {
+        "target_hz": 200.0,
+        "telemetry_target_hz": 200.0,
+        "can_rx_hz": 182.9,
+        "loop_hz": 200.0,
+        "comp_hz": 99.0,
+        "cmd_tx_hz": 99.0,
+        "mit_tx_hz": 99.0,
+        "grip_tx_hz": 0.0,
+        "ros_cmd_hz": 200.0,
+        "joints_pub_hz": 200.0,
+        "wrench_pub_hz": 0.0,
+        "pose_pub_hz": 47.9,
+        "status_pub_hz": 47.9,
+        "control_pub_hz": 48.0
+      }
+    },
+    "status_age": 0.004391818001749925,
+    "driver_pid": null
+  },
+  "joint_names": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6"
+  ],
+  "timestamp": 1795604931.4352138,
+  "monotonic_time": 119257.954987986,
+  "mode": "idle",
+  "backend": "hardware",
+  "tcp_pose": {
+    "position": [
+      0.2055102233163132,
+      -0.021383317715402826,
+      0.2500374677352919
+    ],
+    "orientation": [
+      -0.14003301901094234,
+      0.8266081577221155,
+      -0.15172170523911194,
+      0.523536275088238
+    ]
+  },
+  "motion": {
+    "id": "a55ea99cb035494c8f12a43b4f88348e",
+    "kind": "trajectory",
+    "status": "aborted",
+    "progress": 1.0,
+    "duration": 4.0,
+    "error": "goal tracking error 0.0247 rad exceeds tolerance"
+  },
+  "target_positions": [
+    -0.0373674992851986,
+    0.18399260974524223,
+    -0.5830970497987855,
+    0.9054419093496183,
+    0.0702669556852917,
+    1.1521616524115366
+  ],
+  "control_rate_hz": 199.90367138088658
+}

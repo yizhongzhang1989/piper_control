@@ -1,1 +1,171 @@
-# piper_control
+# Piper Control
+
+AgileX Piper X 的通用机械臂服务：启动后等待上层命令，通过相同接口控制真机或
+动力学仿真，并实时返回关节和 TCP 状态。提供 Python、HTTP/WebSocket 和 ROS 2
+接口，以及可显示真实三维模型、执行基本调试运动的 Web dashboard。
+
+本仓库复用 `~/Documents/Piper_workspace` 的 C++ SocketCAN 驱动、重力/摩擦补偿
+与标定代码。`vendor/Piper_workspace` 只保留驱动、接口、模型及两种标定包，
+附一个可选的超时位置保持补丁；本机原工作空间不改动。无需启动原工作空间的
+摄像头、插孔、示教等应用。
+
+![Dashboard](docs/dashboard-desktop.png)
+
+## 快速启动
+
+Python 3.10+ 可运行离线仿真；本机真机使用 Ubuntu 22.04、ROS 2 Humble 和 Python 3.10。
+
+```bash
+cd ~/Documents/piper_control
+uv venv --python /usr/bin/python3 --system-site-packages .venv
+uv pip install --python .venv/bin/python -r requirements.lock
+uv pip install --python .venv/bin/python -e .
+
+# 不依赖 ROS、CAN 或原工作空间的动力学仿真
+.venv/bin/python -m piper_control --backend sim
+```
+
+打开 <http://127.0.0.1:8088>；仿真启动时失能，点击“使能机械臂”或调用 `enable()`。
+请求格式见 <http://127.0.0.1:8088/docs>。
+
+匹配本次真机标定的仿真：
+
+```bash
+.venv/bin/python -m piper_control --backend sim \
+  --arm-config vendor/Piper_workspace/config/arms/arm_2.yaml
+```
+
+本机真机（`arm_2`，`can1`，带 PX6D 的夹爪）：
+
+```bash
+source scripts/env.sh
+# 本机已有 control_msgs；新环境缺少时可用户目录安装：
+# bash scripts/install_ros_extras.sh && source scripts/env.sh
+python -m piper_control --backend hardware --arm arm_2 \
+  --launch-driver --ros --max-velocity 0.08 --port 8090
+```
+
+真机 dashboard 为 <http://127.0.0.1:8090>。`--launch-driver` 会复用已运行驱动，
+否则启动该臂的原 C++ 驱动；它会使能电机，以实测位置开始保持，不自动归零。
+原驱动启动时会配置从臂反馈，解决固件未主动上报的情况。仅附着已有驱动可省略
+`--launch-driver`，随后显式调用 `enable()` 进入控制模式。
+
+原工作空间不存在时，也可以在本仓库独立构建五个底层包：
+
+```bash
+bash scripts/build_vendor.sh
+export PIPER_WORKSPACE="$PWD/vendor/Piper_workspace"
+source scripts/env.sh
+python -m piper_control --backend hardware --launch-driver --ros --max-velocity 0.08
+```
+
+`scripts/env.sh` 默认选择已安装的原工作空间，也支持上述 `PIPER_WORKSPACE`。
+CAN 应为已启用的 1 Mbps SocketCAN 接口；更换设备时修改所选工作空间的臂配置，
+并使用该设备自己的标定。仓库内的标定是当前这台 `arm_2` 的快照。
+
+## 上层控制器只使用通用接口
+
+```python
+from piper_control.client import RobotClient
+
+with RobotClient("http://127.0.0.1:8090") as robot:
+    robot.enable()
+    state = robot.state()
+    target = state["positions"].copy()
+    target[0] += 0.02
+    task = robot.trajectory([
+        {"positions": target, "time_from_start": 2.0},
+        {"positions": state["positions"], "time_from_start": 4.0},
+    ], joint_names=state["joint_names"])
+    robot.wait(task)  # 以实测反馈判断成功，而不是只等轨迹计时结束
+```
+
+换成仿真时只需改服务地址。另一个机器人实现相同后端或网络契约，也能继续使用
+这些上层代码。客户端不导入 Piper 驱动，不访问 CAN，不判断机器人型号。
+
+| 功能 | Python | HTTP / WebSocket | ROS 2 |
+| --- | --- | --- | --- |
+| 同构遥操 | `servo_joints(q)` | `/api/stream/joints`；`/ws/control` type=joints | `sensor_msgs/JointState` → `/robot/servo_joints` |
+| 绝对 TCP 跟随 | `servo_pose(pose)` | `/api/stream/tcp`；type=tcp | `geometry_msgs/PoseStamped` → `/robot/servo_pose` |
+| SpaceMouse 速度 | `servo_twist(v,w,frame)` | `/api/stream/twist`；type=twist | `geometry_msgs/TwistStamped` → `/robot/servo_twist` |
+| 外部关节轨迹 | `trajectory(points,names)` | `/api/trajectory` | `control_msgs/FollowJointTrajectory` action |
+| 关节/直线/圆弧 | `movej` / `movel` / `movec` | `/api/movej` / `movel` / `movec` | 同一控制器，可由 HTTP/Python 提交 |
+| 实时状态 | `state()` | `/api/state`；`/ws/state` | `/robot/joint_states`、`tcp_pose`、`state` |
+| 使能/停止/失能 | `enable` / `stop` / `disable` | 同名 `/api/` 端点 | `/robot/enable`、`stop` 服务 |
+
+使用 REP-103 的 SI 单位：m、rad、rad/s、Nm；姿态四元数为 `[x,y,z,w]`，TCP
+位姿在 `base_link` 系表达。默认 TCP 为原驱动法兰沿 z 偏移 0.16 m，可通过
+`--tcp-offset x y z`、`--tcp-orientation qx qy qz qw` 更改。这是配置值，不能代替
+实际工具标定。完整契约、错误及支持的 ROS action 字段见 [接口文档](docs/api.md)。
+
+实时输入示例：
+
+```bash
+python examples/stream.py --url http://127.0.0.1:8090 --mode joints
+python examples/stream.py --url http://127.0.0.1:8090 --mode twist
+python examples/trajectory.py --url http://127.0.0.1:8090
+```
+
+例子中的信号可替换为主臂关节或 SpaceMouse 轴值。驱动补偿内环为 200 Hz；上层
+建议使用 ROS 或持续 WebSocket，以 50–100 Hz 发送最新输入。HTTP/Python 网络层
+不是硬实时控制系统。dashboard 是同一接口的客户端，和上层控制器共享指令入口。
+
+## 执行语义与参数
+
+- 关节限位、惯性和三维模型来自同一套 URDF。笛卡尔轨迹在执行前完成全路径采样
+  逆解、分支连续性及速度检查；上层到达时间不会被静默改写。
+- 默认软件关节速度上限为 `0.3 rad/s`，本次真机验收显式使用 `0.08 rad/s`。
+  `--max-velocity` 可配置，且不超过模型速度上限。这是服务配置，不是硬件极限。
+- 实时流默认 `0.2 s` 没有新指令后保持实测位置，使用 `--stream-timeout` 配置。
+  反馈中断或硬件报错会中止任务。停止后新输入可重新开始，生产者应停止旧流。
+- 默认终点容差 `0.01 rad`、轨迹结束后最多等 `5 s`，可用 `--goal-tolerance` 和
+  `--goal-timeout` 调整。失败会报告 `aborted`，不会把未到达伪报成成功。
+- 默认 [位置控制 profile](piper_control/assets/position_control.yaml) 增加了 J1、J4 的
+  kp 和相应阻尼，减少原柔顺参数在位置控制中的稳态误差；只影响适配层下发的
+  命令，不改原驱动或标定。`--control-profile source` 使用原始增益，自定义 YAML
+  可同时用于仿真与真机。`extra.command_gains` 和驱动遥测可核对实际增益。
+- 正常退出 API 持续使用 MIT 固定目标保持，不切换固件运动模式。新驱动可自行
+  保持超时目标；未修改的旧驱动由独立 ROS 保持进程接管，重启 API 后交回控制。
+  保留底层驱动，显式失能不同于保持，见 [真机文档](docs/hardware.md)。
+
+默认服务仅绑定本机，无身份认证；外部网络部署需要自己的访问控制。该项目不做
+环境碰撞规划或接触力安全判定。仿真复用物理参数与标定，但没有完整电机、静摩擦
+锁止、CAN 延迟或接触辨识模型，见 [仿真文档](docs/simulation.md)。
+
+## 验证与仓库结构
+
+```bash
+source scripts/env.sh
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q
+
+# 会通过公开接口实际运动：约 0.02 rad 关节目标、微小 TCP 路径和实时流。
+python scripts/acceptance.py --url http://127.0.0.1:8090 \
+  --output docs/hardware-acceptance.json
+
+# 仅接收 CAN，不发送任何帧
+python scripts/probe_can.py --interface can1 --duration 2
+```
+
+验收结果及实测误差见 [验证记录](docs/validation.md)。测试覆盖模型与原驱动一致性、
+动力学、直线/圆弧几何、命名关节轨迹、超限/不可达预检查、看门狗、停止、并发
+规划失效、HTTP/WebSocket 和真实 ROS action 传输。浏览器测试加载本地 STL 模型，
+通过真实仿真 API 操作关节、直线和圆弧。
+
+```text
+piper_control/
+  model.py                 同源 URDF 运动学、TCP、IK、Jacobian
+  planning.py              通用关节轨迹、movel、movec
+  controller.py            执行、状态机、实时流和看门狗
+  backends/                仿真、现有 C++ 驱动的 ROS 适配
+  server.py / client.py     通用 HTTP/WebSocket 和 Python SDK
+  ros_bridge.py            ROS 标准消息、服务和 action
+  web/                     本地依赖的三维 dashboard
+  assets/                  模型、网格、位置控制参数
+vendor/Piper_workspace/     五个核心包、可选保持补丁、标定快照与来源校验
+scripts/                   构建、环境、只读诊断和验收
+examples/                  不依赖机器人型号的上层示例
+```
+
+原始代码、模型和前端依赖保留各自许可证与来源，见
+[复用清单](vendor/Piper_workspace/README.md) 和模型目录说明。Dashboard 布局参考
+[ur15_crisp](https://github.com/yizhongzhang1989/ur15_crisp)，界面代码在本仓库实现。

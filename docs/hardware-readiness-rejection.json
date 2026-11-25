@@ -1,0 +1,15 @@
+{
+  "command_ready": false,
+  "firmware": {
+    "ctrl_mode": 2,
+    "mode_feedback": 6,
+    "teach_status": 1,
+    "arm_status": 0,
+    "err_code": 0,
+    "command_ready": false
+  },
+  "status_code": 409,
+  "response": {
+    "detail": "firmware has not confirmed external joint control; inspect extra.firmware"
+  }
+}

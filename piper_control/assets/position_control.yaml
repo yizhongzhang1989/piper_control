@@ -1,0 +1,5 @@
+# Position-control gains applied by the adapter, not written to the source config.
+# Original arm_2: kp1=17/kp4=4; higher position gains reduce measured deadband.
+# J1 damping follows sqrt(kp ratio); J4 is overdamped to reduce stick-slip spikes.
+kp: [51.0, 16.0, 15.0, 64.0, 3.0, 3.0]
+kd: [10.375, 6.06, 3.16, 4.00, 0.30, 0.08]

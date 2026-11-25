@@ -1,0 +1,45 @@
+{
+  "description": "Graceful API -> ROS guardian -> API handoff; no firmware mode switch. This checks publishing continuity, not firmware control readiness.",
+  "before_positions": [
+    -0.0373674992851986,
+    0.18399260974524223,
+    -0.5839173545472229,
+    0.9056513488598577,
+    0.0696211838620538,
+    1.1488106202477077
+  ],
+  "after_positions": [
+    -0.0373674992851986,
+    0.18399260974524223,
+    -0.5839173545472229,
+    0.9050230303291397,
+    0.0696211838620538,
+    1.1488106202477077
+  ],
+  "max_joint_change_rad": 0.0006283185307179862,
+  "before_desired": [
+    -0.0373674992851986,
+    0.18399260974524223,
+    -0.5830970497987855,
+    0.9039583794854231,
+    0.0702669556852917,
+    1.1521616524115366
+  ],
+  "after_desired": [
+    -0.0373674992851986,
+    0.18399260974524223,
+    -0.5830970497987855,
+    0.9039583794854231,
+    0.0702669556852917,
+    1.1521616524115366
+  ],
+  "command_ready": false,
+  "firmware": {
+    "ctrl_mode": 2,
+    "mode_feedback": 6,
+    "teach_status": 1,
+    "arm_status": 0,
+    "err_code": 0,
+    "command_ready": false
+  }
+}

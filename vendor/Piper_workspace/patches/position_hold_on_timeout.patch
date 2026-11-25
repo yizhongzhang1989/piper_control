@@ -1,0 +1,132 @@
+--- a/src/piper_x_driver/include/piper_x_driver/controller.hpp
++++ b/src/piper_x_driver/include/piper_x_driver/controller.hpp
+@@ -158,6 +158,8 @@
+   Vec6 kd{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+   double mit_started{0.0};
+   bool mit_ready{false};
++  // Opt-in daemon behavior: retain a fixed position after client commands stop.
++  bool position_hold_on_timeout{false};
+   Vec6 gravity{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+   Vec6 friction{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+   Vec6 output_torque{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+--- a/src/piper_x_driver/src/controller.cpp
++++ b/src/piper_x_driver/src/controller.cpp
+@@ -291,6 +291,10 @@
+     arm_.mode("hold");
+   }
+   const MitTarget command = gravity_command(sample);
++  if (position_hold_on_timeout) {
++    mit_target = command;
++    mit_received = clock_();
++  }
+   gravity_scale_applied = gravity_scale;
+   friction_scale_applied = friction_scale;
+   adaptive_stiffness_scale_applied =
+@@ -1020,6 +1024,15 @@
+         command = compute_cartesian_mit(*cartesian_mit_target, *sample);
+       } else if (fresh_rx && mit_target.has_value()) {
+         command = *mit_target;
++      } else if (position_hold_on_timeout) {
++        // Keep the last joint position and gains, never a stale velocity/force
++        // demand. Cartesian timeout latches the measured joint pose. Gravity
++        // and friction are still recomputed from feedback by send_mit below.
++        command = mit_target.value_or(gravity_command(*sample));
++        command.velocity.fill(0.0);
++        command.torque.fill(0.0);
++        mit_target = command;
++        cartesian_mit_target.reset();
+       } else {
+         if (mit_target.has_value() || cartesian_mit_target.has_value()) {
+           mit_target.reset();
+--- a/src/piper_x_driver/src/node.cpp
++++ b/src/piper_x_driver/src/node.cpp
+@@ -61,6 +61,9 @@
+   this->declare_parameter<double>("rate_hz", 200.0);
+   this->declare_parameter<double>("telemetry_hz", 200.0);
+   this->declare_parameter<bool>("wrench_estimation_enabled", false);
++  rcl_interfaces::msg::ParameterDescriptor hold_descriptor;
++  hold_descriptor.read_only = true;
++  this->declare_parameter<bool>("position_hold_on_timeout", false, hold_descriptor);
+   wrench_estimation_param_ = this->get_parameter("wrench_estimation_enabled").as_bool();
+ 
+   rate_hz_ = bounded(this->get_parameter("rate_hz").as_double(), "rate_hz", 10.0, 1000.0);
+@@ -136,6 +139,7 @@
+     this->get_parameter("offset_ramp_s").as_double(),
+     arm_config_.kp,
+     arm_config_.kd);
++  control_->position_hold_on_timeout = this->get_parameter("position_hold_on_timeout").as_bool();
+ 
+   param_cb_handle_ = this->add_on_set_parameters_callback(
+     std::bind(&DriverNode::on_parameters_set, this, std::placeholders::_1));
+@@ -524,7 +528,8 @@
+   const bool mit_fresh =
+     control_->mode == "mit" && control_->mit_received.has_value() &&
+     (ctrl_now - *control_->mit_received <= 0.2);
+-  const bool mit_target_live = mit_fresh && control_->mit_target.has_value();
++  const bool mit_target_live =
++    (mit_fresh || control_->position_hold_on_timeout) && control_->mit_target.has_value();
+   const bool cart_mit_live = mit_fresh && control_->cartesian_mit_target.has_value();
+ 
+   std::string & out = control_msg_.data;
+@@ -532,6 +537,8 @@
+   out += public_config_prefix_;
+   out += "\"mode\": \""; out += json_escape(control_->mode); out += "\", ";
+   out += "\"mit_ready\": "; out += ((control_->mode == "mit" && control_->mit_ready) ? "true" : "false"); out += ", ";
++  out += "\"position_hold_on_timeout\": "; out += (control_->position_hold_on_timeout ? "true" : "false"); out += ", ";
++  out += "\"position_hold_active\": "; out += ((control_->mode == "mit" && control_->position_hold_on_timeout && !mit_fresh && mit_target_live) ? "true" : "false"); out += ", ";
+   out += "\"cartesian_mit_active\": "; out += (cart_mit_live ? "true" : "false"); out += ", ";
+   out += "\"mit_target\": ";
+   if (mit_target_live) append_json_vec6(out, control_->mit_target->position); else out += "null";
+--- a/src/piper_x_driver/test/test_cpp_driver.cpp
++++ b/src/piper_x_driver/test/test_cpp_driver.cpp
+@@ -149,6 +149,50 @@
+   std::vector<std::string> calls;
+ };
+ 
++TEST(PiperXDriverCppTest, PositionHoldTimeoutKeepsPositionWithoutModeSwitch) {
++  MockArm arm;
++  double now = 0.0;
++  const Vec6 kp{{17.0, 16.0, 15.0, 4.0, 3.0, 3.0}};
++  const Vec6 kd{{6.0, 6.0, 3.0, 0.6, 0.4, 0.1}};
++  Controller ctrl(arm, [&] { return now; }, std::nullopt, 1.0, std::nullopt,
++                  0.0, std::nullopt, 0.05, 0.02, 5.0, 0.0, 0.08, 3.0, 0.0, kp, kd);
++  ctrl.position_hold_on_timeout = true;
++  ctrl.start_mit();
++  ASSERT_TRUE(ctrl.mit_target.has_value());
++  const auto startup = ctrl.mit_target->position;
++  arm.pos_[1] += 0.02;
++  now = 1.0;
++  ctrl.watchdog(false);
++  EXPECT_EQ(ctrl.mit_target->position, startup);
++
++  MitTarget command = *ctrl.mit_target;
++  command.position[0] += 0.01;
++  command.velocity.fill(0.1);
++  command.torque.fill(0.2);
++  ctrl.mit(command);
++  ctrl.watchdog(false);
++  const auto gravity_before = ctrl.gravity;
++  arm.calls.clear();
++  arm.pos_[2] -= 0.03;
++  now += 1.0;
++  ctrl.watchdog(false);
++  ASSERT_TRUE(arm.mit_out_.has_value());
++  EXPECT_EQ(ctrl.mit_target->position, command.position);
++  EXPECT_EQ(ctrl.mit_target->kp, command.kp);
++  EXPECT_EQ(ctrl.mit_target->kd, command.kd);
++  EXPECT_EQ(arm.mit_out_->velocity, Vec6{});
++  EXPECT_EQ(ctrl.mit_target->torque, Vec6{});
++  EXPECT_NE(ctrl.gravity, gravity_before);
++  EXPECT_EQ(arm.calls, std::vector<std::string>{"mit"});
++  now += 10.0;
++  ctrl.watchdog(false);
++  EXPECT_EQ(ctrl.mit_target->position, command.position);
++  command.position[0] += 0.01;
++  ctrl.mit(command);
++  ctrl.watchdog(false);
++  EXPECT_EQ(arm.mit_out_->velocity, command.velocity);
++}
++
+ TEST(PiperXDriverCppTest, FleetConfigAndDynamicsLoadCleanly) {
+   FleetConfig fleet(default_config_path());
+   ASSERT_EQ(fleet.arms.size(), 4u);

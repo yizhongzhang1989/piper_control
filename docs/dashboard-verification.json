@@ -1,0 +1,11 @@
+{
+  "page_errors": [],
+  "failed_responses": [],
+  "joint_goal_deg": 1.0,
+  "joint_feedback_deg": "1.00",
+  "connection": "实时连接",
+  "model_loaded": true,
+  "horizontal_overflow": false,
+  "movel_dashboard": "succeeded",
+  "movec_dashboard": "succeeded"
+}

@@ -1,0 +1,25 @@
+version: 1
+arm_id: arm_2
+joints:
+  joint2:
+    scale: 1.25
+    angle_offset: 0.025
+    bias: 0.0
+    static_friction: 0.800078
+  joint3:
+    scale: 1.234461
+    angle_offset: 0.025
+    bias: 0.0
+    static_friction: 0.940593
+  joint4:
+    scale: 1.25
+    angle_offset: 0.025
+    bias: 0.0
+    static_friction: 0.144262
+  joint5:
+    scale: 1.25
+    angle_offset: -0.025
+    bias: 0.0
+    static_friction: 0.09493
+effector_model: piper_description_with_wrench.urdf
+added_mass_kg: 0.0

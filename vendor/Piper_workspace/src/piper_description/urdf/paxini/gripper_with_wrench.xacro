@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<robot name="gripper_with_wrench" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Standalone stack along +Z: arm flange -> PX6D-75A -> gripper flange -> gripper.
+       The root is the arm-facing plane of the arm flange. The arm is not attached.
+       The sensor stays -90 degrees about Z relative to the gripper. -->
+  <xacro:property name="arm_flange_height" value="0.0075"/>
+  <xacro:property name="sensor_height" value="0.024"/>
+  <xacro:property name="printed_flange_height" value="0.0088"/>
+  <xacro:property name="removed_flange_height" value="0.0105"/>
+  <xacro:property name="removed_flange_mass" value="${0.356 / 9.81}"/>
+
+  <link name="arm_sensor_flange">
+    <!-- Printed arm flange: flipped about X, then rotated -90 degrees about Z.
+         Recessed side faces the arm; flat side faces the sensor.
+         COM/inertia are computed from the transformed uniform STL volume. -->
+    <inertial>
+      <origin xyz="3.11052664684e-05 0.0001155577473791 0.00410619162603" rpy="0 0 0"/>
+      <mass value="${0.242 / 9.81}"/>
+      <inertia ixx="9.293832395097e-06" ixy="-1.826514276555e-08" ixz="1.593410693193e-09"
+               iyy="9.230666003516e-06" iyz="6.008937478148e-09" izz="1.830170230812e-05"/>
+    </inertial>
+    <visual>
+      <geometry><mesh filename="package://piper_description/meshes/px6d75_arm_flange.stl"/></geometry>
+      <material name="arm_flange"><color rgba="0.65 0.72 0.80 1"/></material>
+    </visual>
+    <collision>
+      <geometry><mesh filename="package://piper_description/meshes/px6d75_arm_flange.stl"/></geometry>
+    </collision>
+  </link>
+  <link name="wrench_sensor">
+    <!-- Official PX6D-75A mass; COM/inertia from its uniform-density outline mesh. -->
+    <inertial>
+      <origin xyz="-2.059358673173e-11 -0.0001265850879357 0.01113998113907" rpy="0 0 0"/>
+      <mass value="0.18"/>
+      <inertia ixx="6.839126964368e-05" ixy="4.692331118388e-16" ixz="3.747628359679e-14"
+               iyy="6.74533948036e-05" iyz="-1.385396778019e-07" izz="0.0001201351819815"/>
+    </inertial>
+    <visual>
+      <geometry><mesh filename="package://piper_description/meshes/px6d75.stl"/></geometry>
+      <material name="sensor_aluminium"><color rgba="0.72 0.74 0.77 1"/></material>
+    </visual>
+    <collision>
+      <geometry><mesh filename="package://piper_description/meshes/px6d75.stl"/></geometry>
+    </collision>
+  </link>
+  <joint name="arm_flange_to_sensor" type="fixed">
+    <parent link="arm_sensor_flange"/>
+    <child link="wrench_sensor"/>
+    <!-- Four outer holes retain their alignment with the sensor's rear M4
+         pattern after the flange's -90-degree mesh rotation. -->
+    <origin xyz="0 0 ${arm_flange_height}" rpy="0 0 -0.7853981633974483"/>
+  </joint>
+
+  <link name="sensor_gripper_flange">
+    <!-- Printed flange: 0.168 N / 9.81 m/s^2. COM/inertia from uniform STL volume. -->
+    <inertial>
+      <origin xyz="0.0001440939581277 -8.265815834953e-07 0.003733040843163" rpy="0 0 0"/>
+      <mass value="0.0171253823"/>
+      <inertia ixx="4.795517580961e-06" ixy="-6.288185906547e-11" ixz="-5.04436316593e-09"
+               iyy="4.837613557762e-06" iyz="-1.092991918914e-11" izz="9.399466510712e-06"/>
+    </inertial>
+    <visual>
+      <geometry><mesh filename="package://piper_description/meshes/px6d75_gripper_flange.stl"/></geometry>
+      <material name="printed_flange"><color rgba="0.86 0.65 0.33 1"/></material>
+    </visual>
+    <collision>
+      <geometry><mesh filename="package://piper_description/meshes/px6d75_gripper_flange.stl"/></geometry>
+    </collision>
+  </link>
+  <joint name="sensor_to_gripper_flange" type="fixed">
+    <parent link="wrench_sensor"/>
+    <child link="sensor_gripper_flange"/>
+    <origin xyz="0 0 ${sensor_height}" rpy="0 0 1.5707963267948966"/>
+  </joint>
+
+  <link name="gripper_base">
+    <!-- Original 0.45 kg base includes the old flange. Subtract its measured
+         0.356 N mass. COM/inertia use the remaining uniform-density mesh. -->
+    <inertial>
+      <origin xyz="-0.0003375446770613 -2.581455375968e-06 0.02483037123337" rpy="0 0 0"/>
+      <mass value="${0.45 - removed_flange_mass}"/>
+      <inertia ixx="0.0003529474481974" ixy="-2.929070272696e-08" ixz="1.670718559226e-06"
+               iyy="0.0001603365464112" iyz="6.763878873048e-09" izz="0.0003544379938784"/>
+    </inertial>
+    <visual>
+      <geometry><mesh filename="package://piper_description/meshes/gripper_base_without_flange.STL"/></geometry>
+      <material name="gripper_aluminium"><color rgba="0.792157 0.819608 0.933333 1"/></material>
+    </visual>
+    <collision>
+      <geometry><mesh filename="package://piper_description/meshes/gripper_base_without_flange.STL"/></geometry>
+    </collision>
+  </link>
+  <joint name="flange_to_gripper_base" type="fixed">
+    <parent link="sensor_gripper_flange"/>
+    <child link="gripper_base"/>
+    <origin xyz="0 0 ${printed_flange_height}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Keep the existing PiPER finger models and their prismatic joint limits.
+       Their joint origins move down with the gripper-base mesh by 10.5 mm. -->
+  <link name="link7">
+    <inertial>
+      <origin xyz="0.0006503301757724 -0.0491966278017 0.009719241144408" rpy="0 0 0"/>
+      <mass value="0.025"/>
+      <inertia ixx="1.083133376057e-05" ixy="3.321087373159e-07" ixz="-5.177762098675e-08"
+               iyy="5.439410208874e-06" iyz="1.757461020197e-06" izz="1.41828411537e-05"/>
+    </inertial>
+    <visual>
+      <geometry><mesh filename="package://piper_description/meshes/link7.STL"/></geometry>
+      <material name="left_finger_aluminium"><color rgba="0.792157 0.819608 0.933333 1"/></material>
+    </visual>
+    <collision><geometry><mesh filename="package://piper_description/meshes/link7.STL"/></geometry></collision>
+  </link>
+  <joint name="joint7" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="link7"/>
+    <origin xyz="0 0 ${0.1358 - removed_flange_height}" rpy="1.5708 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="0.035" effort="10" velocity="1"/>
+  </joint>
+
+  <link name="link8">
+    <inertial>
+      <origin xyz="0.0006503301757724 -0.0491966278017 0.009719241144408" rpy="0 0 0"/>
+      <mass value="0.025"/>
+      <inertia ixx="1.083133376057e-05" ixy="3.321087373159e-07" ixz="-5.177762098675e-08"
+               iyy="5.439410208874e-06" iyz="1.757461020197e-06" izz="1.41828411537e-05"/>
+    </inertial>
+    <visual>
+      <geometry><mesh filename="package://piper_description/meshes/link8.STL"/></geometry>
+      <material name="right_finger_aluminium"><color rgba="0.792157 0.819608 0.933333 1"/></material>
+    </visual>
+    <collision><geometry><mesh filename="package://piper_description/meshes/link8.STL"/></geometry></collision>
+  </link>
+  <joint name="joint8" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="link8"/>
+    <origin xyz="0 0 ${0.1358 - removed_flange_height}" rpy="1.5708 0 -3.1416"/>
+    <axis xyz="0 0 -1"/>
+    <limit lower="-0.035" upper="0" effort="10" velocity="1"/>
+  </joint>
+</robot>
