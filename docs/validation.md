@@ -47,5 +47,6 @@
 这不证明本机的具体原因，按钮状态仍需确认。没有通过断电、强制失能或热切换
 CAN 驱动来绕过该问题。原驱动仍在运行，API 保持固定目标发布并禁止推进轨迹。
 
-恢复 `command_ready=true` 后，需低速返回原始测试姿态，重跑完整硬件验收、
+恢复 `command_ready=true` 后，需低速返回[初始被动 CAN 记录](hardware-initial-passive.json)
+中的 `positions` 姿态，重跑完整硬件验收、
 标准 ROS action 和退出/重连接管验证，再更新本记录为最终结论。
