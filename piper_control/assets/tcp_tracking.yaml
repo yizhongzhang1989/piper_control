@@ -1,24 +1,30 @@
-# Candidate commissioned on arm_2 / gripper_with_wrench, still under broad-path
-# validation. Spatial residuals are identified locally; do not assume a payload
-# or a different arm shares these parameters. Original calibration is untouched.
-kp: [51.0, 64.0, 60.0, 32.0, 3.0, 3.0]
-kd: [8.0, 12.12, 20.0, 0.53, 0.30, 0.08]
+# Commissioned arm_2 / gripper_with_wrench tracking profile.
+# Hardware evidence and limits: docs/tcp-highspeed-validation.md.
+# Original calibration is unchanged; other arms/payloads need their own data.
+kp: [51.0, 120.0, 120.0, 24.0, 3.0, 2.5]
+kd: [4.0, 8.0, 10.0, 0.53, 0.30, 0.01]
 friction_scale: 0.0
 gravity_scale: 0.89
 tracking:
   position_integral:
-    gains: [1.0, 1.0, 1.0, 0.5, 0.5, 0.5]
-    limit: 0.02
-    rate: 0.005
-    deadband: 0.003
-  moving_kd: [8.0, 12.12, 20.0, 1.6, 0.30, 0.08]
-  gain_ramp_rate: 2.0
+    gains: [2.0, 2.0, 2.0, 1.0, 1.0, 1.0]
+    limit: 0.03
+    rate: 0.01
+    deadband: 0.0002
+    max_velocity: 0.02
+    motor_lead_limit: 0.003
+    motor_lead_time: 0.5
+  moving_kd: [8.0, 12.12, 14.0, 1.6, 0.30, 0.20]
+  gain_ramp_rate: 5.0
   friction_scale: 0.88
   friction_factors: [1.0, 1.75, 1.0, 1.0, 1.0, 1.5]
   velocity_remainder: true
   phase_filter_hz: 10.0
   spatial_prediction: 0.005
   spatial_decay: 0.2
+  coordinate_mapping: {time_aligned: true, rate: 0.1, cutoff_hz: 5.0}
+  dynamics: {scale: 1.0, acceleration_cutoff_hz: 20.0, max_acceleration: 50.0}
+  feedback_zero_band: 0.005235987755982988
   spatial_harmonics:
     - {joint: 1, omega: 540, a: 0.0115, b: 0.1004, c: -0.0520, d: -0.0153}
     - {joint: 3, omega: 540, a: -0.06, b: 0.45}

@@ -1,0 +1,2372 @@
+{
+  "source": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/summary.json",
+  "info": {
+    "name": "AgileX PiPER X",
+    "dof": 6,
+    "joint_names": [
+      "joint1",
+      "joint2",
+      "joint3",
+      "joint4",
+      "joint5",
+      "joint6"
+    ],
+    "joint_limits": [
+      {
+        "lower": -2.6179938,
+        "upper": 2.6179938,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": 0.0,
+        "upper": 3.1415926,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": -2.9670597,
+        "upper": 0.0,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": -1.553343,
+        "upper": 1.553343,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": -1.553343,
+        "upper": 1.553343,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": -2.9670597,
+        "upper": 2.9670597,
+        "velocity": 3.0
+      }
+    ],
+    "base_frame": "base_link",
+    "tcp_frame": "tcp",
+    "tcp_offset": [
+      0.0,
+      0.0,
+      0.16
+    ],
+    "tcp_orientation": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "angle_offsets": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "end_effector": "gripper_with_wrench",
+    "model_url": "/robot/model.urdf",
+    "kinematics": "upstream_piper_x_driver",
+    "api_version": "1.0",
+    "backend": "hardware",
+    "control_rate_hz": 200.0,
+    "stream_timeout": 0.2,
+    "feedback_timeout": 0.2,
+    "goal_tolerance": 0.005,
+    "joint_goal_tolerances": [
+      0.0012,
+      0.0012,
+      0.0012,
+      0.005,
+      0.005,
+      0.01
+    ],
+    "goal_velocity_tolerance": 0.01,
+    "goal_settle_time": 1.0,
+    "goal_timeout": 30.0,
+    "tcp_position_tolerance": 0.00045,
+    "units": {
+      "position": "m",
+      "joint": "rad",
+      "orientation": "quaternion_xyzw",
+      "time": "s",
+      "effort": "Nm"
+    },
+    "capabilities": [
+      "servo_joints",
+      "servo_pose",
+      "servo_twist",
+      "trajectory",
+      "movej",
+      "movel",
+      "movec"
+    ]
+  },
+  "passed": false,
+  "failure": "Repeated endpoint separation exceeds limit",
+  "quality_failures": [
+    ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-yz-500-out: final_position_error_mm=1.00897 exceeds 0.75",
+    ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-yz-500-out: post_success_max_distance_from_final_mm=0.589313 exceeds 0.5",
+    ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-yz-500-out: hold_current_ac_rms_a=0.0340103 exceeds 0.02",
+    ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xy-500-out: post_success_max_distance_from_final_mm=0.585 exceeds 0.5"
+  ],
+  "repeatability": {
+    "measurement": "Joint feedback + configured FK, including explicitly marked motor-based zero-band estimates when enabled; not external 3D metrology",
+    "acceptance": "Maximum pairwise distance between repeated settled endpoints",
+    "groups": [
+      {
+        "records": [
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-xy-500-out",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-xz-500-out",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xy-500-out",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xz-500-out",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-xy-500-out",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-xz-500-out"
+        ],
+        "count": 6,
+        "target_position_mm": [
+          256.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "centroid_mm": [
+          256.05696899512884,
+          5.0137567068382385,
+          219.5194513391643
+        ],
+        "centroid_error_mm": 0.1854519755569225,
+        "maximum_radius_mm": 0.32335652167047774,
+        "maximum_pairwise_distance_mm": 0.5669181643508727,
+        "mean_radius_plus_3sd_mm": 0.419347203827766,
+        "endpoint_errors_mm": [
+          0.2713689190458211,
+          0.38302041580260676,
+          0.42518173254541586,
+          0.3190863008089259,
+          0.1824720813931272,
+          0.3281460880737708
+        ],
+        "completion_delays_s": [
+          8.540501882440655,
+          5.462112237812121,
+          8.743120958211648,
+          7.376569797397693,
+          17.223938753011453,
+          6.3695126074562864
+        ],
+        "limit_mm": 1.0,
+        "enough_repetitions": true,
+        "pairwise_limit_passed": true
+      },
+      {
+        "records": [
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-xy-500-return",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-xz-500-return",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-yz-500-return",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xy-500-return",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xz-500-return",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-yz-500-return",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-xy-500-return",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-xz-500-return",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-yz-500-return"
+        ],
+        "count": 9,
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "centroid_mm": [
+          376.11565576801655,
+          5.041352249774679,
+          219.57720386233305
+        ],
+        "centroid_error_mm": 0.11479937594134426,
+        "maximum_radius_mm": 0.4404741738767524,
+        "maximum_pairwise_distance_mm": 0.7695629824672073,
+        "mean_radius_plus_3sd_mm": 0.5794098042959408,
+        "endpoint_errors_mm": [
+          0.38052726985303487,
+          0.4489711528044683,
+          0.40767881387549176,
+          0.1835542759426,
+          0.36663751611453166,
+          0.39889774191874894,
+          0.22635904867518455,
+          0.17327534785145338,
+          0.28776830611173326
+        ],
+        "completion_delays_s": [
+          3.55137114704693,
+          5.591109802129977,
+          4.75555997074118,
+          3.3622589606150446,
+          6.873043825033419,
+          3.820025255088715,
+          3.804383088956719,
+          22.38467483699631,
+          4.759843875770477
+        ],
+        "limit_mm": 1.0,
+        "enough_repetitions": true,
+        "pairwise_limit_passed": true
+      },
+      {
+        "records": [
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-yz-500-out",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-yz-500-out",
+          ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-yz-500-out"
+        ],
+        "count": 3,
+        "target_position_mm": [
+          376.2038540893353,
+          -114.88542872422035,
+          219.57096470662438
+        ],
+        "centroid_mm": [
+          376.41063034582504,
+          -114.91544362983875,
+          219.83883873875985
+        ],
+        "centroid_error_mm": 0.3397260836316461,
+        "maximum_radius_mm": 0.6760312214839012,
+        "maximum_pairwise_distance_mm": 1.2899757678961645,
+        "mean_radius_plus_3sd_mm": 1.3625647401921865,
+        "endpoint_errors_mm": [
+          1.0089656526980288,
+          0.33006488186016353,
+          0.2843003637742345
+        ],
+        "completion_delays_s": [
+          6.566180517081773,
+          3.4187033671183946,
+          3.7130616205973985
+        ],
+        "limit_mm": 1.0,
+        "enough_repetitions": true,
+        "pairwise_limit_passed": false
+      }
+    ]
+  },
+  "trials": [
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-xy-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470515336,
+        "reference_peak_speed_m_s": 0.49999296306822966,
+        "measured_peak_speed_m_s": 0.5293736857258868,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.06731295583701391,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5421941317814851,
+        "motor_feedback_velocity_nrmse": 0.08511162477509267,
+        "motor_feedback_fitted_delay_s": 0.014999999999999972,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.7809538009736339,
+        "path_error_rms_mm": 1.900958678316286,
+        "path_error_max_mm": 3.9083347608284873,
+        "final_position_mm": [
+          256.28085910231493,
+          4.855694953480723,
+          219.5446138441509
+        ],
+        "target_position_mm": [
+          256.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.2713689190458211,
+        "final_orientation_error_deg": 0.13129993670238463,
+        "final_joint_positions_rad": [
+          0.017924531417981768,
+          0.8846724912508857,
+          -1.0193246430422487,
+          1.2284849006012488,
+          -0.0013407075111026487,
+          0.005550147021341966
+        ],
+        "final_joint_error_rad": [
+          0.000589159306706246,
+          0.0004206025286466186,
+          -0.00019918477425417969,
+          -1.0591905742263208e-05,
+          0.002108670465010511,
+          -0.0009131058007601882
+        ],
+        "final_position_excursion_mm": 2.7769124835677135e-14,
+        "post_plan_max_distance_from_final_mm": 1.9652245561128616,
+        "post_success_max_distance_from_final_mm": 2.7769124835677135e-14,
+        "post_terminal_max_distance_from_final_mm": 2.7769124835677135e-14,
+        "completion_delay_s": 8.540501882440655,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.756,
+          1.77,
+          1.115,
+          0.738,
+          0.931,
+          1.545
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002033125672456083,
+          0.0028667010656850873,
+          0.0025365281390120607,
+          0.0070079080330723515,
+          0.0023519353732617734,
+          0.0028996995053549813
+        ],
+        "encoder_max_gap_s": 0.005713462829589844,
+        "raw_output_final_position_mm": [
+          256.2856386875805,
+          4.594300743982749,
+          219.54446573748885
+        ],
+        "raw_output_final_position_error_mm": 0.5273256509326961,
+        "raw_output_final_orientation_error_deg": 0.19730689674192162,
+        "raw_output_final_joint_positions_rad": [
+          0.017924531417981726,
+          0.8846724912508857,
+          -1.0193246430422498,
+          1.228484900601246,
+          0.0,
+          0.005550147021341972
+        ],
+        "raw_output_final_joint_error_rad": [
+          0.0005891593067062044,
+          0.0004206025286466186,
+          -0.0001991847742552899,
+          -1.0591905745149788e-05,
+          0.0034493779761131595,
+          -0.0009131058007601821
+        ],
+        "raw_output_final_position_excursion_mm": 8.006101228949801e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 8.006101228949801e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 8.006101228949801e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          5
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 1.320319652557373,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-xy-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470479188,
+        "reference_peak_speed_m_s": 0.4999931990732519,
+        "measured_peak_speed_m_s": 0.522779771514488,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.06436309187625902,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5436025911213263,
+        "motor_feedback_velocity_nrmse": 0.07466769453433113,
+        "motor_feedback_fitted_delay_s": 0.014999999999999972,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.90777788510384,
+        "path_error_rms_mm": 2.592439862007062,
+        "path_error_max_mm": 6.4788440855174425,
+        "final_position_mm": [
+          376.39896619116183,
+          5.15327989462756,
+          219.8953624773466
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.38052726985303487,
+        "final_orientation_error_deg": 0.10294438849458916,
+        "final_joint_positions_rad": [
+          0.009983283321407568,
+          1.2999910400554564,
+          -1.2870057904206185,
+          1.0796781285762123,
+          -0.007155849933176752,
+          0.0017388308517695865
+        ],
+        "final_joint_error_rad": [
+          0.00029670612854893613,
+          -8.961168604715297e-06,
+          -0.0006632238249544287,
+          -0.0003218727370524199,
+          0.0003839727256353363,
+          0.0017388310859465172
+        ],
+        "final_position_excursion_mm": 5.551792708129603e-14,
+        "post_plan_max_distance_from_final_mm": 1.5454835310534514,
+        "post_success_max_distance_from_final_mm": 5.551792708129603e-14,
+        "post_terminal_max_distance_from_final_mm": 5.551792708129603e-14,
+        "completion_delay_s": 3.55137114704693,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.749,
+          1.657,
+          1.121,
+          0.922,
+          0.918,
+          1.499
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0029694275542602503,
+          0.003200484338346313,
+          0.0026596240335806888,
+          0.0030413812651491124,
+          0.004799124920232854,
+          0.005258478867505317
+        ],
+        "encoder_max_gap_s": 0.005331277847290039,
+        "raw_output_final_position_mm": [
+          376.39896619116143,
+          5.153279894627553,
+          219.8953624773464
+        ],
+        "raw_output_final_position_error_mm": 0.3805272698526692,
+        "raw_output_final_orientation_error_deg": 0.060138077977667584,
+        "raw_output_final_joint_positions_rad": [
+          0.009983283321407547,
+          1.2999910400554588,
+          -1.2870057904206211,
+          1.0796781285762094,
+          -0.007155849933176751,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          0.0002967061285489153,
+          -8.961168602272807e-06,
+          -0.0006632238249570932,
+          -0.0003218727370553065,
+          0.0003839727256353372,
+          2.3417693059148076e-10
+        ],
+        "raw_output_final_position_excursion_mm": 4.61965199714999e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 4.61965199714999e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 4.61965199714999e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 1.523207187652588,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-xz-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470572634,
+        "reference_peak_speed_m_s": 0.49999302471256396,
+        "measured_peak_speed_m_s": 0.5324891228849716,
+        "fitted_delay_s": 0.024999999999999953,
+        "velocity_vector_nrmse": 0.05929965413714169,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5199903371114386,
+        "motor_feedback_velocity_nrmse": 0.06802559886444375,
+        "motor_feedback_fitted_delay_s": 0.024999999999999953,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.6890363432851322,
+        "path_error_rms_mm": 1.939539539971897,
+        "path_error_max_mm": 4.43305151379148,
+        "final_position_mm": [
+          255.82260615330992,
+          5.115666240316731,
+          219.60775398836023
+        ],
+        "target_position_mm": [
+          256.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.38302041580260676,
+        "final_orientation_error_deg": 0.5443572638071426,
+        "final_joint_positions_rad": [
+          0.017488199104983178,
+          0.8835031206520496,
+          -1.019254829872168,
+          1.2299335238804043,
+          -0.0032883476335428185,
+          0.01607448241086778
+        ],
+        "final_joint_error_rad": [
+          0.00015282623659427022,
+          -0.0007487682903404291,
+          -0.00012937137310808922,
+          0.0014380311278026081,
+          0.00016102936147069803,
+          0.00961122879291202
+        ],
+        "final_position_excursion_mm": 7.852378676284824e-14,
+        "post_plan_max_distance_from_final_mm": 1.866675847739932,
+        "post_success_max_distance_from_final_mm": 7.852378676284824e-14,
+        "post_terminal_max_distance_from_final_mm": 7.852378676284824e-14,
+        "completion_delay_s": 5.462112237812121,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          0.088,
+          1.743,
+          1.935,
+          1.34,
+          0.162,
+          0.544
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0018248287590894659,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0025376958052532594,
+          0.004687899316324962,
+          0.0023017330427310616,
+          0.01204930599661243,
+          0.0029497415140991587,
+          0.004872820025406234
+        ],
+        "encoder_max_gap_s": 0.005414724349975586,
+        "raw_output_final_position_mm": [
+          255.83438273688313,
+          4.474547511696125,
+          219.60686282100613
+        ],
+        "raw_output_final_position_error_mm": 0.7398838918983526,
+        "raw_output_final_orientation_error_deg": 0.5774746723058024,
+        "raw_output_final_joint_positions_rad": [
+          0.017488199104983164,
+          0.8835031206520507,
+          -1.0192548298721678,
+          1.2299335238804046,
+          0.0,
+          0.01607448241086779
+        ],
+        "raw_output_final_joint_error_rad": [
+          0.00015282623659425634,
+          -0.0007487682903393189,
+          -0.00012937137310786717,
+          0.0014380311278028302,
+          0.0034493769950135166,
+          0.00961122879291203
+        ],
+        "raw_output_final_position_excursion_mm": 3.237397913101005e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 3.237397913101005e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 3.237397913101005e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          5
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 1.813429355621338,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-xz-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470552039,
+        "reference_peak_speed_m_s": 0.4999931426978924,
+        "measured_peak_speed_m_s": 0.4971516264387228,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.054681572184515415,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5050070768355581,
+        "motor_feedback_velocity_nrmse": 0.06376585349506209,
+        "motor_feedback_fitted_delay_s": 0.019999999999999962,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.8058950413915086,
+        "path_error_rms_mm": 1.077194185294427,
+        "path_error_max_mm": 2.7422002309793814,
+        "final_position_mm": [
+          376.1485724531539,
+          4.791827821783496,
+          219.2637909778416
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.4489711528044683,
+        "final_orientation_error_deg": 0.09279089814655599,
+        "final_joint_positions_rad": [
+          0.008866272600131194,
+          1.3004622789534952,
+          -1.2861156725021021,
+          1.0802715405218908,
+          -0.007470009198535733,
+          0.0005042820834712206
+        ],
+        "final_joint_error_rad": [
+          -0.0008203047448509977,
+          0.0004622774657376816,
+          0.00022689448793067335,
+          0.0002715387718219553,
+          6.981317475657483e-05,
+          0.0005042821038525692
+        ],
+        "final_position_excursion_mm": 5.553824967135427e-14,
+        "post_plan_max_distance_from_final_mm": 2.351187689907408,
+        "post_success_max_distance_from_final_mm": 5.553824967135427e-14,
+        "post_terminal_max_distance_from_final_mm": 5.553824967135427e-14,
+        "completion_delay_s": 5.591109802129977,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          0.095,
+          1.61,
+          1.8860000000000001,
+          1.338,
+          0.145,
+          0.233
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0024756362818475594,
+          0.0027037751385793913,
+          0.00253069160507558,
+          0.002816575935422302,
+          0.004580654975000846,
+          0.005660909820868021
+        ],
+        "encoder_max_gap_s": 0.005701303482055664,
+        "raw_output_final_position_mm": [
+          376.148572453154,
+          4.791827821783499,
+          219.26379097784124
+        ],
+        "raw_output_final_position_error_mm": 0.44897115280470645,
+        "raw_output_final_orientation_error_deg": 0.07386363846270137,
+        "raw_output_final_joint_positions_rad": [
+          0.008866272600131182,
+          1.3004622789534925,
+          -1.2861156725021032,
+          1.0802715405218917,
+          -0.007470009198535721,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.0008203047448510099,
+          0.00046227746573501705,
+          0.00022689448792956313,
+          0.00027153877182284347,
+          6.98131747565861e-05,
+          2.038134861581863e-11
+        ],
+        "raw_output_final_position_excursion_mm": 8.342919866351945e-14,
+        "raw_output_post_success_max_distance_from_final_mm": 8.342919866351945e-14,
+        "raw_output_post_terminal_max_distance_from_final_mm": 8.342919866351945e-14,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 2.968153238296509,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-yz-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470539691,
+        "reference_peak_speed_m_s": 0.4999931302401419,
+        "measured_peak_speed_m_s": 0.525480082769776,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.06992989326944447,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5406279285403315,
+        "motor_feedback_velocity_nrmse": 0.08179978873422789,
+        "motor_feedback_fitted_delay_s": 0.024999999999999953,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.7571385428135639,
+        "path_error_rms_mm": 1.8980640347450712,
+        "path_error_max_mm": 2.6898028671200116,
+        "final_position_mm": [
+          376.70016171445894,
+          -114.89460638455243,
+          220.44937588603827
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          -114.88542872422035,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 1.0089656526980288,
+        "final_orientation_error_deg": 0.1247022948938889,
+        "final_joint_positions_rad": [
+          -0.4072376743678367,
+          1.3948496849013485,
+          -1.380642704790115,
+          1.1197683414945214,
+          -0.22603759142578558,
+          -0.35774013678127764
+        ],
+        "final_joint_error_rad": [
+          0.00018992685046009816,
+          0.0003148182999845872,
+          -0.0024436046506097764,
+          3.807974175495943e-05,
+          -0.0005992986743268425,
+          0.0011301656425924955
+        ],
+        "final_position_excursion_mm": 1.594436429147036e-13,
+        "post_plan_max_distance_from_final_mm": 3.3994571047712427,
+        "post_success_max_distance_from_final_mm": 0.5893130886567081,
+        "post_terminal_max_distance_from_final_mm": 0.5893130886567081,
+        "completion_delay_s": 6.566180517081773,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.805,
+          0.461,
+          1.524,
+          1.2630000000000001,
+          1.069,
+          1.556
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.006319414529843726,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.00631783982069821,
+          0.0023333238095043746,
+          0.03401026278934049,
+          0.004547304146414666,
+          0.002299342297266766,
+          0.0064384703152223985
+        ],
+        "encoder_max_gap_s": 0.00519108772277832,
+        "raw_output_final_position_mm": [
+          376.7001617144595,
+          -114.8946063845527,
+          220.44937588603827
+        ],
+        "raw_output_final_position_error_mm": 1.0089656526983042,
+        "raw_output_final_orientation_error_deg": 0.12470229489380283,
+        "raw_output_final_joint_positions_rad": [
+          -0.40723767436783687,
+          1.394849684901346,
+          -1.3806427047901166,
+          1.1197683414945205,
+          -0.22603759142578608,
+          -0.35774013678127803
+        ],
+        "raw_output_final_joint_error_rad": [
+          0.00018992685045993163,
+          0.0003148182999821447,
+          -0.0024436046506113307,
+          3.807974175407125e-05,
+          -0.0005992986743273421,
+          0.001130165642592107
+        ],
+        "raw_output_final_position_excursion_mm": 6.057141688996292e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 0.58931308865708,
+        "raw_output_post_terminal_max_distance_from_final_mm": 0.58931308865708,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": null,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": false
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/01-arc-yz-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470536203,
+        "reference_peak_speed_m_s": 0.49999303074073753,
+        "measured_peak_speed_m_s": 0.5291052824581791,
+        "fitted_delay_s": 0.024999999999999953,
+        "velocity_vector_nrmse": 0.0624248900987591,
+        "motor_feedback_tcp_peak_speed_m_s": 0.54886465312399,
+        "motor_feedback_velocity_nrmse": 0.08651328732301984,
+        "motor_feedback_fitted_delay_s": 0.024999999999999953,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.7313709290340669,
+        "path_error_rms_mm": 3.1237392734375686,
+        "path_error_max_mm": 4.887445879698674,
+        "final_position_mm": [
+          375.86325776699965,
+          5.187175151928208,
+          219.3590099056348
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.40767881387549176,
+        "final_orientation_error_deg": 0.14113381225883562,
+        "final_joint_positions_rad": [
+          0.01082104136236484,
+          1.2994674412798586,
+          -1.2855746204339835,
+          1.0806380596648093,
+          -0.005742133239061347,
+          -0.0010151943425773771
+        ],
+        "final_joint_error_rad": [
+          0.001134464017382944,
+          -0.0005325602078987135,
+          0.0007679465560495036,
+          0.0006380579147395871,
+          0.0017976891342316136,
+          -0.0010151943221955652
+        ],
+        "final_position_excursion_mm": 8.673617379884035e-16,
+        "post_plan_max_distance_from_final_mm": 4.2134658314732265,
+        "post_success_max_distance_from_final_mm": 8.673617379884035e-16,
+        "post_terminal_max_distance_from_final_mm": 8.673617379884035e-16,
+        "completion_delay_s": 4.75555997074118,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.815,
+          0.467,
+          1.555,
+          1.208,
+          1.115,
+          1.595
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.004427838336351389,
+          0.002621432644788085,
+          0.002727251363552681,
+          0.0024971358063718683,
+          0.004653963364703251,
+          0.006258975555152777
+        ],
+        "encoder_max_gap_s": 0.005185842514038086,
+        "raw_output_final_position_mm": [
+          375.86325776700056,
+          5.187175151928196,
+          219.35900990563465
+        ],
+        "raw_output_final_position_error_mm": 0.40767881387477356,
+        "raw_output_final_orientation_error_deg": 0.10091031883258726,
+        "raw_output_final_joint_positions_rad": [
+          0.010821041362364838,
+          1.2994674412798586,
+          -1.28557462043398,
+          1.0806380596648077,
+          -0.005742133239061355,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          0.0011344640173829423,
+          -0.0005325602078987135,
+          0.0007679465560530563,
+          0.0006380579147380327,
+          0.0017976891342316057,
+          2.0381811968547185e-11
+        ],
+        "raw_output_final_position_excursion_mm": 1.0236279711428503e-12,
+        "raw_output_post_success_max_distance_from_final_mm": 1.0236279711428503e-12,
+        "raw_output_post_terminal_max_distance_from_final_mm": 1.0236279711428503e-12,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 1.7318062782287598,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xy-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470556865,
+        "reference_peak_speed_m_s": 0.49999296306817703,
+        "measured_peak_speed_m_s": 0.5279696759185155,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.07467543709713875,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5445255398501521,
+        "motor_feedback_velocity_nrmse": 0.08267574281248118,
+        "motor_feedback_fitted_delay_s": 0.024999999999999953,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.7812614775378954,
+        "path_error_rms_mm": 2.3820011181474094,
+        "path_error_max_mm": 4.23414310941244,
+        "final_position_mm": [
+          256.06675186086454,
+          4.745171168493147,
+          219.4111959819772
+        ],
+        "target_position_mm": [
+          256.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.42518173254541586,
+        "final_orientation_error_deg": 0.5526926901436366,
+        "final_joint_positions_rad": [
+          0.017348572764823638,
+          0.885213543319004,
+          -1.0198831484028865,
+          1.230020790343004,
+          -0.0015501470213419683,
+          -0.00282939970166106
+        ],
+        "final_joint_error_rad": [
+          1.3200653548123276e-05,
+          0.0009616545967650048,
+          -0.0007576901348922416,
+          0.0015252978360134062,
+          0.001899230954771195,
+          -0.009292652523763207
+        ],
+        "final_position_excursion_mm": 1.0007790978631674e-13,
+        "post_plan_max_distance_from_final_mm": 2.4113043484529344,
+        "post_success_max_distance_from_final_mm": 0.5849997806250257,
+        "post_terminal_max_distance_from_final_mm": 0.5849997806250257,
+        "completion_delay_s": 8.743120958211648,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.758,
+          1.764,
+          1.097,
+          0.8260000000000001,
+          0.931,
+          1.555
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002248199279423425,
+          0.002538459178320584,
+          0.0028042111190136857,
+          0.00598665181883831,
+          0.002533135408934944,
+          0.005441321071210558
+        ],
+        "encoder_max_gap_s": 0.005159616470336914,
+        "raw_output_final_position_mm": [
+          256.0721206396712,
+          4.442940275845978,
+          219.4109977977154
+        ],
+        "raw_output_final_position_error_mm": 0.7028736115250016,
+        "raw_output_final_orientation_error_deg": 0.43150754217249554,
+        "raw_output_final_joint_positions_rad": [
+          0.01734857276482366,
+          0.8852135433190023,
+          -1.019883148402884,
+          1.2300207903430047,
+          0.0,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          1.3200653548144092e-05,
+          0.0009616545967632284,
+          -0.0007576901348897991,
+          0.0015252978360140723,
+          0.0034493779761131634,
+          -0.006463252822102147
+        ],
+        "raw_output_final_position_excursion_mm": 2.8318530563036215e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 2.8318530563036215e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 2.8318530563036215e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          5,
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 0.9977660179138184,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": false
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xy-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470479193,
+        "reference_peak_speed_m_s": 0.49999319907326495,
+        "measured_peak_speed_m_s": 0.5236698487646199,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.06005043772703198,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5538096954015604,
+        "motor_feedback_velocity_nrmse": 0.0735645244673143,
+        "motor_feedback_fitted_delay_s": 0.019999999999999962,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.8718531658035008,
+        "path_error_rms_mm": 1.7037129960078117,
+        "path_error_max_mm": 3.9512656177310927,
+        "final_position_mm": [
+          376.2099031248003,
+          5.174976727694679,
+          219.74418930870416
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.1835542759426,
+        "final_orientation_error_deg": 0.08799872787917364,
+        "final_joint_positions_rad": [
+          0.010000736613927506,
+          1.299921226885377,
+          -1.2867963509103792,
+          1.0803064471069301,
+          -0.007243116395776464,
+          -0.001246855741517308
+        ],
+        "final_joint_error_rad": [
+          0.0003141594210687836,
+          -7.877433868341832e-05,
+          -0.00045378431471565506,
+          0.0003064457936654552,
+          0.00029670626303557497,
+          -0.0012468555073404536
+        ],
+        "final_position_excursion_mm": 1.1103585416259206e-13,
+        "post_plan_max_distance_from_final_mm": 1.0691677856477146,
+        "post_success_max_distance_from_final_mm": 1.1103585416259206e-13,
+        "post_terminal_max_distance_from_final_mm": 1.1103585416259206e-13,
+        "completion_delay_s": 3.3622589606150446,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.738,
+          1.673,
+          1.062,
+          0.9430000000000001,
+          0.9390000000000001,
+          1.413
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0030017328328817033,
+          0.0032501463658915204,
+          0.002416562641439295,
+          0.0029457694217641657,
+          0.004414822326195804,
+          0.006745167875675724
+        ],
+        "encoder_max_gap_s": 0.005191802978515625,
+        "raw_output_final_position_mm": [
+          376.2099031248003,
+          5.174976727694677,
+          219.7441893087037
+        ],
+        "raw_output_final_position_error_mm": 0.18355427594218032,
+        "raw_output_final_orientation_error_deg": 0.021295651861583886,
+        "raw_output_final_joint_positions_rad": [
+          0.010000736613927523,
+          1.2999212268853748,
+          -1.286796350910379,
+          1.0803064471069315,
+          -0.007243116395776462,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          0.000314159421068801,
+          -7.877433868563877e-05,
+          -0.000453784314715433,
+          0.0003064457936667875,
+          0.0002967062630355767,
+          2.3417685426449485e-10
+        ],
+        "raw_output_final_position_excursion_mm": 3.6082665298743556e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 3.6082665298743556e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 3.6082665298743556e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 0.02654862403869629,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xz-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470572631,
+        "reference_peak_speed_m_s": 0.4999930247125533,
+        "measured_peak_speed_m_s": 0.5260191177181757,
+        "fitted_delay_s": 0.024999999999999953,
+        "velocity_vector_nrmse": 0.050013989872496514,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5376596169796085,
+        "motor_feedback_velocity_nrmse": 0.05926878719612297,
+        "motor_feedback_fitted_delay_s": 0.019999999999999962,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.8784575909424817,
+        "path_error_rms_mm": 2.297720811344337,
+        "path_error_max_mm": 4.758722801092747,
+        "final_position_mm": [
+          255.99369182976127,
+          5.141921831958178,
+          219.80950157817966
+        ],
+        "target_position_mm": [
+          256.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.3190863008089259,
+        "final_orientation_error_deg": 0.17776008838398447,
+        "final_joint_positions_rad": [
+          0.016737707526625623,
+          0.8835554805296096,
+          -1.0196038957225677,
+          1.2294273783973255,
+          -0.004393067388662479,
+          0.008988445647770796
+        ],
+        "final_joint_error_rad": [
+          -0.0005976653417632989,
+          -0.0006964084127801806,
+          -0.0004784372235082657,
+          0.0009318856447240176,
+          -0.0009436903936489677,
+          0.002525192029815028
+        ],
+        "final_position_excursion_mm": 1.2412670766236365e-13,
+        "post_plan_max_distance_from_final_mm": 1.7715836843817954,
+        "post_success_max_distance_from_final_mm": 1.2412670766236365e-13,
+        "post_terminal_max_distance_from_final_mm": 1.2412670766236365e-13,
+        "completion_delay_s": 7.376569797397693,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          0.068,
+          1.747,
+          1.923,
+          1.344,
+          0.028,
+          0.511
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.004751538111797137,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.003140080010558819,
+          0.002851315485876653,
+          0.0027619334763546903,
+          0.008931330757079223,
+          0.002893976503014493,
+          0.0019572365723131147
+        ],
+        "encoder_max_gap_s": 0.005167484283447266,
+        "raw_output_final_position_mm": [
+          256.00903600180544,
+          4.285413287866401,
+          219.8079118643693
+        ],
+        "raw_output_final_position_error_mm": 0.8840820163947032,
+        "raw_output_final_orientation_error_deg": 0.27742458967771716,
+        "raw_output_final_joint_positions_rad": [
+          0.016737707526625574,
+          0.8835554805296085,
+          -1.019603895722568,
+          1.2294273783973289,
+          0.0,
+          0.008988445647770795
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.0005976653417633475,
+          -0.0006964084127812908,
+          -0.0004784372235084877,
+          0.0009318856447273483,
+          0.003449376995013511,
+          0.002525192029815026
+        ],
+        "raw_output_final_position_excursion_mm": 6.804451452489348e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 6.804451452489348e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 6.804451452489348e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          5
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 4.624789476394653,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-xz-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.706858347055204,
+        "reference_peak_speed_m_s": 0.49999314269792394,
+        "measured_peak_speed_m_s": 0.5065810541585525,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.06023833028275511,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5088190667789861,
+        "motor_feedback_velocity_nrmse": 0.07225767964436874,
+        "motor_feedback_fitted_delay_s": 0.019999999999999962,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.7788100464065072,
+        "path_error_rms_mm": 1.1398156013492957,
+        "path_error_max_mm": 2.2872350843802876,
+        "final_position_mm": [
+          375.99750980444503,
+          4.94386989259904,
+          219.82137665141929
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.36663751611453166,
+        "final_orientation_error_deg": 0.02719128560730641,
+        "final_joint_positions_rad": [
+          0.009337511498169663,
+          1.299397628109779,
+          -1.2867439910328191,
+          1.0809871255152077,
+          -0.007347836150896127,
+          -9.368590921813268e-06
+        ],
+        "final_joint_error_rad": [
+          -0.0003490658468125376,
+          -0.0006023733779780827,
+          -0.00040142404278653565,
+          0.0009871237651388753,
+          0.0001919862223961769,
+          -9.368570540469382e-06
+        ],
+        "final_position_excursion_mm": 1.1444245688649702e-13,
+        "post_plan_max_distance_from_final_mm": 2.5106431037374524,
+        "post_success_max_distance_from_final_mm": 1.1444245688649702e-13,
+        "post_terminal_max_distance_from_final_mm": 1.1444245688649702e-13,
+        "completion_delay_s": 6.873043825033419,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          0.09,
+          1.621,
+          1.905,
+          1.323,
+          0.113,
+          0.228
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.007291776189653658
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002324430037665148,
+          0.0028799262143325887,
+          0.0026810612457994366,
+          0.002455192376314485,
+          0.004731304047422728,
+          0.006155028432103301
+        ],
+        "encoder_max_gap_s": 0.005154609680175781,
+        "raw_output_final_position_mm": [
+          375.997509804445,
+          4.94386989259904,
+          219.82137665141948
+        ],
+        "raw_output_final_position_error_mm": 0.3666375161146956,
+        "raw_output_final_orientation_error_deg": 0.027517500605111597,
+        "raw_output_final_joint_positions_rad": [
+          0.009337511498169644,
+          1.2993976281097763,
+          -1.2867439910328207,
+          1.0809871255152077,
+          -0.007347836150896144,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.0003490658468125567,
+          -0.0006023733779807472,
+          -0.00040142404278808996,
+          0.0009871237651388753,
+          0.0001919862223961604,
+          2.0381343886059966e-11
+        ],
+        "raw_output_final_position_excursion_mm": 3.248718412986959e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 3.248718412986959e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 3.248718412986959e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 0.7849078178405762,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-yz-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470539687,
+        "reference_peak_speed_m_s": 0.49999313024014924,
+        "measured_peak_speed_m_s": 0.5135624450578657,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.061586453196278604,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5433361363877183,
+        "motor_feedback_velocity_nrmse": 0.08540333889356108,
+        "motor_feedback_fitted_delay_s": 0.019999999999999962,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.6694018575627035,
+        "path_error_rms_mm": 2.0295542028423523,
+        "path_error_max_mm": 5.535609184772964,
+        "final_position_mm": [
+          376.45069025206703,
+          -115.01455793697306,
+          219.74799685460638
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          -114.88542872422035,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.33006488186016353,
+        "final_orientation_error_deg": 0.06638813783557646,
+        "final_joint_positions_rad": [
+          -0.4075343803406762,
+          1.3947100585611882,
+          -1.378513403102681,
+          1.1188607702834843,
+          -0.22554889923522717,
+          -0.35815901580175624
+        ],
+        "final_joint_error_rad": [
+          -0.00010677912237933018,
+          0.00017519195982429459,
+          -0.00031430296317491724,
+          -0.0008694914692821687,
+          -0.00011060648376837179,
+          0.0007112866221138936
+        ],
+        "final_position_excursion_mm": 1.2719202621569003e-13,
+        "post_plan_max_distance_from_final_mm": 1.728552063187497,
+        "post_success_max_distance_from_final_mm": 0.3022850530618191,
+        "post_terminal_max_distance_from_final_mm": 0.3022850530618191,
+        "completion_delay_s": 3.4187033671183946,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.793,
+          0.455,
+          1.545,
+          1.2690000000000001,
+          1.004,
+          1.51
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.003561053214991315,
+          0.002302875391426747,
+          0.002770830200499452,
+          0.006202803801507815,
+          0.0021257880891565857,
+          0.0067699316835548645
+        ],
+        "encoder_max_gap_s": 0.005168914794921875,
+        "raw_output_final_position_mm": [
+          376.45069025206664,
+          -115.0145579369733,
+          219.74799685460647
+        ],
+        "raw_output_final_position_error_mm": 0.33006488186001537,
+        "raw_output_final_orientation_error_deg": 0.06638813783555832,
+        "raw_output_final_joint_positions_rad": [
+          -0.407534380340676,
+          1.3947100585611893,
+          -1.378513403102684,
+          1.1188607702834867,
+          -0.2255488992352274,
+          -0.3581590158017563
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.00010677912237916365,
+          0.0001751919598254048,
+          -0.00031430296317802586,
+          -0.0008694914692797262,
+          -0.00011060648376859383,
+          0.0007112866221138381
+        ],
+        "raw_output_final_position_excursion_mm": 3.7341307954279785e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 0.38806551547853835,
+        "raw_output_post_terminal_max_distance_from_final_mm": 0.38806551547853835,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 1.256357192993164,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/02-arc-yz-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470536193,
+        "reference_peak_speed_m_s": 0.49999303074073426,
+        "measured_peak_speed_m_s": 0.6490533831333557,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.07633547244101704,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5584221374447836,
+        "motor_feedback_velocity_nrmse": 0.07601331300353659,
+        "motor_feedback_fitted_delay_s": 0.024999999999999953,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.8194727995745079,
+        "path_error_rms_mm": 2.3247580809110935,
+        "path_error_max_mm": 5.033542225116589,
+        "final_position_mm": [
+          376.03176477506656,
+          4.7635640668153885,
+          219.6503285250652
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.39889774191874894,
+        "final_orientation_error_deg": 0.1152385167340834,
+        "final_joint_positions_rad": [
+          0.009110618695410402,
+          1.2995372544499377,
+          -1.286307658719821,
+          1.0805507932022098,
+          -0.006859143960337713,
+          -0.002235030497560902
+        ],
+        "final_joint_error_rad": [
+          -0.0005759586495713929,
+          -0.00046274703781978843,
+          3.490827021201959e-05,
+          0.0005507914521400981,
+          0.0006806784129552998,
+          -0.0022350304771790027
+        ],
+        "final_position_excursion_mm": 1.734723475976807e-15,
+        "post_plan_max_distance_from_final_mm": 1.752352093502329,
+        "post_success_max_distance_from_final_mm": 1.734723475976807e-15,
+        "post_terminal_max_distance_from_final_mm": 1.734723475976807e-15,
+        "completion_delay_s": 3.820025255088715,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.806,
+          0.451,
+          1.545,
+          1.2730000000000001,
+          1.079,
+          1.5070000000000001
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0035169269255985393,
+          0.0025340876070096773,
+          0.0024824181758921864,
+          0.0025016794358990145,
+          0.004588875134496471,
+          0.005667607519932905
+        ],
+        "encoder_max_gap_s": 0.005191802978515625,
+        "raw_output_final_position_mm": [
+          376.0317647750664,
+          4.763564066815385,
+          219.65032852506536
+        ],
+        "raw_output_final_position_error_mm": 0.398897741918857,
+        "raw_output_final_orientation_error_deg": 0.06352937818781586,
+        "raw_output_final_joint_positions_rad": [
+          0.009110618695410409,
+          1.2995372544499413,
+          -1.2863076587198206,
+          1.0805507932022076,
+          -0.006859143960337711,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.0005759586495713859,
+          -0.0004627470378162357,
+          3.490827021246368e-05,
+          0.0005507914521378776,
+          0.0006806784129553016,
+          2.038189926137282e-11
+        ],
+        "raw_output_final_position_excursion_mm": 2.7341025078088736e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 2.7341025078088736e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 2.7341025078088736e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 0.7276432514190674,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-xy-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470556866,
+        "reference_peak_speed_m_s": 0.4999929630682074,
+        "measured_peak_speed_m_s": 0.5213006574671024,
+        "fitted_delay_s": 0.024999999999999953,
+        "velocity_vector_nrmse": 0.06849860546155026,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5592040439764273,
+        "motor_feedback_velocity_nrmse": 0.07474760120218214,
+        "motor_feedback_fitted_delay_s": 0.024999999999999953,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.7357128159016304,
+        "path_error_rms_mm": 2.196590528706781,
+        "path_error_max_mm": 4.1337934012714745,
+        "final_position_mm": [
+          256.1866057644728,
+          5.030583684378557,
+          219.40989130637462
+        ],
+        "target_position_mm": [
+          256.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.1824720813931272,
+        "final_orientation_error_deg": 0.1519567375262268,
+        "final_joint_positions_rad": [
+          0.017400932642383463,
+          0.884969197223725,
+          -1.0193770029198082,
+          1.2290434059618864,
+          -0.0029341194567807215,
+          0.008918632477691025
+        ],
+        "final_joint_error_rad": [
+          6.556053110793117e-05,
+          0.0007173085014863245,
+          -0.0002515446518143172,
+          0.0005479134548953546,
+          0.0005152585193324358,
+          0.0024553796555888668
+        ],
+        "final_position_excursion_mm": 2.7809732887839817e-14,
+        "post_plan_max_distance_from_final_mm": 2.2972899306594288,
+        "post_success_max_distance_from_final_mm": 2.7809732887839817e-14,
+        "post_terminal_max_distance_from_final_mm": 2.7809732887839817e-14,
+        "completion_delay_s": 17.223938753011453,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.7710000000000001,
+          1.7590000000000001,
+          1.236,
+          0.887,
+          0.885,
+          1.461
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002143151884491626,
+          0.0031128604208990832,
+          0.002712471198003763,
+          0.006761294254800631,
+          0.0022449944320643645,
+          0.002178158625995822
+        ],
+        "encoder_max_gap_s": 0.005343914031982422,
+        "raw_output_final_position_mm": [
+          256.19700937037766,
+          4.458525629324476,
+          219.40918159158687
+        ],
+        "raw_output_final_position_error_mm": 0.6757340576895833,
+        "raw_output_final_orientation_error_deg": 0.24612985122545059,
+        "raw_output_final_joint_positions_rad": [
+          0.017400932642383453,
+          0.8849691972237251,
+          -1.0193770029198097,
+          1.2290434059618882,
+          0.0,
+          0.008918632477691008
+        ],
+        "raw_output_final_joint_error_rad": [
+          6.556053110792076e-05,
+          0.0007173085014864355,
+          -0.0002515446518158715,
+          0.000547913454897131,
+          0.0034493779761131573,
+          0.0024553796555888494
+        ],
+        "raw_output_final_position_excursion_mm": 2.0037558016330778e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 2.0037558016330778e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 2.0037558016330778e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          5
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 2.6468513011932373,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-xy-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470479198,
+        "reference_peak_speed_m_s": 0.4999931990732456,
+        "measured_peak_speed_m_s": 0.5224532532360233,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.06744551383739379,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5724403247094602,
+        "motor_feedback_velocity_nrmse": 0.07596689133912508,
+        "motor_feedback_fitted_delay_s": 0.019999999999999962,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.8144168729756509,
+        "path_error_rms_mm": 1.5130008648227111,
+        "path_error_max_mm": 2.933495856344513,
+        "final_position_mm": [
+          376.25174556241376,
+          5.335707594711165,
+          219.56436514808388
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.22635904867518455,
+        "final_orientation_error_deg": 0.12286406443150252,
+        "final_joint_positions_rad": [
+          0.010471975511965971,
+          1.2998863203003372,
+          -1.2860458593320214,
+          1.079486142358493,
+          -0.007155849933176752,
+          -0.0014531523509040412
+        ],
+        "final_joint_error_rad": [
+          0.0007853983191072732,
+          -0.0001136809237241021,
+          0.00029670726364328104,
+          -0.0005138589547715178,
+          0.00038397272563529816,
+          -0.0014531521167271693
+        ],
+        "final_position_excursion_mm": 1.6883948721335657e-13,
+        "post_plan_max_distance_from_final_mm": 1.4464885455732703,
+        "post_success_max_distance_from_final_mm": 1.6883948721335657e-13,
+        "post_terminal_max_distance_from_final_mm": 1.6883948721335657e-13,
+        "completion_delay_s": 3.804383088956719,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.7510000000000001,
+          1.672,
+          1.236,
+          0.868,
+          0.975,
+          1.512
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0029637644980666077,
+          0.0030758180886445215,
+          0.002734040050913668,
+          0.003621322272319881,
+          0.004839108905573423,
+          0.0056453498562976595
+        ],
+        "encoder_max_gap_s": 0.005558967590332031,
+        "raw_output_final_position_mm": [
+          376.25174556241353,
+          5.335707594711175,
+          219.5643651480842
+        ],
+        "raw_output_final_position_error_mm": 0.226359048675138,
+        "raw_output_final_orientation_error_deg": 0.04253457633772738,
+        "raw_output_final_joint_positions_rad": [
+          0.010471975511965985,
+          1.2998863203003346,
+          -1.2860458593320208,
+          1.0794861423584914,
+          -0.007155849933176751,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          0.0007853983191072871,
+          -0.00011368092372676664,
+          0.00029670726364394717,
+          -0.0005138589547730721,
+          0.00038397272563529903,
+          2.341768719743656e-10
+        ],
+        "raw_output_final_position_excursion_mm": 5.118470572972074e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 5.118470572972074e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 5.118470572972074e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 2.2164196968078613,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-xz-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470572631,
+        "reference_peak_speed_m_s": 0.49999302471255685,
+        "measured_peak_speed_m_s": 0.5271369283132202,
+        "fitted_delay_s": 0.024999999999999953,
+        "velocity_vector_nrmse": 0.046386385476211454,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5264706071451271,
+        "motor_feedback_velocity_nrmse": 0.06732728151214729,
+        "motor_feedback_fitted_delay_s": 0.024999999999999953,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.7499522070451282,
+        "path_error_rms_mm": 1.4607393878883288,
+        "path_error_max_mm": 3.9101505276466515,
+        "final_position_mm": [
+          255.9912992600495,
+          5.193502362402096,
+          219.33375133594308
+        ],
+        "target_position_mm": [
+          256.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.3281460880737708,
+        "final_orientation_error_deg": 0.43405174260371754,
+        "final_joint_positions_rad": [
+          0.01841322360854018,
+          0.8846026780808064,
+          -1.019150110117049,
+          1.229584458030005,
+          -0.0024577182323790186,
+          0.014800392056911912
+        ],
+        "final_joint_error_rad": [
+          0.0010778507401512788,
+          0.000350789138416463,
+          -2.4651617989368546e-05,
+          0.0010889652774033198,
+          0.0009916587626345006,
+          0.008337138438956162
+        ],
+        "final_position_excursion_mm": 5.551115123125783e-14,
+        "post_plan_max_distance_from_final_mm": 1.719436594365223,
+        "post_success_max_distance_from_final_mm": 5.551115123125783e-14,
+        "post_terminal_max_distance_from_final_mm": 5.551115123125783e-14,
+        "completion_delay_s": 6.3695126074562864,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          0.075,
+          1.749,
+          1.938,
+          1.338,
+          0.107,
+          0.494
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          7.071067811865475e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002682680562422594,
+          0.0026186828750347016,
+          0.0025596093451931263,
+          0.007312017505449512,
+          0.0024564964889044714,
+          0.004877435289165815
+        ],
+        "encoder_max_gap_s": 0.005734682083129883,
+        "raw_output_final_position_mm": [
+          256.00043759482844,
+          4.71433481844856,
+          219.33325325224376
+        ],
+        "raw_output_final_position_error_mm": 0.5080100663945141,
+        "raw_output_final_orientation_error_deg": 0.46351429882868356,
+        "raw_output_final_joint_positions_rad": [
+          0.018413223608540155,
+          0.8846026780808064,
+          -1.0191501101170497,
+          1.2295844580300044,
+          0.0,
+          0.014800392056911952
+        ],
+        "raw_output_final_joint_error_rad": [
+          0.0010778507401512545,
+          0.000350789138416463,
+          -2.465161799003468e-05,
+          0.0010889652774026537,
+          0.003449376995013519,
+          0.008337138438956202
+        ],
+        "raw_output_final_position_excursion_mm": 4.476872297544989e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 4.476872297544989e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 4.476872297544989e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          5
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 2.846606969833374,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-xz-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470552037,
+        "reference_peak_speed_m_s": 0.49999314269787254,
+        "measured_peak_speed_m_s": 0.5093540588734414,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.06174974457934261,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5208040029646651,
+        "motor_feedback_velocity_nrmse": 0.07335830201576533,
+        "motor_feedback_fitted_delay_s": 0.024999999999999953,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.7516424880347088,
+        "path_error_rms_mm": 1.8540674240230273,
+        "path_error_max_mm": 4.953401947040582,
+        "final_position_mm": [
+          376.17646607933966,
+          5.031553021002195,
+          219.4213578469714
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.17327534785145338,
+        "final_orientation_error_deg": 0.058431722832395255,
+        "final_joint_positions_rad": [
+          0.00902335223281068,
+          1.3000783065180561,
+          -1.2860109527469819,
+          1.0798875680864517,
+          -0.008395033702092722,
+          0.0002759572400925182
+        ],
+        "final_joint_error_rad": [
+          -0.0006632251121715151,
+          7.830503029904179e-05,
+          0.0003316142430511704,
+          -0.00011243366361779472,
+          -0.0008552113288004164,
+          0.000275957260473864
+        ],
+        "final_position_excursion_mm": 1.3877787807814457e-13,
+        "post_plan_max_distance_from_final_mm": 1.8462628490901565,
+        "post_success_max_distance_from_final_mm": 1.3877787807814457e-13,
+        "post_terminal_max_distance_from_final_mm": 1.3877787807814457e-13,
+        "completion_delay_s": 22.38467483699631,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          0.121,
+          1.614,
+          1.925,
+          1.34,
+          0.116,
+          0.358
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002415667530432059,
+          0.0030632947948246833,
+          0.002710645679538369,
+          0.0029781873681821993,
+          0.003302118641881492,
+          0.007197437043837202
+        ],
+        "encoder_max_gap_s": 0.0057451725006103516,
+        "raw_output_final_position_mm": [
+          376.17646607934023,
+          5.031553021002209,
+          219.42135784697183
+        ],
+        "raw_output_final_position_error_mm": 0.17327534785097554,
+        "raw_output_final_orientation_error_deg": 0.046308967633264635,
+        "raw_output_final_joint_positions_rad": [
+          0.009023352232810693,
+          1.300078306518057,
+          -1.2860109527469803,
+          1.0798875680864493,
+          -0.008395033702092715,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.0006632251121715029,
+          7.830503029992997e-05,
+          0.0003316142430527247,
+          -0.00011243366362023721,
+          -0.0008552113288004095,
+          2.0381345827928008e-11
+        ],
+        "raw_output_final_position_excursion_mm": 6.940113524167507e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 6.940113524167507e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 6.940113524167507e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 2.6332497596740723,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-yz-500-out",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470539685,
+        "reference_peak_speed_m_s": 0.4999931302401502,
+        "measured_peak_speed_m_s": 0.5347674783510812,
+        "fitted_delay_s": 0.029999999999999957,
+        "velocity_vector_nrmse": 0.06369497265253837,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5712900458568155,
+        "motor_feedback_velocity_nrmse": 0.09291766323551265,
+        "motor_feedback_fitted_delay_s": 0.029999999999999957,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.6453143958621512,
+        "path_error_rms_mm": 2.897573558557659,
+        "path_error_max_mm": 4.400356854359665,
+        "final_position_mm": [
+          376.0810390709492,
+          -114.83716656799075,
+          219.31914347563492
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          -114.88542872422035,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.2843003637742345,
+        "final_orientation_error_deg": 0.31674996053895155,
+        "final_joint_positions_rad": [
+          -0.40786599289855474,
+          1.3947624184387486,
+          -1.3778327246944035,
+          1.1200999540524006,
+          -0.2263168441061047,
+          -0.3648785334219344
+        ],
+        "final_joint_error_rad": [
+          -0.00043839168025772146,
+          0.00022755183738487617,
+          0.00036637544510198516,
+          0.00036969229963412786,
+          -0.0008785513546458457,
+          -0.006008230998064024
+        ],
+        "final_position_excursion_mm": 2.7755575615628914e-14,
+        "post_plan_max_distance_from_final_mm": 4.333681025646043,
+        "post_success_max_distance_from_final_mm": 2.7755575615628914e-14,
+        "post_terminal_max_distance_from_final_mm": 2.7755575615628914e-14,
+        "completion_delay_s": 3.7130616205973985,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.811,
+          0.46,
+          1.558,
+          1.317,
+          1.068,
+          1.585
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          7.071067811865475e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0037097708824130916,
+          0.0029223107295426355,
+          0.002648013406310478,
+          0.004684482362011821,
+          0.0025783667310916043,
+          0.006710283153489129
+        ],
+        "encoder_max_gap_s": 0.005842685699462891,
+        "raw_output_final_position_mm": [
+          376.08103907094943,
+          -114.8371665679909,
+          219.31914347563466
+        ],
+        "raw_output_final_position_error_mm": 0.28430036377433393,
+        "raw_output_final_orientation_error_deg": 0.3167499605389968,
+        "raw_output_final_joint_positions_rad": [
+          -0.40786599289855513,
+          1.394762418438746,
+          -1.377832724694401,
+          1.1200999540524028,
+          -0.22631684410610473,
+          -0.36487853342193444
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.00043839168025811004,
+          0.00022755183738221163,
+          0.00036637544510442765,
+          0.0003696922996363483,
+          -0.0008785513546458734,
+          -0.006008230998064079
+        ],
+        "raw_output_final_position_excursion_mm": 3.4219371797089427e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 3.4219371797089427e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 3.4219371797089427e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 2.3389298915863037,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    },
+    {
+      "folder": ".runtime/tcp-smooth/soft-wrist-orthogonal-rerun/03-arc-yz-500-return",
+      "exit_code": 0,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470536198,
+        "reference_peak_speed_m_s": 0.49999303074074525,
+        "measured_peak_speed_m_s": 0.5274742527010585,
+        "fitted_delay_s": 0.024999999999999953,
+        "velocity_vector_nrmse": 0.06286314056342313,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5418369998858751,
+        "motor_feedback_velocity_nrmse": 0.08054098946070565,
+        "motor_feedback_fitted_delay_s": 0.029999999999999957,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.9300051361775317,
+        "path_error_rms_mm": 2.7523877521672495,
+        "path_error_max_mm": 3.458694002701673,
+        "final_position_mm": [
+          375.9627161547678,
+          4.990216076810383,
+          219.47505391993053
+        ],
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.28776830611173326,
+        "final_orientation_error_deg": 0.06636715288992072,
+        "final_joint_positions_rad": [
+          0.00940732466824944,
+          1.2996070676200173,
+          -1.2859585928694226,
+          1.0805856997872494,
+          -0.007452555906015788,
+          -0.0012176708502683608
+        ],
+        "final_joint_error_rad": [
+          -0.0002792526767324086,
+          -0.00039293386774019723,
+          0.00038397412061019764,
+          0.0005856980371796716,
+          8.726646727719601e-05,
+          -0.0012176708298865075
+        ],
+        "final_position_excursion_mm": 5.551115123125783e-14,
+        "post_plan_max_distance_from_final_mm": 3.4625457737618346,
+        "post_success_max_distance_from_final_mm": 5.551115123125783e-14,
+        "post_terminal_max_distance_from_final_mm": 5.551115123125783e-14,
+        "completion_delay_s": 4.759843875770477,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          1.8,
+          0.488,
+          1.546,
+          1.2670000000000001,
+          1.039,
+          1.532
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.003846598097390532,
+          0.002342010407152205,
+          0.002680405685571051,
+          0.00252714771675254,
+          0.00434692079557016,
+          0.006016540322851548
+        ],
+        "encoder_max_gap_s": 0.005765676498413086,
+        "raw_output_final_position_mm": [
+          375.9627161547672,
+          4.990216076810384,
+          219.47505391993033
+        ],
+        "raw_output_final_position_error_mm": 0.2877683061123093,
+        "raw_output_final_orientation_error_deg": 0.03818998569148964,
+        "raw_output_final_joint_positions_rad": [
+          0.009407324668249449,
+          1.2996070676200169,
+          -1.285958592869421,
+          1.0805856997872494,
+          -0.007452555906015789,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.00027925267673239995,
+          -0.0003929338677406413,
+          0.00038397412061175196,
+          0.0005856980371796716,
+          8.726646727719514e-05,
+          2.0381853362469147e-11
+        ],
+        "raw_output_final_position_excursion_mm": 7.711855592701269e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 7.711855592701269e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 7.711855592701269e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 1.491476058959961,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "quality_passed": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "source": ".runtime/tcp-smooth/separated-damping-orthogonal/03-arc-xy-500-out",
+  "controller_completion_after_acceptance_s": 10.37251329421997,
+  "post_success_tool_max_distance_from_final_px": 0.6890510378736718,
+  "post_success_tool_peak_to_peak_px": [
+    0.8680725771182978,
+    0.38864778929387445
+  ],
+  "measurement": "Fixed-background-registered tool features. Pixels normalized to width960. No spatial calibration; cannot exclude depth motion.",
+  "retained_features": 11
+}

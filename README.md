@@ -9,9 +9,10 @@ AgileX Piper X 的通用机械臂服务：启动后等待上层命令，通过�
 附可选的超时位置保持补丁，以及就绪状态失效修复；本机原工作空间不改动。
 无需启动原工作空间的摄像头、插孔、示教等应用。
 
-默认位置控制参数已针对本机实测 J4 保持振荡修正，并增加被动 CAN 静止验收。
-当前参数下完整 10 项真机运动验收、15 秒静止检查和 API 重启接管通过，运动验收
-最大终点误差 `0.00955 rad`。
+基础位置配置已修复本机 J4 保持振荡，完成 10 项真机接口验收、15 秒静止检查
+和 API 重启接管，基础验收最大关节终点误差 `0.00955 rad`。TCP 跟踪配置另包含
+高速动力学前馈、编码器坐标同步和固件零区间反馈处理。1.0 m/s 实拍、40 次往返及
+多平面检查见 [TCP 高速验证](docs/tcp-highspeed-validation.md)，其中保留所有未通过的检查。
 旧运动验收检查了轨迹终点，漏掉了静止振荡，不能用旧通过记录证明当前稳定性。
 本轮调参与复验数据见 [验证记录](docs/validation.md) 和 [J4 诊断说明](docs/j4-vibration.md)。
 
@@ -37,18 +38,15 @@ uv pip install --python .venv/bin/python -e .
 匹配本次真机标定的仿真：
 
 ```bash
-.venv/bin/python -m piper_control --backend sim \
-  --arm-config vendor/Piper_workspace/config/arms/arm_2.yaml --max-velocity 0.05
+bash scripts/start.sh sim
 ```
 
 本机真机（`arm_2`，`can1`，带 PX6D 的夹爪）：
 
 ```bash
-source scripts/env.sh
 # 本机已有 control_msgs；新环境缺少时可用户目录安装：
 # bash scripts/install_ros_extras.sh && source scripts/env.sh
-python -m piper_control --backend hardware --arm arm_2 \
-  --launch-driver --ros --max-velocity 3.141592653589793 --port 8090
+bash scripts/start.sh hardware
 ```
 
 真机 dashboard 为 <http://127.0.0.1:8090>。`--launch-driver` 会复用已运行驱动，
@@ -57,27 +55,38 @@ python -m piper_control --backend hardware --arm arm_2 \
 原驱动启动时会配置从臂反馈，解决固件未主动上报的情况。仅附着已有驱动可省略
 `--launch-driver`，随后显式调用 `enable()` 进入控制模式。
 
-TCP 平滑性改进正在进行真机验证；本机当前 API 使用候选
-[跟踪 profile](piper_control/assets/tcp_tracking.yaml)，启动参数另加：
+推荐脚本为两种后端加载同一 [跟踪 profile](piper_control/assets/tcp_tracking.yaml)，
+使用 180°/s 关节指令上限和更严格的到位条件。手动启动对应的附加参数为：
 
 ```bash
---control-profile piper_control/assets/tcp_tracking.yaml --goal-tolerance 0.005
+--control-profile piper_control/assets/tcp_tracking.yaml --max-velocity 3.141592653589793 --goal-tolerance 0.005 \
+--joint-goal-tolerances .0012 .0012 .0012 .005 .005 .01 \
+--tcp-position-tolerance .00045 --goal-settle-time 3 --goal-timeout 30 --goal-velocity-tolerance .01 --goal-velocity-window 1
 ```
 
 该 profile 启用硬件边界的电机/输出关节坐标转换、目标速度摩擦前馈、速度编码
 余量、J1/J3 空间扰动补偿，以及有死区、限幅和限速的位置积分修正。当前 J2
 摩擦前馈采用原模型输出的 1.75 倍，J6 为 1.5 倍；比例可逐轴配置，总前馈力矩仍受限。
-积分死区为 0.003 rad，示例到位容差为 0.005 rad，避免继续追逐细小静态误差。
+积分死区为 0.0002 rad，修正限幅 0.03 rad、限速 0.01 rad/s。肩部关节容差
+为 0.0012 rad，J4/J5 为 0.005 rad，J6 为 0.01 rad，TCP 额外要求 0.45 mm，
+速度按完整 1 s 窗口逐轴计算时间加权 RMS（限值 0.01 rad/s），
+并连续满足位置和速度条件 3 s，轨迹结束后最多等待 30 s。较长观察窗口用于捕捉停止后的迟发反馈变化，运动本身仍按给定速度执行。
 静止关节保留最后的坐标转换，避免编码器细小变化推动保持目标。电机相位
-融合速度与带时间戳的位置反馈，避免放大位置量化。J4 按目标速度平滑切换运动和
+融合速度与带时间戳的位置反馈，避免放大位置量化。按目标速度平滑切换运动和
 静止阻尼；API 退出保持时冻结转换与积分，所有保活命令使用同一目标。
 任务成功、超时、停止或实时流失联后也冻结积分，保留最后修正值；下一条运动
 才继续修正，避免已报告结束的动作数秒后又因积分累积产生补动。
+逆动力学前馈补偿运动惯量与耦合负载，重力仍复用原标定。固件约 ±0.3° 的置零
+反馈区间采用有标记的电机估算，保留原始读数，见 [测量范围与证据](docs/tcp-zero-feedback.md)。
+参考关节速度超过 0.02 rad/s 时冻结位置积分，避免累积高速反馈延迟。停车修正
+计入限幅 0.003 rad、衰减时间 0.5 s 的电机位移预测，原始反馈与精度计分保持独立。
+肩部静止阻尼为 `[4, 8, 10]`，运动目标为 `[8, 12.12, 14]`；腕部 kp 为 `[24, 3, 2.5]`。
+增益过渡限速为 5/s，最长约 0.824 s，短于连续停稳观察窗口。
 上层接口与 SI 单位保持一致。
 参数针对当前 `arm_2` 和工具；尚不能将局部路径结果外推到整个工作空间。
 当前进展、相机证据和未完成检查见 [TCP 排查记录](docs/tcp-motion-diagnosis.md)。
 仿真可以加载同一 profile，复用增益、阻尼切换、位置积分、重力比例和目标速度摩擦前馈；其刚体模型
-尚未复现电机空间扰动、双编码器弹性差值和 CAN 量化。
+尚未复现电机空间扰动、双编码器弹性差值和固件反馈量化。
 
 原工作空间不存在时，也可以在本仓库独立构建五个底层包：
 
@@ -204,7 +213,15 @@ python scripts/record_tcp_motion.py --case line_z --distance .02 --speed .02 \
   --post-motion-seconds 5 --out .runtime/tcp-hd-check
 python scripts/stabilize_tcp_camera.py .runtime/tcp-hd-check
 python scripts/analyze_tcp_timing.py --camera-data camera-stabilized.npz .runtime/tcp-hd-check
+
+# 本机已经审查过的固定路径；会运动，模型与起始姿态必须匹配清单
+python scripts/run_tcp_suite.py --manifest docs/tcp-highspeed-suite.json \
+  --out .runtime/tcp-repeat --repeats 10
 ```
+
+重复测试会保留每次运动、原始 CAN、相机和失败记录，超出到位或静止指标时中止
+后续批次。停止点按最大两次间距验收 ≤1 mm；多平面清单为
+[tcp-orthogonal-suite.json](docs/tcp-orthogonal-suite.json)。固定清单不能代替新环境的路径检查。
 
 相机分析使用本次 BRIO 机位的固定工具区域；换机位后先检查输出的
 `camera-tracking-features.jpg`。直线时间律分析不适用于圆弧；相机像素速度不是
