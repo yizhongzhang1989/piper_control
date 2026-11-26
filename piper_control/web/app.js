@@ -42,7 +42,8 @@ async function command(path, body, message) {
   feedback('正在发送指令…');
   try {
     const result = await request(path, body);
-    feedback(message + (result.id ? ` · ${result.id.slice(0, 8)}` : ''), 'success');
+    feedback(message + (Number.isFinite(result.duration) ? ` · 规划 ${result.duration.toFixed(2)} s` : '')
+      + (result.id ? ` · ${result.id.slice(0, 8)}` : ''), 'success');
   } catch (error) {
     feedback(error.message, 'error');
   }
@@ -127,6 +128,10 @@ function copyArc() {
     $(`arc-via-${i}`).value = fmt(value, 5);
     $(`arc-target-${i}`).value = fmt(value, 5);
   });
+  rpyFromQuaternion(state.tcp_pose.orientation).forEach((value, i) => {
+    $(`arc-via-r-${i}`).value = fmt(value / RAD, 3);
+    $(`arc-target-r-${i}`).value = fmt(value / RAD, 3);
+  });
 }
 
 function updateState(next) {
@@ -204,6 +209,9 @@ fields('tcp-position-inputs', 'tcp-p', ['X', 'Y', 'Z'], 'any');
 fields('tcp-orientation-inputs', 'tcp-r', ['Roll', 'Pitch', 'Yaw'], 'any');
 fields('arc-via-inputs', 'arc-via', ['X', 'Y', 'Z'], 'any');
 fields('arc-target-inputs', 'arc-target', ['X', 'Y', 'Z'], 'any');
+fields('arc-via-orientation-inputs', 'arc-via-r', ['Roll', 'Pitch', 'Yaw'], 'any');
+fields('arc-target-orientation-inputs', 'arc-target-r', ['Roll', 'Pitch', 'Yaw'], 'any');
+$('arc-rotate').onchange = () => { $('arc-orientation-fields').hidden = !$('arc-rotate').checked; };
 buildJointRows(['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6'], []);
 setConnected(false, '正在连接');
 
@@ -235,17 +243,21 @@ $('tcp-form').onsubmit = event => {
   event.preventDefault();
   if (!connected || !state?.enabled) return;
   const pose = {position: readVector('tcp-p'), orientation: quaternionFromRPY(readVector('tcp-r').map(v => v * RAD))};
-  command('/api/movel', {pose, speed: Number($('tcp-speed').value)}, '直线轨迹已提交');
+  command('/api/movel', {pose, speed: Number($('tcp-speed').value),
+    angular_speed: Number($('tcp-angular-speed').value) * RAD}, '直线轨迹已提交');
 };
 
 $('arc-form').onsubmit = event => {
   event.preventDefault();
   if (!connected || !state?.enabled || !state?.tcp_pose) return;
   const orientation = [...state.tcp_pose.orientation];
+  const viaOrientation = $('arc-rotate').checked ? quaternionFromRPY(readVector('arc-via-r').map(v => v * RAD)) : orientation;
+  const targetOrientation = $('arc-rotate').checked ? quaternionFromRPY(readVector('arc-target-r').map(v => v * RAD)) : orientation;
   command('/api/movec', {
-    via: {position: readVector('arc-via'), orientation},
-    pose: {position: readVector('arc-target'), orientation},
+    via: {position: readVector('arc-via'), orientation: viaOrientation},
+    pose: {position: readVector('arc-target'), orientation: targetOrientation},
     speed: Number($('arc-speed').value),
+    angular_speed: Number($('arc-angular-speed').value) * RAD,
   }, '圆弧轨迹已提交');
 };
 
