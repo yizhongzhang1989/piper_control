@@ -18,10 +18,11 @@ from piper_control.model import RobotModel
 from piper_control.planning import pose_matrix
 
 
-def analyze(folder):
+def analyze(folder, include_failed=False):
     folder = Path(folder)
     report = json.loads((folder / 'report.json').read_text())
-    if report['failure'] or report.get('result', {}).get('status') != 'succeeded':
+    succeeded = not report['failure'] and report.get('result', {}).get('status') == 'succeeded'
+    if not succeeded and not include_failed:
         raise ValueError(f'{folder}: incomplete motion; do not score as a completed trial')
     can = np.load(folder / 'can.npz')
     reference = np.load(folder / 'reference.npz')
@@ -71,25 +72,40 @@ def analyze(folder):
     rotation_error = (Rotation.from_matrix(target[:3, :3]).inv() * tail_rotation).magnitude()
     late = t > duration
     finished_t = report['motion_finished_unix'] - accepted
-    post_success = t > finished_t + .1
+    post_success = t > finished_t
     raw_velocity_peaks = []
     static_velocity_rms = []
     static_current_ac_rms = []
+    motor_velocity_columns = []
     for j in range(6):
         g = can[f'id_{0x251+j:03x}']
         b = g[:, 1:].astype('u1')
         values = np.frombuffer(b[:, :4].copy().tobytes(), dtype='>i2').reshape(-1, 2) * .001
+        motor_velocity_columns.append(np.interp(t, g[:, 0]-accepted, values[:, 0]))
         raw_velocity_peaks.append(float(np.max(abs(values[:, 0]))))
         final = g[:, 0] > g[-1, 0] - 2
         static_velocity_rms.append(float(np.sqrt(np.mean(values[final, 0]**2))))
         static_current_ac_rms.append(float(np.std(values[final, 1])))
     speed = np.linalg.norm(velocity, axis=1)
+    motor_tcp_velocity = np.array([model.jacobian(v)[:3] @ w
+                                  for v, w in zip(q, np.array(motor_velocity_columns).T)])
+    motor_fit = []
+    for candidate_delay in np.arange(-.05, .251, .005):
+        expected_motor = np.array([np.interp(t-candidate_delay, reference['times'], reference_velocity[:, j],
+                                             left=0, right=0) for j in range(3)]).T
+        motor_rms = float(np.sqrt(np.mean(np.sum((motor_tcp_velocity[moving]-expected_motor[moving])**2, axis=1))))
+        motor_fit.append((motor_rms, float(candidate_delay)))
+    motor_rms, motor_delay = min(motor_fit)
     result = dict(
         measurement='CAN output encoders + configured FK; no external spatial calibration',
-        speed_estimator='55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles',
+        completed_successfully=succeeded, failure=report['failure'],
+        motion_status=report.get('result', {}).get('status'),
+        speed_estimator='55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles',
         requested_speed_m_s=report['requested_speed'], duration_s=duration,
         reference_peak_speed_m_s=float(peak_reference), measured_peak_speed_m_s=float(np.max(speed[moving])),
         fitted_delay_s=float(delay), velocity_vector_nrmse=rms/peak_reference,
+        motor_feedback_tcp_peak_speed_m_s=float(np.max(np.linalg.norm(motor_tcp_velocity[moving], axis=1))),
+        motor_feedback_velocity_nrmse=motor_rms/peak_reference, motor_feedback_fitted_delay_s=motor_delay,
         path_error_rms_mm=float(np.sqrt(np.mean(path_error**2))*1000),
         path_error_max_mm=float(np.max(path_error)*1000),
         final_position_mm=(terminal_xyz*1000).tolist(), target_position_mm=(target[:3, 3]*1000).tolist(),
@@ -99,7 +115,9 @@ def analyze(folder):
         final_joint_error_rad=(terminal_q-reference['q'][-1]).tolist(),
         final_position_excursion_mm=float(np.max(np.linalg.norm(xyz[tail]-terminal_xyz, axis=1))*1000),
         post_plan_max_distance_from_final_mm=float(np.max(np.linalg.norm(xyz[late]-terminal_xyz, axis=1))*1000),
-        post_success_max_distance_from_final_mm=float(np.max(np.linalg.norm(xyz[post_success]-terminal_xyz, axis=1))*1000),
+        post_success_max_distance_from_final_mm=(float(np.max(np.linalg.norm(xyz[post_success]-terminal_xyz, axis=1))*1000)
+                                                 if succeeded else None),
+        post_terminal_max_distance_from_final_mm=float(np.max(np.linalg.norm(xyz[post_success]-terminal_xyz, axis=1))*1000),
         completion_delay_s=finished_t-duration,
         raw_joint_velocity_peak_rad_s=raw_velocity_peaks,
         final_2s_velocity_rms_rad_s=static_velocity_rms,
@@ -107,13 +125,15 @@ def analyze(folder):
         encoder_max_gap_s=max(gaps),
     )
     (folder/'performance.json').write_text(json.dumps(result, indent=2)+'\n')
-    np.savez_compressed(folder/'performance.npz', t=t, q=q, xyz=xyz, velocity=velocity, expected_velocity=expected)
+    np.savez_compressed(folder/'performance.npz', t=t, q=q, xyz=xyz, velocity=velocity,
+                        motor_tcp_velocity=motor_tcp_velocity, expected_velocity=expected)
     return result
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('folders', nargs='+')
+    parser.add_argument('--include-failed', action='store_true', help='diagnostic metrics only; failed trials remain explicitly marked')
     args = parser.parse_args()
     for folder in args.folders:
-        print(folder, json.dumps(analyze(folder)))
+        print(folder, json.dumps(analyze(folder, args.include_failed)))

@@ -26,7 +26,7 @@ class ReferenceFeedforward:
         from piper_x_driver.gravity import load_gravity_model
 
         allowed = {"friction_scale", "friction_factors", "velocity_remainder", "spatial_harmonics",
-                   "spatial_prediction", "spatial_decay", "torque_limits", "phase_filter_hz"}
+                   "spatial_prediction", "spatial_decay", "torque_limits", "phase_filter_hz", "dynamics"}
         if set(settings) - allowed:
             raise ValueError(f"Unknown tracking settings: {sorted(set(settings)-allowed)}")
         self.scale = float(settings.get("friction_scale", .88))
@@ -64,8 +64,15 @@ class ReferenceFeedforward:
         self.encode = _core.encode_mit_command
         self.gain_scale = MIT_GAIN_SCALE
         self.last = {"torque": [0.]*6, "spatial_torque": [0.]*6, "clipped": [False]*6}
+        self.dynamics = None
+        if settings.get('dynamics') is not None:
+            from piper_control.model import RobotModel
+            from .dynamics import DynamicsFeedforward
+            self.dynamics = DynamicsFeedforward(
+                RobotModel(end_effector=arm_config.get('end_effector', 'gripper_with_wrench')),
+                **settings['dynamics'])
 
-    def evaluate(self, target, velocity, state, sample, kp, kd, dt=.005):
+    def evaluate(self, target, velocity, state, sample, kp, kd, dt=.005, reference=None):
         target, velocity, kp, kd = map(_six, (target, velocity, kp, kd))
         sample.validate()
         phase = self.phase.update(sample, dt) if self.phase else None
@@ -97,6 +104,11 @@ class ReferenceFeedforward:
             spatial[i] += ((harmonic.cogging(theta) + direction*harmonic.modulation(theta))
                            * abs(direction) * math.exp(-(velocity[i]/self.decay)**2))
         requested = [f+s if v else 0. for f, s, v in zip(ff, spatial, desired)]
+        if self.dynamics:
+            if reference is None:
+                raise ValueError('Dynamics feedforward requires output-joint reference positions')
+            dynamic = self.dynamics.evaluate(reference, velocity, dt)
+            requested = [f+d for f, d in zip(requested, dynamic.tolist())]
         if not all(math.isfinite(x) for x in requested):
             raise RuntimeError("Nonfinite tracking feedforward")
         torque = [max(-limit, min(limit, f)) for f, limit in zip(requested, self.limits)]
@@ -104,7 +116,13 @@ class ReferenceFeedforward:
                      "friction_torque": friction, "friction_factors": self.friction_factors,
                      "clipped": [a != b for a, b in zip(requested, torque)],
                      "motor_phase": phase, "phase_filter_hz": self.phase.cutoff_hz if self.phase else 0.}
+        if self.dynamics:
+            self.last['dynamics'] = self.dynamics.last.copy()
         return torque
+
+    def close(self):
+        if self.dynamics:
+            self.dynamics.close()
 
 
 class TrackingBackend:
@@ -142,6 +160,7 @@ class TrackingBackend:
                 or max(abs(h-m) for h, m in zip(self._hold_kd, self._moving_kd)) > 2*self._gain_rate):
             raise ValueError('Tracking damping requires gains in 0..100 and a 0.1..5 ramp reaching hold within 2 s')
         self._dt = .005
+        self._feedforward_dt = .005
         self._last_velocity = (0.,)*6
         self._mapping_active = (False,)*6
         self.receiver = receiver or MotorFeedbackReceiver(raw.config["can_port"])
@@ -224,6 +243,7 @@ class TrackingBackend:
             if self._holding:
                 return
             self._dt = min(.02, max(.00001, dt))
+            self._feedforward_dt = dt
             # IK spline roundoff can produce a few microradians/s on a nominally
             # stationary axis. Do not let it unlock the faster aligned mapper.
             threshold = 1e-4 if self._aligned_mapping else 1e-6
@@ -274,7 +294,7 @@ class TrackingBackend:
             self.integral.advance(q, sample.joints, self._dt)
         target = self.integral.apply(self.mapper.to_motor(q))
         kd = state['extra']['driver'].get('applied_kd', self.raw.kd)
-        torque = self.feedforward.evaluate(target, dq, state, sample, self.raw.kp, kd, self._dt)
+        torque = self.feedforward.evaluate(target, dq, state, sample, self.raw.kp, kd, self._feedforward_dt, q)
         self.raw.command(target, dq, torque=torque)
         self._last_velocity = dq
         self._nominal, self._actuator = list(q), list(target)
@@ -360,4 +380,9 @@ class TrackingBackend:
             self._checkpoint()
         finally:
             self.receiver.close()
-            self.raw.close()
+            try:
+                close = getattr(self.feedforward, 'close', None)
+                if close:
+                    close()
+            finally:
+                self.raw.close()

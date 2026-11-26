@@ -74,6 +74,8 @@ def main():
                                     reference_friction_factors=None if tracking is None else tracking.get('friction_factors'),
                                     moving_kd=None if tracking is None else tracking.get('moving_kd'),
                                     position_integral=None if tracking is None else tracking.get('position_integral'),
+                                    dynamics=None if tracking is None else tracking.get('dynamics'),
+                                    reference_torque_limits=None if tracking is None else tracking.get('torque_limits', [4, 4, 4, .8, .5, .5]),
                                     gain_ramp_rate=2. if tracking is None else tracking.get('gain_ramp_rate', 2.), **gains)
     else:
         from .backends.hardware import HardwareBackend

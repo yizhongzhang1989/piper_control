@@ -4,20 +4,18 @@ from __future__ import annotations
 
 import math
 from pathlib import Path
-import tempfile
 import time
-import xml.etree.ElementTree as ET
 import sys
 
 import numpy as np
 import yaml
-from scipy.spatial.transform import Rotation
 
 from piper_control.model import RobotModel, finite_vector
 from .position_integral import PositionIntegral
+from .dynamics import BulletModel, DynamicsFeedforward
 
 
-class SimulationBackend:
+class SimulationBackend(BulletModel):
     """PyBullet DIRECT backend: actual integration and measured joint feedback.
 
     Uses upstream link masses, COMs, inertia tensors and gravity, with nominal
@@ -31,7 +29,8 @@ class SimulationBackend:
 
     def __init__(self, model: RobotModel | None = None, initial_positions=None, arm_config=None,
                  kp=None, kd=None, friction_scale=None, gravity_scale=None, reference_friction_scale=None,
-                 moving_kd=None, gain_ramp_rate=2., position_integral=None, reference_friction_factors=None):
+                 moving_kd=None, gain_ramp_rate=2., position_integral=None, reference_friction_factors=None,
+                 dynamics=None, reference_torque_limits=None):
         import pybullet as bullet
 
         self._p = bullet
@@ -56,6 +55,10 @@ class SimulationBackend:
         self._gravity_model = self._friction_model = None
         self._gravity_scale = float(self.config.get("gravity_scale", 1) if gravity_scale is None else gravity_scale)
         self._reference_friction_scale = reference_friction_scale
+        self._reference_limits = (finite_vector(reference_torque_limits, 6, 'reference_torque_limits')
+                                  if reference_torque_limits is not None else None)
+        if self._reference_limits is not None and (np.any(self._reference_limits <= 0) or np.any(self._reference_limits > 4)):
+            raise ValueError('reference torque limits must be within 0..4 Nm')
         self._reference_friction_factors = finite_vector(
             [1.]*6 if reference_friction_factors is None else reference_friction_factors, 6, 'reference_friction_factors')
         if np.any(self._reference_friction_factors < 0) or np.any(self._reference_friction_factors > 2):
@@ -89,47 +92,15 @@ class SimulationBackend:
         self._friction_efforts = np.zeros(6)
         self._plant_friction = np.zeros(6)
         self._effective_kp, self._effective_kd = self.kp.copy(), self.kd.copy()
-        self._client = bullet.connect(bullet.DIRECT)
-        self._connected = True
+        super().__init__(self.model)
         self._enabled = False
         self._last_feedback = time.monotonic()
-        self._temporary_urdf = None
-        bullet.setGravity(0, 0, -9.81, physicsClientId=self._client)
-        bullet.setPhysicsEngineParameter(
-            fixedTimeStep=0.001, numSolverIterations=80, physicsClientId=self._client
-        )
-        urdf_path = self.model.urdf_path
-        if np.any(self.model.angle_offsets):
-            root = ET.parse(urdf_path).getroot()
-            for name, offset in zip(self.model.names, self.model.angle_offsets):
-                origin = root.find(f"joint[@name='{name}']/origin")
-                rotation = Rotation.from_euler("xyz", np.fromstring(origin.get("rpy"), sep=" "))
-                rotation = rotation * Rotation.from_rotvec([0, 0, offset])
-                origin.set("rpy", " ".join(map(str, rotation.as_euler("xyz"))))
-            for mesh in root.findall(".//mesh"):
-                mesh.set("filename", str(self.model.asset_dir / mesh.get("filename")))
-            self._temporary_urdf = tempfile.TemporaryDirectory(prefix="piper-simulation-")
-            urdf_path = Path(self._temporary_urdf.name) / "model.urdf"
-            ET.ElementTree(root).write(urdf_path, encoding="utf-8", xml_declaration=True)
-        self._body = bullet.loadURDF(
-            str(urdf_path), useFixedBase=True,
-            flags=bullet.URDF_USE_INERTIA_FROM_FILE,
-            physicsClientId=self._client,
-        )
-        self._joint_indices = {}
-        self._movable = []
-        for index in range(bullet.getNumJoints(self._body, physicsClientId=self._client)):
-            info = bullet.getJointInfo(self._body, index, physicsClientId=self._client)
-            self._joint_indices[info[1].decode()] = index
-            if info[2] != bullet.JOINT_FIXED:
-                self._movable.append(index)
-            bullet.changeDynamics(
-                self._body, index, linearDamping=0, angularDamping=0, jointDamping=0,
-                physicsClientId=self._client,
-            )
-        self._arm = [self._joint_indices[name] for name in self.model.names]
-        self._arm_slots = [self._movable.index(index) for index in self._arm]
-        self._finger_slots = [slot for slot, index in enumerate(self._movable) if index not in self._arm]
+        try:
+            self._dynamics = DynamicsFeedforward(self, **dynamics) if dynamics is not None else None
+        except Exception:
+            super().close()
+            raise
+        self._dynamic_efforts = np.zeros(6)
         q = self.model.validate_joints(
             initial_positions if initial_positions is not None else [0, 0.5, -0.5, 0, 0.2, 0]
         )
@@ -175,6 +146,8 @@ class SimulationBackend:
         if enabled and not self._enabled:
             self.kd = self._hold_kd.copy()
             self._integral.bias = (0.,)*6
+            if self._dynamics:
+                self._dynamics.reset()
             self._target = np.asarray(self.read()["positions"])
             self._target_velocity = np.zeros(6)
             self._adaptive_applied = 0.0 if self._offset_ramp_s > 0 else self._adaptive_amount
@@ -205,6 +178,8 @@ class SimulationBackend:
         if not math.isfinite(dt) or dt <= 0:
             raise ValueError("simulation step must be positive and finite")
         if self._enabled:
+            self._dynamic_efforts = (self._dynamics.evaluate(self._target, self._target_velocity, dt)
+                                     if self._dynamics else np.zeros(6))
             wanted_kd = self._hold_kd + (self._moving_kd-self._hold_kd)*np.tanh(np.abs(self._target_velocity)/.003)
             gain_step = self._gain_rate*min(dt, .02)
             self.kd += np.clip(wanted_kd-self.kd, -gain_step, gain_step)
@@ -256,6 +231,9 @@ class SimulationBackend:
                         arm_q, desired, target_velocities=desired, **common)
                     self._friction_efforts += (self._reference_friction_scale * self._reference_friction_factors
                                                * np.where(desired != 0, reference, 0.))
+            reference_effort = self._friction_efforts + self._dynamic_efforts
+            if self._reference_limits is not None:
+                reference_effort = np.clip(reference_effort, -self._reference_limits, self._reference_limits)
             for index in range(count):
                 if index:
                     states = self._p.getJointStates(self._body, self._movable, physicsClientId=self._client)
@@ -273,7 +251,7 @@ class SimulationBackend:
                 error = servo_target - arm_q
                 arm_torque = (self._effective_kp * error
                               + self._effective_kd * (self._target_velocity - arm_dq)
-                              + self._gravity_efforts + self._friction_efforts)
+                              + self._gravity_efforts + reference_effort)
                 self._efforts = np.clip(arm_torque, -self.model.effort, self.model.effort)
                 # Joint-wise calibrated gravity scales cannot be represented by
                 # a unique rigid-body mass model. Add their difference as an
@@ -321,13 +299,11 @@ class SimulationBackend:
                 "gravity_compensation": self._gravity_efforts.tolist(),
                 "friction_compensation": self._friction_efforts.tolist(),
                 "friction_load": self._plant_friction.tolist(),
+                "dynamic_compensation": self._dynamic_efforts.tolist(),
             },
         }
 
     def close(self):
-        if self._connected:
-            self._p.disconnect(physicsClientId=self._client)
-            self._connected = False
-        if self._temporary_urdf is not None:
-            self._temporary_urdf.cleanup()
-            self._temporary_urdf = None
+        if self._dynamics:
+            self._dynamics.close()
+        super().close()
