@@ -41,6 +41,11 @@ def reconstructed_stop_metrics(report, model, reference_q, succeeded):
         raise ValueError('Insufficient reconstructed final hold coverage')
     center, final_q = np.mean(xyz[tail], axis=0), np.mean(q[tail], axis=0)
     target = pose_matrix(report['target_pose'])
+    plan_end = report['accepted_unix']+report['motion']['duration']
+    after_plan = np.flatnonzero(stamps >= plan_end)
+    outside_mm = after_plan[np.linalg.norm(xyz[after_plan]-target[:3, 3], axis=1) > .001]
+    first_stable = outside_mm[-1]+1 if len(outside_mm) else (after_plan[0] if len(after_plan) else len(stamps))
+    settle_1mm = (max(0., float(stamps[first_stable]-plan_end)) if first_stable < len(stamps) else None)
     rotation = Rotation.from_matrix(transforms[tail, :3, :3]).mean()
     unanchored, inferred = set(), set()
     for s in (r for r, keep in zip(rows, tail) if keep):
@@ -60,6 +65,8 @@ def reconstructed_stop_metrics(report, model, reference_q, succeeded):
         endpoint_position_estimate_anchored=position_anchored,
         final_position_mm=(center*1000).tolist(),
         final_position_error_mm=float(np.linalg.norm(center-target[:3, 3])*1000),
+        after_plan_1mm_position_settle_s=settle_1mm,
+        position_settle_observation='First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion.',
         final_orientation_error_deg=float(np.degrees((Rotation.from_matrix(target[:3, :3]).inv()*rotation).magnitude())),
         final_joint_positions_rad=final_q.tolist(),
         final_joint_error_rad=(final_q-reference_q).tolist(),
@@ -147,6 +154,11 @@ def analyze(folder, include_failed=False):
         motor_rms = float(np.sqrt(np.mean(np.sum((motor_tcp_velocity[moving]-expected_motor[moving])**2, axis=1))))
         motor_fit.append((motor_rms, float(candidate_delay)))
     motor_rms, motor_delay = min(motor_fit)
+    motor_expected = np.array([np.interp(t-motor_delay, reference['times'], reference_velocity[:, j],
+                                         left=0, right=0) for j in range(3)]).T
+    middle = (t > motor_delay+.2*duration) & (t < motor_delay+.8*duration)
+    forward_ratio = (np.sum(motor_tcp_velocity[middle]*motor_expected[middle], axis=1)
+                     / np.maximum(np.sum(motor_expected[middle]**2, axis=1), 1e-12))
     result = dict(
         measurement='CAN output encoders + configured FK; no external spatial calibration',
         completed_successfully=succeeded, failure=report['failure'],
@@ -157,6 +169,8 @@ def analyze(folder, include_failed=False):
         fitted_delay_s=float(delay), velocity_vector_nrmse=rms/peak_reference,
         motor_feedback_tcp_peak_speed_m_s=float(np.max(np.linalg.norm(motor_tcp_velocity[moving], axis=1))),
         motor_feedback_velocity_nrmse=motor_rms/peak_reference, motor_feedback_fitted_delay_s=motor_delay,
+        middle_low_speed_fraction=(float(np.mean(forward_ratio < .15)) if len(forward_ratio) else None),
+        middle_min_forward_speed_ratio=(float(np.min(forward_ratio)) if len(forward_ratio) else None),
         path_error_rms_mm=float(np.sqrt(np.mean(path_error**2))*1000),
         path_error_max_mm=float(np.max(path_error)*1000),
         final_position_mm=(terminal_xyz*1000).tolist(), target_position_mm=(target[:3, 3]*1000).tolist(),

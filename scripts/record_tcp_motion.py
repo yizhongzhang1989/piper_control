@@ -4,7 +4,7 @@
 This command moves the arm. Confirm the chosen local path is clear before running.
 Joint travel defaults to a 0.4 rad envelope; that is not a collision check.
 """
-import argparse,collections,datetime,json,math,socket,struct,threading,time
+import argparse,collections,datetime,fcntl,json,math,os,socket,struct,threading,time
 from pathlib import Path
 from zoneinfo import ZoneInfo
 import cv2,numpy as np
@@ -13,6 +13,7 @@ from piper_control.model import RobotModel
 from piper_control.planning import Planner,matrix_pose,pose_matrix
 parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--url',default='http://127.0.0.1:8090');parser.add_argument('--camera',default='/dev/video0');parser.add_argument('--camera-focus',type=float);parser.add_argument('--camera-resolution',type=int,nargs=2,default=[1280,720],metavar=('WIDTH','HEIGHT'));parser.add_argument('--camera-roi',type=int,nargs=4,metavar=('X','Y','WIDTH','HEIGHT'),help='record this full-resolution region instead of resizing to 960x540');parser.add_argument('--case',choices=['line_x','line_y','line_z','line_xy','line_xz','arc_xz','arc_xy','arc_yz','line_path','arc_path','return',*[f'joint{i}' for i in range(1,7)]],required=True);parser.add_argument('--distance',type=float,default=.03);parser.add_argument('--speed',type=float,default=.02);parser.add_argument('--out',required=True);parser.add_argument('--return-pose')
 parser.add_argument('--path-file',help='line_path/arc_path: JSON with target_pose and, for arc_path, via')
+parser.add_argument('--fixed-camera-framerate',action='store_true',help='disable V4L2 automatic frame-rate reduction during exposure adjustment')
 parser.add_argument('--angular-speed',type=float,default=.3,help='Cartesian angular speed limit, rad/s')
 parser.add_argument('--post-motion-seconds',type=float,default=5.,help='record 2..30 seconds after the terminal motion result')
 parser.add_argument('--max-observed-joint-speed',type=float,default=.3,help='stop the trial if any measured joint speed exceeds this rad/s envelope')
@@ -69,6 +70,18 @@ def camera():
  cap=cv2.VideoCapture(a.camera,cv2.CAP_V4L2);writer=None
  try:
   if not cap.isOpened():raise RuntimeError('camera unavailable')
+  if a.fixed_camera_framerate:
+   fd=os.open(a.camera,os.O_RDWR)
+   try:
+    # V4L2_CID_EXPOSURE_AUTO_PRIORITY; keep automatic exposure, but retain FPS.
+    cid=0x009a0903;control=bytearray(struct.pack('Ii',cid,0))
+    fcntl.ioctl(fd,0xc008561b,control,True)
+    camera_controls['exposure_auto_priority_before']=struct.unpack('Ii',control)[1]
+    fcntl.ioctl(fd,0xc008561c,struct.pack('Ii',cid,0))
+    fcntl.ioctl(fd,0xc008561b,control,True)
+    camera_controls['exposure_auto_priority']=struct.unpack('Ii',control)[1]
+    if camera_controls['exposure_auto_priority']!=0:raise RuntimeError('camera did not retain fixed frame rate')
+   finally:os.close(fd)
   cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc(*'MJPG'));cap.set(cv2.CAP_PROP_FRAME_WIDTH,a.camera_resolution[0]);cap.set(cv2.CAP_PROP_FRAME_HEIGHT,a.camera_resolution[1]);cap.set(cv2.CAP_PROP_FPS,60);cap.set(cv2.CAP_PROP_BUFFERSIZE,2)
   if a.camera_focus is not None:
    if not cap.set(cv2.CAP_PROP_AUTOFOCUS,0) or not cap.set(cv2.CAP_PROP_FOCUS,a.camera_focus):raise RuntimeError('could not set fixed camera focus')

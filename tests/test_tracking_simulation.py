@@ -17,6 +17,8 @@ def test_tracking_profile_movel_movec_and_stationary_damping():
                             reference_friction_scale=tracking['friction_scale'],
                             reference_friction_factors=tracking.get('friction_factors'),
                             moving_kd=tracking['moving_kd'], gain_ramp_rate=tracking['gain_ramp_rate'],
+                            dynamics=tracking.get('dynamics'),
+                            reference_torque_limits=tracking.get('torque_limits', [4, 4, 4, .8, .5, .5]),
                             position_integral=tracking.get('position_integral'), **profile)
     try:
         sim.enable()

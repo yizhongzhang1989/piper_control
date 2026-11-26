@@ -308,7 +308,7 @@ def make_feedforward(settings):
     pytest.importorskip('piper_x_driver._core')
     config_path = Path('vendor/Piper_workspace/config/arms/arm_2.yaml')
     return ReferenceFeedforward(yaml.safe_load(config_path.read_text()), config_path,
-                                {k:v for k, v in settings.items() if k not in ('moving_kd', 'gain_ramp_rate', 'position_integral')})
+                                {k:v for k, v in settings.items() if k not in ('moving_kd', 'gain_ramp_rate', 'position_integral', 'coordinate_mapping', 'feedback_zero_band')})
 
 
 def test_reference_feedforward_is_zero_at_rest_and_bounded_at_high_speed():
@@ -391,8 +391,11 @@ def test_candidate_profile_loads_all_bounded_harmonics():
     from piper_control.__main__ import load_control_profile
     profile = load_control_profile('piper_control/assets/tcp_tracking.yaml')
     ff = make_feedforward(profile['tracking'])
-    assert {i for i, _ in ff.harmonics} == {0, 2}
-    assert profile['gravity_scale'] == .89
+    try:
+        assert {i for i, _ in ff.harmonics} == {0, 2}
+        assert profile['gravity_scale'] == .89
+    finally:
+        ff.close()
 
 
 def test_motion_damping_ramps_and_shutdown_restores_hold_gain(tmp_path):

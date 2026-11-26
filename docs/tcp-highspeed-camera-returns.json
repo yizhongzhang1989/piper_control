@@ -1,0 +1,247 @@
+{
+  "measurement": "Rigid tool image displacement after fixed background registration",
+  "units": "pixels normalized to full frame width 960; no millimetre calibration",
+  "tool_region": [
+    821.0,
+    246.0,
+    866.0,
+    284.0
+  ],
+  "background_regions": [
+    [
+      505.0,
+      420.0,
+      567.0,
+      500.0
+    ],
+    [
+      690.0,
+      445.0,
+      790.0,
+      515.0
+    ]
+  ],
+  "maximum_pairwise_displacement_px": 1.0314333388788055,
+  "records": [
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/01-arc-return",
+      "displacement_px": [
+        0.0,
+        0.0
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/01-line-return",
+      "displacement_px": [
+        -0.31219482421875,
+        0.701446533203125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/02-arc-return",
+      "displacement_px": [
+        -0.11981201171875,
+        0.2247314453125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/02-line-return",
+      "displacement_px": [
+        -0.01171875,
+        0.0684814453125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/03-arc-return",
+      "displacement_px": [
+        0.06915283203125,
+        -0.04986572265625
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/03-line-return",
+      "displacement_px": [
+        -0.09698486328125,
+        0.613677978515625
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/04-arc-return",
+      "displacement_px": [
+        0.12176513671875,
+        -0.2342529296875
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/04-line-return",
+      "displacement_px": [
+        -0.14337158203125,
+        0.11065673828125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/05-arc-return",
+      "displacement_px": [
+        0.0015869140625,
+        0.174072265625
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/05-line-return",
+      "displacement_px": [
+        -0.03057861328125,
+        0.172332763671875
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/06-arc-return",
+      "displacement_px": [
+        -0.2108154296875,
+        0.25030517578125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/06-line-return",
+      "displacement_px": [
+        0.08294677734375,
+        -0.00048828125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/07-arc-return",
+      "displacement_px": [
+        0.115966796875,
+        0.1810302734375
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/07-line-return",
+      "displacement_px": [
+        0.11798095703125,
+        0.15826416015625
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/08-arc-return",
+      "displacement_px": [
+        -0.00714111328125,
+        0.1903076171875
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/08-line-return",
+      "displacement_px": [
+        -0.03411865234375,
+        0.182159423828125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/09-arc-return",
+      "displacement_px": [
+        0.09356689453125,
+        0.10528564453125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/09-line-return",
+      "displacement_px": [
+        0.06109619140625,
+        0.01776123046875
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/10-arc-return",
+      "displacement_px": [
+        -0.05078125,
+        0.22113037109375
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/10-line-return",
+      "displacement_px": [
+        -0.0574951171875,
+        0.131866455078125
+      ],
+      "tool_features": 13,
+      "background_inliers": 75,
+      "motion_status": "succeeded",
+      "failure": null
+    }
+  ]
+}

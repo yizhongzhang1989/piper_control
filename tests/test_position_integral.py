@@ -88,3 +88,44 @@ def test_restart_preserves_integral_and_mechanical_coordinates(tmp_path):
         assert second.raw.sent[-1][0] == pytest.approx(held)
     finally:
         second.close()
+
+
+def test_motor_motion_reduces_windup_without_hiding_unresolved_output_error():
+    integral = PositionIntegral(gains=[2.]*6, deadband=.0002, max_velocity=.02,
+                                motor_lead_limit=.003)
+    integral.advance([.001]*6, [0.]*6, .005, [0.]*6, [0.]*6)
+    before = integral.bias
+    integral.advance([.001]*6, [0.]*6, .005, [0.]*6, [.001]*6)
+    assert integral.bias == before  # Motor already reached the target.
+    assert .0009 < integral.motor_lead[0] < .001
+    # Arrival of the new output value must not double-count motor motion.
+    integral.advance([.001]*6, [.001]*6, .005, [0.]*6, [.001]*6)
+    assert integral.bias == before
+    assert integral.motor_lead == (0.,)*6
+    integral.advance([.001]*6, [.001]*6, .005, [0.]*6, [.02]*6)
+    assert integral.motor_lead == pytest.approx([.003]*6)
+    # A new fast move cannot retain a stale low-speed anchor.
+    integral.advance([1.]*6, [.001]*6, .005, [.5]*6, [1.]*6)
+    assert integral.motor_lead == (0.,)*6
+    integral.advance([1.]*6, [1.]*6, .005, [0.]*6, [1.]*6)
+    assert integral.motor_lead == (0.,)*6
+    integral.advance([1.001]*6, [1.]*6, .005, [0.]*6, [1.001]*6)
+    before = integral.bias
+    for _ in range(1000):
+        integral.advance([1.001]*6, [1.]*6, .005, [0.]*6, [1.001]*6)
+    assert abs(integral.motor_lead[0]) < 1e-7
+    assert integral.bias[0]-before[0] > .006
+
+
+@pytest.mark.parametrize('limit', [-.001, .006, float('nan'), float('inf')])
+def test_motor_lead_requires_bounded_configuration(limit):
+    with pytest.raises(ValueError):
+        PositionIntegral(motor_lead_limit=limit)
+
+
+def test_motor_lead_requires_valid_feedback_without_changing_bias():
+    integral = PositionIntegral(motor_lead_limit=.003)
+    for motor in (None, [float('nan')]*6):
+        with pytest.raises(ValueError):
+            integral.advance([0.]*6, [0.]*6, .005, motor=motor)
+    assert integral.bias == (0.,)*6

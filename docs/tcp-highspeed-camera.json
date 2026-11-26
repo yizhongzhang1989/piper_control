@@ -1,0 +1,26 @@
+{
+  "sources": [
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/01-line-out",
+      "camera_fps": 60.024528156444,
+      "duration_s": 0.5399260733658832
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/01-line-return",
+      "camera_fps": 59.926288322567544,
+      "duration_s": 0.5399260733658913
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/01-arc-out",
+      "camera_fps": 59.89613570757238,
+      "duration_s": 0.5540571011545379
+    },
+    {
+      "folder": ".runtime/tcp-smooth/gated-wrist001-highspeed/01-arc-return",
+      "camera_fps": 59.99863513581106,
+      "duration_s": 0.5540571011546336
+    }
+  ],
+  "playback": "Approximately real time, 30 frames/s selected from host camera timestamps; excludes most terminal settling wait. Peak speed is CAN motor feedback + FK, not camera calibration.",
+  "frames": 164
+}

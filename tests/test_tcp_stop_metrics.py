@@ -15,6 +15,7 @@ def record(axis, anchored):
                  extra={'feedback_reconstruction': dict(inferred=inferred, anchored=anchors)})
             for i in range(80)]
     return model, q, dict(samples=rows, motion_finished_unix=1000.5,
+                          accepted_unix=999.9, motion={'duration': .3},
                           target_pose=pose_from_matrix(model.forward(q)))
 
 
@@ -53,3 +54,12 @@ def test_motion_between_completion_and_client_poll_is_included():
     assert result['post_success_max_distance_from_final_mm'] > .5
     del report['result']
     assert reconstructed_stop_metrics(report, model, q, True)['post_success_max_distance_from_final_mm'] < 1e-8
+
+
+def test_position_settle_time_includes_a_late_excursion_and_never_assumes_success():
+    model, q, report = record(4, True)
+    report['samples'][52]['positions'] = (q+[.01, 0, 0, 0, 0, 0]).tolist()
+    result = reconstructed_stop_metrics(report, model, q, True)
+    assert result['after_plan_1mm_position_settle_s'] == pytest.approx(1.125)
+    report['samples'][-1]['positions'] = report['samples'][52]['positions']
+    assert reconstructed_stop_metrics(report, model, q, False)['after_plan_1mm_position_settle_s'] is None
