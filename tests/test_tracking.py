@@ -100,6 +100,39 @@ def test_stationary_encoder_changes_cannot_move_a_held_actuator_target(tmp_path)
         b.close()
 
 
+def test_aligned_mapping_tracks_fast_motion_but_freezes_at_rest(tmp_path):
+    receiver = Receiver()
+    receiver.sample_aligned = lambda: receiver.aligned
+    receiver.aligned = receiver.value
+    b = TrackingBackend(Raw(), {'coordinate_mapping': {'time_aligned': True, 'rate': .1, 'cutoff_hz': 5}},
+                        receiver=receiver, feedforward=Feedforward(), state_path=tmp_path/'aligned.json')
+    try:
+        b._freeze_until = 0
+        old = b.mapper.offset
+        receiver.value = EncoderSample(tuple(m+.03 for m in MOTOR), Q, (.8,)*6, .001)
+        receiver.aligned = EncoderSample(tuple(m+.005 for m in MOTOR), Q, (.8,)*6, .01)
+        b.command(Q, [.8, 4e-6, 0, 0, 0, 0])
+        b.step(.005)
+        assert b.mapper.offset[0] == pytest.approx(old[0]+.0005)
+        assert b.mapper.offset[1:] == old[1:]
+        b.command(Q)
+        b.set_tracking_active(False)
+        held = b.raw.sent[-1]
+        saved = b.mapper.offset
+        for _ in range(100):
+            b.step(.005)
+            b.command(Q)
+        assert b.mapper.offset == saved
+        assert b.raw.sent[-1] == held
+        b.command(Q, [.8, 0, 0, 0, 0, 0])
+        receiver.aligned = EncoderSample(MOTOR, Q, (0.,)*6, .2)
+        with pytest.raises(RuntimeError, match='Fresh'):
+            b.step(.005)
+        assert b.mapper.offset == saved
+    finally:
+        b.close()
+
+
 @pytest.mark.parametrize('ending', ['succeeded', 'aborted', 'stop', 'watchdog'])
 def test_terminal_command_freezes_residual_integral_until_next_motion(tmp_path, ending):
     from piper_control.controller import RobotController

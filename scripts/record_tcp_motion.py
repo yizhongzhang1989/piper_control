@@ -10,12 +10,18 @@ from zoneinfo import ZoneInfo
 import cv2,numpy as np
 from piper_control.client import RobotClient
 from piper_control.model import RobotModel
-from piper_control.planning import Planner,matrix_pose
-parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--url',default='http://127.0.0.1:8090');parser.add_argument('--camera',default='/dev/video0');parser.add_argument('--camera-focus',type=float);parser.add_argument('--camera-resolution',type=int,nargs=2,default=[1280,720],metavar=('WIDTH','HEIGHT'));parser.add_argument('--camera-roi',type=int,nargs=4,metavar=('X','Y','WIDTH','HEIGHT'),help='record this full-resolution region instead of resizing to 960x540');parser.add_argument('--case',choices=['line_x','line_y','line_z','line_xy','line_xz','arc_xz','arc_xy','arc_yz','return','joint2','joint3','joint4'],required=True);parser.add_argument('--distance',type=float,default=.03);parser.add_argument('--speed',type=float,default=.02);parser.add_argument('--out',required=True);parser.add_argument('--return-pose')
+from piper_control.planning import Planner,matrix_pose,pose_matrix
+parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--url',default='http://127.0.0.1:8090');parser.add_argument('--camera',default='/dev/video0');parser.add_argument('--camera-focus',type=float);parser.add_argument('--camera-resolution',type=int,nargs=2,default=[1280,720],metavar=('WIDTH','HEIGHT'));parser.add_argument('--camera-roi',type=int,nargs=4,metavar=('X','Y','WIDTH','HEIGHT'),help='record this full-resolution region instead of resizing to 960x540');parser.add_argument('--case',choices=['line_x','line_y','line_z','line_xy','line_xz','arc_xz','arc_xy','arc_yz','line_path','arc_path','return','joint2','joint3','joint4'],required=True);parser.add_argument('--distance',type=float,default=.03);parser.add_argument('--speed',type=float,default=.02);parser.add_argument('--out',required=True);parser.add_argument('--return-pose')
+parser.add_argument('--path-file',help='line_path/arc_path: JSON with target_pose and, for arc_path, via')
+parser.add_argument('--angular-speed',type=float,default=.3,help='Cartesian angular speed limit, rad/s')
 parser.add_argument('--post-motion-seconds',type=float,default=5.,help='record 2..30 seconds after the terminal motion result')
 parser.add_argument('--max-observed-joint-speed',type=float,default=.3,help='stop the trial if any measured joint speed exceeds this rad/s envelope')
 parser.add_argument('--max-joint-travel',type=float,default=.4,help='maximum planned joint excursion in rad; measured travel has an additional 0.05 rad margin')
 a=parser.parse_args()
+if bool(a.path_file) != (a.case in ('line_path','arc_path')):
+ parser.error('--path-file is required exclusively for line_path/arc_path')
+if not math.isfinite(a.angular_speed) or a.angular_speed <= 0:
+ parser.error('--angular-speed must be positive and finite')
 if not math.isfinite(a.post_motion_seconds) or not 2 <= a.post_motion_seconds <= 30:
  parser.error('--post-motion-seconds must be within 2..30')
 if not math.isfinite(a.max_observed_joint_speed) or a.max_observed_joint_speed <= 0:
@@ -26,7 +32,11 @@ out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
 r=RobotClient(a.url,timeout=30);before=r.state();info=r.info();assert info['backend']=='hardware';assert before['command_ready'] and before['mode']=='idle' and not before['errors']
 m=RobotModel(tcp_offset=info['tcp_offset'],tcp_orientation=info['tcp_orientation'],end_effector=info['end_effector'],angle_offsets=info['angle_offsets']);q=np.array(before['target_positions']);T=m.forward(q);E=T.copy();V=T.copy();dist=a.distance;planr=Planner(m,max(x['velocity'] for x in info['joint_limits']))
 planr.velocity=np.array([x['velocity'] for x in info['joint_limits']])
-if a.case=='return':E=m.forward(json.loads(Path(a.return_pose).read_text())['target_positions'])
+if a.case in ('line_path','arc_path'):
+ if not a.path_file:parser.error('line_path/arc_path requires --path-file')
+ path=json.loads(Path(a.path_file).read_text());E=pose_matrix(path['target_pose'])
+ if a.case=='arc_path':V=pose_matrix(path['via'])
+elif a.case=='return':E=m.forward(json.loads(Path(a.return_pose).read_text())['target_positions'])
 elif a.case.startswith('joint'):
  end_q=q.copy();end_q[int(a.case[-1])-1]+=dist;E=m.forward(end_q)
 elif a.case.startswith('line_'):
@@ -36,7 +46,7 @@ else:
  axes=a.case.removeprefix('arc_');first,second=['xyz'.index(axis) for axis in axes]
  E[first,3]+=dist;V[first,3]+=dist/2;V[second,3]+=dist/2
 via=matrix_pose(V) if a.case.startswith('arc_') else None
-plan=planr.movej(q,end_q,duration=1.875*abs(dist)/a.speed) if a.case.startswith('joint') else planr.cartesian(q,matrix_pose(E),via,speed=a.speed)
+plan=planr.movej(q,end_q,duration=1.875*abs(dist)/a.speed) if a.case.startswith('joint') else planr.cartesian(q,matrix_pose(E),via,speed=a.speed,angular_speed=a.angular_speed)
 # Review larger excursions explicitly; no mode/enable actions.
 pts=np.array([plan.sample(t)[0] for t in np.linspace(0,plan.duration,200)]);assert np.max(abs(pts-q))<a.max_joint_travel
 plan_ts=np.r_[np.arange(0,plan.duration,.0025),plan.duration];qq=np.array([plan.sample(t)[0] for t in plan_ts]);vv=np.array([plan.sample(t)[1] for t in plan_ts]);np.savez_compressed(out/'reference.npz',times=plan_ts,q=qq,dq=vv)
@@ -89,10 +99,11 @@ for th in threads:th.start()
 report={'timestamp':datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),'case':a.case,'requested_speed':a.speed,'target_pose':matrix_pose(E),'via':via,'before':before,'info':info,'samples':[],'camera_timing_note':'Host read timestamps; no calibrated exposure/CAN alignment','capture_transmitted_frames':0,'post_motion_seconds':a.post_motion_seconds};failure=None;motion=None
 report['max_observed_joint_speed_rad_s']=a.max_observed_joint_speed
 report['max_joint_travel_rad']=a.max_joint_travel
+report['requested_angular_speed_rad_s']=a.angular_speed
 try:
  if not camera_ready.wait(5) or camera_errors:raise RuntimeError(str(camera_errors))
  time.sleep(.5);report['submitted_unix']=time.time()
- motion=r.movej(end_q.tolist(),duration=plan.duration) if a.case.startswith('joint') else (r.movec(via,matrix_pose(E),speed=a.speed) if via else r.movel(matrix_pose(E),speed=a.speed));report['motion']=motion;report['accepted_unix']=time.time();deadline=time.monotonic()+motion['duration']+7+a.post_motion_seconds;finished=None
+ motion=r.movej(end_q.tolist(),duration=plan.duration) if a.case.startswith('joint') else (r.movec(via,matrix_pose(E),speed=a.speed,angular_speed=a.angular_speed) if via else r.movel(matrix_pose(E),speed=a.speed,angular_speed=a.angular_speed));report['motion']=motion;report['accepted_unix']=time.time();deadline=time.monotonic()+motion['duration']+7+a.post_motion_seconds;finished=None
  if abs(motion['duration']-plan.duration)>1e-5:raise RuntimeError('server duration differs from the recorded reference')
  while time.monotonic()<deadline:
   st=r.state();report['samples'].append(st)

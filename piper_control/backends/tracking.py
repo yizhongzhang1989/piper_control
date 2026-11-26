@@ -123,6 +123,15 @@ class TrackingBackend:
         self._holding = False
         self._tracking_active = True
         settings = dict(settings)
+        mapping = dict(settings.pop('coordinate_mapping', {}))
+        if set(mapping)-{'time_aligned', 'rate', 'cutoff_hz'}:
+            raise ValueError('Unknown coordinate mapping setting')
+        self._aligned_mapping = mapping.pop('time_aligned', False)
+        if (type(self._aligned_mapping) is not bool
+                or not .001 <= mapping.get('rate', .005) <= .2
+                or not 1 <= mapping.get('cutoff_hz', 1.) <= 10):
+            raise ValueError('Invalid coordinate mapping bounds')
+        self._mapping_options = mapping
         integral_settings = settings.pop('position_integral', {})
         self.integral = PositionIntegral(**integral_settings)
         self._hold_kd = _six(raw.kd)
@@ -161,14 +170,14 @@ class TrackingBackend:
                 saved = json.loads(self._path.read_text())
                 if (all(saved.get(k) == v for k, v in self._identity.items())
                         and max(abs(a-b) for a, b in zip(_six(saved['actuator_target']), initial)) < 1e-8):
-                    candidate = CoordinateMapper(saved['offset'])
+                    candidate = CoordinateMapper(saved['offset'], **self._mapping_options)
                     integral = PositionIntegral(**dict(integral_settings, bias=saved.get('tracking_bias', [0.]*6)))
                     if max(abs(a-b) for a, b in zip(integral.apply(candidate.to_motor(saved['nominal_target'])), initial)) < 1e-8:
                         offset = candidate.offset
                         self.integral = integral
             except (OSError, KeyError, ValueError, TypeError):
                 pass
-            self.mapper = CoordinateMapper(offset)
+            self.mapper = CoordinateMapper(offset, **self._mapping_options)
             enabled = raw.read()['enabled']
             corrected = tuple(q-b for q, b in zip(initial, self.integral.bias))
             self.initial_target = list(self.mapper.to_joints(corrected) if enabled else sample.joints)
@@ -215,13 +224,19 @@ class TrackingBackend:
             if self._holding:
                 return
             self._dt = min(.02, max(.00001, dt))
-            sample = self.receiver.sample()
+            # IK spline roundoff can produce a few microradians/s on a nominally
+            # stationary axis. Do not let it unlock the faster aligned mapper.
+            threshold = 1e-4 if self._aligned_mapping else 1e-6
+            active = tuple(abs(v) > threshold for v in self._last_velocity)
+            warming = time.monotonic() < self._freeze_until
+            align = self._aligned_mapping and any(active) and not warming
+            sample = self.receiver.sample_aligned() if align else self.receiver.sample()
             sample.validate()
-            # Feedback groups are asynchronous. At higher speeds their timing
-            # skew must not be learned as a changing mechanical offset.
-            active = tuple(abs(v) > 1e-6 for v in self._last_velocity)
-            self._observer_frozen = (time.monotonic() < self._freeze_until
-                                    or max(map(abs, sample.velocity)) > .2 or not any(active))
+            # The legacy estimate freezes at high speed. Aligned histories can
+            # follow coordinate changes without learning packet arrival skew.
+            self._observer_frozen = (warming
+                                    or (not self._aligned_mapping and max(map(abs, sample.velocity)) > .2)
+                                    or not any(active))
             self._mapping_active = (False,)*6 if self._observer_frozen else active
             if not self._observer_frozen:
                 # Following a stationary motor's quantized motion would move
@@ -284,6 +299,7 @@ class TrackingBackend:
             actuator_target=list(self._actuator), observer_frozen=self._observer_frozen,
             checkpoint_error=self._checkpoint_error, handoff_in_progress=self._holding,
             observer_active_joints=list(self._mapping_active),
+            time_aligned=self._aligned_mapping, rate=self.mapper.rate, cutoff_hz=self.mapper.cutoff_hz,
         )
         state['extra']['tracking_feedforward'] = self.feedforward.last.copy()
         state['extra']['tracking_damping'] = dict(hold=self._hold_kd, moving=self._moving_kd,
@@ -300,7 +316,7 @@ class TrackingBackend:
         if enabled:
             sample = self.receiver.sample()
             sample.validate()
-            self.mapper = CoordinateMapper(tuple(m-q for m, q in zip(sample.motor, sample.joints)))
+            self.mapper = CoordinateMapper(tuple(m-q for m, q in zip(sample.motor, sample.joints)), **self._mapping_options)
             self.integral.bias = (0.,)*6
             self._freeze_until = time.monotonic()+6.
             # The controller chose this same public joint snapshot before enable.

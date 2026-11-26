@@ -26,6 +26,43 @@ def test_protocol_coordinates_have_different_units_and_signed_fields():
     assert sample.joints == pytest.approx((math.radians(-57),)*6)
 
 
+def test_time_alignment_removes_fast_motion_arrival_skew():
+    cache = EncoderCache()
+    velocity, offset = 3., .012
+    for tick in range(10):
+        t = tick*.01
+        for j in range(6):
+            cache.update(0x251+j, struct.pack('>hhi', 3000, 0, round((velocity*t+offset)*1000)), t)
+    for tick in range(20):
+        t = tick*.005+.003
+        angle = round(velocity*t*180000/math.pi)
+        for j in range(3):
+            cache.update(0x2a5+j, struct.pack('>ii', angle, angle), t)
+    raw = cache.sample(.1)
+    aligned = cache.aligned_sample(.1)
+    aligned.validate()
+    assert max(abs(m-q-offset) for m, q in zip(raw.motor, raw.joints)) > .02
+    assert [m-q for m, q in zip(aligned.motor, aligned.joints)] == pytest.approx([offset]*6, abs=1e-5)
+    assert aligned.age == pytest.approx(.01)
+    assert aligned.motor_age == pytest.approx([.01]*6)
+
+
+def test_alignment_refuses_extrapolation_gaps_and_stale_history():
+    cache = fresh_cache()
+    assert not cache.update(0x251, struct.pack('>hhi', 0, 0, 500), 9.)
+    assert cache.sample(10.01).motor[0] == -1.
+    cache.history[0].clear()
+    cache.history[0].append((10.01, -1., 0.))
+    with pytest.raises(RuntimeError, match='cover common time'):
+        cache.aligned_sample(10.02).validate()
+    cache.history[0].clear()
+    cache.history[0].extend([(9.9, -1., 0.), (10.01, -1., 0.)])
+    with pytest.raises(RuntimeError, match='interpolation gap'):
+        cache.aligned_sample(10.02).validate()
+    with pytest.raises(RuntimeError, match='Fresh'):
+        fresh_cache().aligned_sample(10.2).validate()
+
+
 def test_missing_or_stale_axis_never_becomes_valid_from_other_frames():
     cache = EncoderCache()
     for i in range(6):

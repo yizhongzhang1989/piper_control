@@ -4,6 +4,7 @@ The MIT servo and the public joint feedback use distinct position signals. Keep
 their conversion at the hardware boundary; planners always use output joints.
 """
 from dataclasses import dataclass
+from collections import deque
 import math
 import socket
 import struct
@@ -55,27 +56,72 @@ class EncoderCache:
         self.joints = [None] * 6
         self.velocity = [None] * 6
         self.stamps = [None] * 9
+        self.history = [deque(maxlen=32) for _ in self.stamps]
 
     def update(self, can_id, payload, stamp):
         # Reject extended, error and RTR frames even if their low ID bits match.
         if (can_id not in MOTOR_IDS + JOINT_IDS or len(payload) != 8
                 or not math.isfinite(stamp)):
             return False
+        index = can_id-MOTOR_IDS[0] if can_id in MOTOR_IDS else 6+can_id-JOINT_IDS[0]
+        if self.stamps[index] is not None and stamp <= self.stamps[index]:
+            return False
         if can_id in MOTOR_IDS:
             i = can_id - MOTOR_IDS[0]
             velocity, _current, position = struct.unpack(">hhi", payload)
             self.motor[i], self.velocity[i] = position * .001, velocity * .001
             self.stamps[i] = stamp
+            self.history[i].append((stamp, self.motor[i], self.velocity[i]))
         else:
             i = can_id - JOINT_IDS[0]
             self.joints[2*i:2*i+2] = [math.radians(v * .001) for v in struct.unpack(">ii", payload)]
             self.stamps[6+i] = stamp
+            self.history[6+i].append((stamp, *self.joints[2*i:2*i+2]))
         return True
 
     def sample(self, now, error=None):
         age = math.inf if any(t is None for t in self.stamps) else now - min(self.stamps)
         motor_age = tuple(math.inf if stamp is None else now-stamp for stamp in self.stamps[:6])
         return EncoderSample(tuple(self.motor), tuple(self.joints), tuple(self.velocity), age, error, motor_age)
+
+    def aligned_sample(self, now, error=None):
+        """Interpolate all nine groups at one past RX time; never extrapolate.
+
+        At 3 rad/s, a 9 ms arrival skew alone creates a false 0.027 rad
+        encoder offset. This removes that skew before estimating coordinates.
+        RX alignment cannot remove unknown motor-internal sampling delays.
+        """
+        try:
+            if any(t is None for t in self.stamps):
+                raise ValueError('incomplete encoder history')
+            stamp = min(self.stamps)
+            values = []
+            for history in self.history:
+                if not history or history[0][0] > stamp:
+                    raise ValueError('encoder history does not cover common time')
+                left = history[0]
+                value = None
+                for right in history:
+                    if right[0] == stamp:
+                        value = right[1:]
+                        break
+                    if right[0] > stamp:
+                        gap = right[0]-left[0]
+                        if gap > .05:
+                            raise ValueError('encoder interpolation gap exceeds 50 ms')
+                        u = (stamp-left[0])/gap
+                        value = tuple(a+u*(b-a) for a, b in zip(left[1:], right[1:]))
+                        break
+                    left = right
+                if value is None:
+                    raise ValueError('encoder interpolation would extrapolate')
+                values.append(value)
+            age = now-stamp
+            return EncoderSample(tuple(v[0] for v in values[:6]),
+                                 tuple(q for v in values[6:] for q in v),
+                                 tuple(v[1] for v in values[:6]), age, error, (age,)*6)
+        except ValueError as exc:
+            return self.sample(now, error or str(exc))
 
 
 class MotorFeedbackReceiver:
@@ -129,6 +175,10 @@ class MotorFeedbackReceiver:
     def sample(self):
         with self._lock:
             return self._cache.sample(time.monotonic(), self._error)
+
+    def sample_aligned(self):
+        with self._lock:
+            return self._cache.aligned_sample(time.monotonic(), self._error)
 
     def close(self):
         self._done.set()
