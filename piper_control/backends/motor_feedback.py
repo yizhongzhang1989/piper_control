@@ -3,7 +3,7 @@
 The MIT servo and the public joint feedback use distinct position signals. Keep
 their conversion at the hardware boundary; planners always use output joints.
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from collections import deque
 import math
 import socket
@@ -191,6 +191,66 @@ def _six(values):
     if len(values) != 6 or not all(math.isfinite(v) for v in values):
         raise ValueError("Expected six finite joint values")
     return values
+
+
+class ZeroBandReconstructor:
+    """Bounded motor-based position estimate inside a firmware zero-report band.
+
+    PiPER firmware can report exactly zero over +/-0.3 degrees. An interpolated
+    transition into that band is equally unsuitable for learning encoder offsets.
+    Use the last valid motor/output conversion, never update it from these values,
+    and expose the estimate as such. This cannot replace external metrology.
+    """
+
+    def __init__(self, band):
+        self.band = float(band)
+        if not math.isfinite(self.band) or not 0 < self.band <= .01:
+            raise ValueError('Firmware zero band must be within (0, 0.01] rad')
+        self.offset = (0.,)*6
+        self.anchored = (False,)*6
+
+    def observe(self, sample):
+        """Anchor only on an output reading outside the censored interval."""
+        sample.validate()
+        offsets, anchored = list(self.offset), list(self.anchored)
+        for i, hidden in enumerate(self.affected(sample)):
+            if not hidden:
+                value = sample.motor[i]-sample.joints[i]
+                if abs(value) > .05:
+                    raise RuntimeError('Zero-band anchor exceeds encoder conversion bound')
+                offsets[i], anchored[i] = value, True
+        self.offset, self.anchored = tuple(offsets), tuple(anchored)
+
+    def restore(self, saved):
+        offsets = _six(saved['offset'])
+        anchored = tuple(saved['anchored'])
+        if (saved['band'] != self.band or max(map(abs, offsets)) > .05
+                or len(anchored) != 6 or any(type(v) is not bool for v in anchored)):
+            raise ValueError('Invalid zero-band checkpoint')
+        self.offset, self.anchored = offsets, anchored
+
+    def checkpoint(self):
+        return dict(band=self.band, offset=list(self.offset), anchored=list(self.anchored))
+
+    def affected(self, sample):
+        return tuple(abs(q) < self.band for q in sample.joints)
+
+    def correct(self, sample, offset):
+        sample.validate()
+        offset = _six(offset)
+        affected = self.affected(sample)
+        values = list(sample.joints)
+        for i, infer in enumerate(affected):
+            if not infer:
+                continue
+            candidate = sample.motor[i]-(self.offset[i] if self.anchored[i] else offset[i])
+            # Accommodate motor quantization and normal asynchronous arrivals,
+            # but do not turn an arbitrary/malformed zero into a valid angle.
+            margin = .002+abs(sample.velocity[i])*.025
+            if abs(candidate) > self.band+margin:
+                raise RuntimeError(f'Zero joint feedback is inconsistent with motor feedback on joint{i+1}')
+            values[i] = max(-self.band, min(self.band, candidate))
+        return replace(sample, joints=tuple(values))
 
 
 class CoordinateMapper:

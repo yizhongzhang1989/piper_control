@@ -12,7 +12,7 @@ from pathlib import Path
 import threading
 import time
 
-from .motor_feedback import CoordinateMapper, MotorFeedbackReceiver, MotorPhaseEstimator, _six
+from .motor_feedback import CoordinateMapper, MotorFeedbackReceiver, MotorPhaseEstimator, ZeroBandReconstructor, _six
 from .position_integral import PositionIntegral
 
 
@@ -141,6 +141,8 @@ class TrackingBackend:
         self._holding = False
         self._tracking_active = True
         settings = dict(settings)
+        zero_band = float(settings.pop('feedback_zero_band', 0.))
+        self._reconstruction = None if zero_band == 0 else ZeroBandReconstructor(zero_band)
         mapping = dict(settings.pop('coordinate_mapping', {}))
         if set(mapping)-{'time_aligned', 'rate', 'cutoff_hz'}:
             raise ValueError('Unknown coordinate mapping setting')
@@ -194,9 +196,13 @@ class TrackingBackend:
                     if max(abs(a-b) for a, b in zip(integral.apply(candidate.to_motor(saved['nominal_target'])), initial)) < 1e-8:
                         offset = candidate.offset
                         self.integral = integral
+                        if self._reconstruction and 'zero_feedback' in saved:
+                            self._reconstruction.restore(saved['zero_feedback'])
             except (OSError, KeyError, ValueError, TypeError):
                 pass
             self.mapper = CoordinateMapper(offset, **self._mapping_options)
+            if self._reconstruction:
+                self._reconstruction.observe(sample)
             enabled = raw.read()['enabled']
             corrected = tuple(q-b for q, b in zip(initial, self.integral.bias))
             self.initial_target = list(self.mapper.to_joints(corrected) if enabled else sample.joints)
@@ -220,6 +226,8 @@ class TrackingBackend:
         self._pending = dict(self._identity, offset=list(self.mapper.offset),
                              tracking_bias=list(self.integral.bias),
                              nominal_target=list(self._nominal), actuator_target=list(self._actuator))
+        if self._reconstruction:
+            self._pending['zero_feedback'] = self._reconstruction.checkpoint()
 
     def _checkpoint(self):
         with self._file_lock:
@@ -252,6 +260,12 @@ class TrackingBackend:
             align = self._aligned_mapping and any(active) and not warming
             sample = self.receiver.sample_aligned() if align else self.receiver.sample()
             sample.validate()
+            if self._reconstruction:
+                if align or max(map(abs, sample.velocity)) <= .02:
+                    self._reconstruction.observe(sample)
+                inferred = self._reconstruction.affected(sample)
+                active = tuple(moving and not estimated for moving, estimated in zip(active, inferred))
+                sample = self._reconstruction.correct(sample, self.mapper.offset)
             # The legacy estimate freezes at high speed. Aligned histories can
             # follow coordinate changes without learning packet arrival skew.
             self._observer_frozen = (warming
@@ -283,12 +297,16 @@ class TrackingBackend:
             return
         sample = self.receiver.sample()
         sample.validate()
+        if self._reconstruction:
+            sample = self._reconstruction.correct(sample, self.mapper.offset)
         # Only a commanded moving axis needs its motion damping. The measured
         # velocity must not keep high damping active during a parking vibration.
         wanted = [h+(m-h)*math.tanh(abs(v)/.003)
                   for h, m, v in zip(self._hold_kd, self._moving_kd, dq)]
         self._ramp_damping(wanted, self._dt)
         state = self.raw.read()
+        if self._reconstruction:
+            state['positions'] = list(sample.joints)
         if (self._tracking_active and time.monotonic() >= self._freeze_until and state.get('command_ready', False)
                 and state.get('connected', True) and state['enabled']):
             self.integral.advance(q, sample.joints, self._dt)
@@ -307,8 +325,20 @@ class TrackingBackend:
     def read(self):
         state = self.raw.read()
         sample = self.receiver.sample()
+        raw_joints = sample.joints
         try:
             sample.validate()
+            if self._reconstruction:
+                inferred = self._reconstruction.affected(sample)
+                sample = self._reconstruction.correct(sample, self.mapper.offset)
+                state['positions'] = list(sample.joints)
+                state['extra']['feedback_reconstruction'] = dict(
+                    zero_band_rad=self._reconstruction.band, raw_positions=list(raw_joints),
+                    inferred=list(inferred), positions=list(sample.joints),
+                    anchored=list(self._reconstruction.anchored),
+                    offset=list(self._reconstruction.offset), motor_resolution_rad=.001,
+                    note='Inside firmware zero band: motor-based estimate. Unanchored axes use the saved mapping until a nonzero output is observed. Not independent output metrology.',
+                )
         except RuntimeError as exc:
             state['connected'] = False
             state.setdefault('errors', []).append(str(exc))

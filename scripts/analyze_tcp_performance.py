@@ -18,6 +18,49 @@ from piper_control.model import RobotModel
 from piper_control.planning import pose_matrix
 
 
+def reconstructed_stop_metrics(report, model, reference_q, succeeded):
+    """Use the service's marked estimates at rest, retaining raw CAN separately."""
+    rows = report['samples']
+    stamps = np.array([s['timestamp'] for s in rows])
+    if len(rows) < 10 or np.max(np.diff(stamps)) > .1 or np.any(np.diff(stamps) <= 0):
+        raise ValueError('Insufficient API samples for reconstructed stop measurements')
+    q = np.array([s['positions'] for s in rows])
+    transforms = np.array([model.forward(v) for v in q])
+    xyz = transforms[:, :3, 3]
+    tail = stamps > stamps[-1]-.5
+    post = stamps > report['motion_finished_unix']
+    if sum(tail) < 10 or sum(post) < 10:
+        raise ValueError('Insufficient reconstructed final hold coverage')
+    center, final_q = np.mean(xyz[tail], axis=0), np.mean(q[tail], axis=0)
+    target = pose_matrix(report['target_pose'])
+    rotation = Rotation.from_matrix(transforms[tail, :3, :3]).mean()
+    unanchored, inferred = set(), set()
+    for s in (r for r, keep in zip(rows, tail) if keep):
+        feedback = s['extra']['feedback_reconstruction']
+        for j, (estimate, anchor) in enumerate(zip(feedback['inferred'], feedback['anchored'])):
+            if estimate:
+                inferred.add(j)
+                if not anchor:
+                    unanchored.add(j)
+    # With an axial TCP, unanchored J6 changes orientation but not TCP position.
+    jacobian = model.jacobian(final_q)[:3]
+    position_anchored = all(np.linalg.norm(jacobian[:, j]) < 1e-6 for j in unanchored)
+    return dict(
+        endpoint_measurement='API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology',
+        endpoint_inferred_joints=[j+1 for j in sorted(inferred)],
+        endpoint_unanchored_joints=[j+1 for j in sorted(unanchored)],
+        endpoint_position_estimate_anchored=position_anchored,
+        final_position_mm=(center*1000).tolist(),
+        final_position_error_mm=float(np.linalg.norm(center-target[:3, 3])*1000),
+        final_orientation_error_deg=float(np.degrees((Rotation.from_matrix(target[:3, :3]).inv()*rotation).magnitude())),
+        final_joint_positions_rad=final_q.tolist(),
+        final_joint_error_rad=(final_q-reference_q).tolist(),
+        final_position_excursion_mm=float(np.max(np.linalg.norm(xyz[tail]-center, axis=1))*1000),
+        post_success_max_distance_from_final_mm=(float(np.max(np.linalg.norm(xyz[post]-center, axis=1))*1000) if succeeded else None),
+        post_terminal_max_distance_from_final_mm=float(np.max(np.linalg.norm(xyz[post]-center, axis=1))*1000),
+    )
+
+
 def analyze(folder, include_failed=False):
     folder = Path(folder)
     report = json.loads((folder / 'report.json').read_text())
@@ -124,6 +167,14 @@ def analyze(folder, include_failed=False):
         final_2s_current_ac_rms_a=static_current_ac_rms,
         encoder_max_gap_s=max(gaps),
     )
+    if report['after']['extra'].get('feedback_reconstruction'):
+        corrected = reconstructed_stop_metrics(report, model, reference['q'][-1], succeeded)
+        for key in corrected:
+            if key in result:
+                result['raw_output_'+key] = result[key]
+        result.update(corrected)
+        result['measurement'] = ('Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. '
+                                 'Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.')
     (folder/'performance.json').write_text(json.dumps(result, indent=2)+'\n')
     np.savez_compressed(folder/'performance.npz', t=t, q=q, xyz=xyz, velocity=velocity,
                         motor_tcp_velocity=motor_tcp_velocity, expected_velocity=expected)

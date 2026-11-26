@@ -48,6 +48,10 @@ J1–J3 的位置增益继续用于减小稳态偏差；低速位置控制保持
 `extra.friction_scale` 及 `extra.driver` 的 `applied_kp`、`applied_kd`、
 `gravity_scale_applied`、`friction_scale_applied` 可核对实际运行设置。
 
+跟踪后端还支持 `tracking.feedback_zero_band`（rad，默认关闭）。本机观察到
+约 ±0.3° 的原始关节反馈置零区间；适配层可在该区间保留电机反馈连续性，
+同时冻结无效的坐标学习并暴露原始值与估算标记，见 [诊断及限制](tcp-zero-feedback.md)。
+
 当前真机示例使用 `--max-velocity 3.141592653589793`，即服务上限 180°/s；
 J1–J5 的有效上限为 180°/s，J6 保留原 URDF 的 `3 rad/s`（约 171.9°/s）约束。
 Dashboard 按填写的运动时间规划轨迹，提高上限不会自动缩短已填写的时长。

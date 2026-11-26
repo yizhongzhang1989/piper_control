@@ -20,6 +20,8 @@ def summarize(folders, limit_mm=1.):
     for folder in folders:
         record = json.loads((Path(folder)/'report.json').read_text())
         result = analyze(folder)
+        if not result.get('endpoint_position_estimate_anchored', True):
+            raise ValueError(f'{folder}: unanchored zero-band estimate cannot establish TCP position repeatability')
         pose = record['target_pose']
         # Quaternion sign describes the same orientation; normalize that sign.
         rotation = np.asarray(pose['orientation'])
@@ -45,7 +47,7 @@ def summarize(folders, limit_mm=1.):
             limit_mm=limit_mm, enough_repetitions=len(p)>=3,
             pairwise_limit_passed=bool(span<=limit_mm) if len(p)>=3 else None,
         ))
-    return dict(measurement='Output encoders + configured FK, not external 3D metrology',
+    return dict(measurement='Joint feedback + configured FK, including explicitly marked motor-based zero-band estimates when enabled; not external 3D metrology',
                 acceptance='Maximum pairwise distance between repeated settled endpoints', groups=output)
 
 

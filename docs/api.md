@@ -27,6 +27,10 @@ TCP 固定变换由启动参数确定。默认是上游驱动原始 `link6` 坐�
 
 状态包括 `joint_names`、`positions`、`velocities`、`efforts`、`tcp_pose`、`enabled`、`connected`、`feedback_age`、`mode`、`backend`、`errors`、`target_positions` 和 `motion`。`target_positions` 是控制器当前下发的目标，反馈字段来自机器人；TCP 由反馈关节和同一运动学模型计算。真机另提供 `command_ready`：有反馈和电机使能并不等于固件已交出控制权，未就绪时拒绝新运动。原始固件模式、补偿力矩、下层驱动频率等位于 `extra`。
 
+启用可选的固件零区间处理时，`positions` 在该区间使用有界电机反馈估算。
+`extra.feedback_reconstruction` 明确报告原始值、估算轴及是否取得有效参照；
+该状态同时用于 TCP、控制器和 ROS 输出。测量范围见 [零位反馈说明](tcp-zero-feedback.md)。
+
 规划运动返回如下对象；HTTP 成功意味着任务已接受，实际完成需查询其状态：
 
 ```json
@@ -36,14 +40,14 @@ TCP 固定变换由启动参数确定。默认是上游驱动原始 `link6` 坐�
 任务状态为 `running`、`succeeded`、`cancelled` 或 `aborted`。`progress=1` 表示指令轨迹已走完，可能仍等待机械臂稳定。默认要求所有关节的终点误差不超过 0.01 rad、速度不超过 0.02 rad/s，并连续保持 0.15 s；位置或速度再次超限会重新计时。缺失或无效的速度反馈不能判定成功。轨迹结束后额外等待最多 5 s；这些参数分别由 `--goal-tolerance`、`--goal-velocity-tolerance`、`--goal-settle-time`、`--goal-timeout` 配置，并在 `/api/info` 中报告。
 
 可用 `--tcp-position-tolerance 0.001` 为 `movel`/`movec` 额外要求 TCP 位置误差不超过 1 mm。
+该检查使用控制反馈和当前 TCP 模型，与关节误差、速度及持续稳定时间同时满足才成功；
+`motion.tcp_position_error` 报告终点检查时的误差（m）。默认不启用这项附加检查，
+`movej` 和 `trajectory` 仍使用关节到位条件。此值是控制反馈误差，不代表已完成外部绝对精度标定。
 
 `--joint-goal-tolerances T1 T2 T3 T4 T5 T6` 可按 `/api/info.joint_names` 的顺序设置
 不同关节的到位容差（rad），覆盖统一的 `--goal-tolerance`；有效数组在
 `/api/info.joint_goal_tolerances` 中报告。所有关节都必须分别满足其容差，超时时报告
 具体关节及阈值。它是服务配置，不改变 ROS action 对每请求容差字段的支持范围。
-该检查使用实测关节反馈和当前 TCP 模型，与关节误差、速度及持续稳定时间同时满足才成功；
-`motion.tcp_position_error` 报告终点检查时的误差（m）。默认不启用这项附加检查，
-`movej` 和 `trajectory` 仍使用关节到位条件。此值是控制反馈误差，不代表已完成外部绝对精度标定。
 
 轨迹结束后保持最终公共目标、目标速度为零。进入位置容差后，冻结可选跟踪后端的位置积分，等待速度稳定；若位置再次超限，则允许有界修正继续收敛并重新计算稳定时间。超时报告中止，冻结并保留最后有效的底层目标。当前任务与最近 100 条已结束任务可查询，重启后不保留。实时流命令不生成规划运动 ID；此时 `motion` 可能仍显示上一条规划运动，应同时查看 `mode`。
 
