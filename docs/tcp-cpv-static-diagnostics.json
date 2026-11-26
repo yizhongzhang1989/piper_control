@@ -1,0 +1,220 @@
+{
+  "adopted": false,
+  "reason": "Native CPV static quality checks did not all pass; original parameters restored and MIT controller retained. User prioritizes faster motion and repeatable stopping; no further low-speed CPV tuning scheduled.",
+  "trials": [
+    {
+      "artifact": ".runtime/tcp-smooth/cpv-j3-mapped-probe",
+      "failure": "AssertionError('native velocity envelope')",
+      "native_mode": "cpv_joint3_mapped",
+      "power_commands_sent": 0,
+      "native_hold_max_excursion_rad": 0.003682644721707984,
+      "cpv_firmware_after": [
+        1,
+        5,
+        2,
+        0
+      ],
+      "cpv_motor_offset": [
+        -0.0006865773485685289,
+        -0.0200062593907111,
+        -0.008653502068278529,
+        -0.00010853180456682487,
+        0.0005398223686155033,
+        0.0
+      ],
+      "restore_max_excursion_rad": 2.220446049250313e-15,
+      "api_pid": 363297,
+      "camera_errors": [],
+      "camera_frames": 1957
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/cpv-all-zero-probe",
+      "failure": "AssertionError('No CPV read responses received after selecting CPV mode')",
+      "native_mode": "cpv_all_mapped",
+      "power_commands_sent": 0,
+      "native_hold_max_excursion_rad": 0.003508111796508784,
+      "cpv_firmware_after": [
+        1,
+        1,
+        2,
+        0
+      ],
+      "restore_max_excursion_rad": 1.1102230246251565e-15,
+      "api_pid": 363993,
+      "camera_errors": [],
+      "camera_frames": 1740
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/cpv-j4-ki40-zero-probe",
+      "failure": "AssertionError('CPV static quality limits')",
+      "native_mode": "cpv_all_mapped_j4_ki40",
+      "power_commands_sent": 0,
+      "native_hold_max_excursion_rad": 0.0036302848441480684,
+      "cpv_firmware_after": [
+        1,
+        5,
+        2,
+        0
+      ],
+      "parameter_changes": [
+        {
+          "joint": 4,
+          "parameter": "ki",
+          "raw": 4000,
+          "readback": 4000,
+          "timestamp": 1795688632.6479053
+        },
+        {
+          "joint": 4,
+          "parameter": "ki",
+          "raw": 8000,
+          "readback": 8000,
+          "timestamp": 1795688634.7999225
+        }
+      ],
+      "cpv_motor_offset": [
+        -0.0006865773485685289,
+        -0.020140723404507455,
+        -0.007877198858105006,
+        -0.00010853180456682487,
+        0.0005398223686155033,
+        0.0
+      ],
+      "cpv_static_velocity_rms": [
+        0.0,
+        0.0,
+        0.0027,
+        0.0005,
+        0.0001,
+        0.0
+      ],
+      "cpv_static_current_ac_rms": [
+        0.0027269763475321895,
+        0.004604769266749411,
+        0.036697697134833944,
+        0.015468282871734655,
+        0.011242579775122784,
+        0.005707880517319895
+      ],
+      "parameter_restored": true,
+      "restore_max_excursion_rad": 1.3322676295501878e-15,
+      "api_pid": 365500,
+      "camera_errors": [],
+      "camera_frames": 1898
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/cpv-j4-ki40-long-hold-probe",
+      "failure": "AssertionError('cpv_all_zero_hold velocity limit')",
+      "native_mode": "cpv_all_mapped_j4_ki40",
+      "power_commands_sent": 0,
+      "native_hold_max_excursion_rad": 0.0036477381366681882,
+      "cpv_firmware_after": [
+        1,
+        5,
+        2,
+        0
+      ],
+      "parameter_changes": [
+        {
+          "joint": 4,
+          "parameter": "ki",
+          "raw": 4000,
+          "readback": 4000,
+          "timestamp": 1795688816.7700336
+        },
+        {
+          "joint": 4,
+          "parameter": "ki",
+          "raw": 8000,
+          "readback": 8000,
+          "timestamp": 1795688817.710571
+        }
+      ],
+      "cpv_motor_offset": [
+        -0.0006865773485685289,
+        -0.01957705571750612,
+        -0.007976756286861342,
+        -0.00010853180456682487,
+        0.0005398223686155033,
+        0.0
+      ],
+      "parameter_restored": true,
+      "restore_max_excursion_rad": 1.1102230246251565e-15,
+      "api_pid": 366267,
+      "camera_errors": [],
+      "camera_frames": 1827
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/cpv-j45-ki40-long-hold-probe",
+      "failure": "AssertionError('CPV static quality limits')",
+      "native_mode": "cpv_all_mapped_j45_ki40",
+      "power_commands_sent": 0,
+      "native_hold_max_excursion_rad": 0.0033510321638290375,
+      "cpv_firmware_after": [
+        1,
+        5,
+        2,
+        0
+      ],
+      "parameter_changes": [
+        {
+          "joint": 4,
+          "parameter": "ki",
+          "raw": 4000,
+          "readback": 4000,
+          "timestamp": 1795688953.2740848
+        },
+        {
+          "joint": 5,
+          "parameter": "ki",
+          "raw": 4000,
+          "readback": 4000,
+          "timestamp": 1795688953.4251838
+        },
+        {
+          "joint": 5,
+          "parameter": "ki",
+          "raw": 8000,
+          "readback": 8000,
+          "timestamp": 1795688961.5796266
+        },
+        {
+          "joint": 4,
+          "parameter": "ki",
+          "raw": 8000,
+          "readback": 8000,
+          "timestamp": 1795688961.729887
+        }
+      ],
+      "cpv_motor_offset": [
+        -0.0006865773485685289,
+        -0.020030841323024573,
+        -0.0076574346951392425,
+        -0.00010853180456682487,
+        0.0005398223686155033,
+        0.0
+      ],
+      "cpv_static_velocity_rms": [
+        0.0027850792927072415,
+        0.0,
+        0.0,
+        0.0,
+        0.00024494897427831784,
+        0.0
+      ],
+      "cpv_static_current_ac_rms": [
+        0.011217567571546969,
+        0.04362071513500081,
+        0.011912140865520353,
+        0.00572561107849828,
+        0.022812849632023888,
+        0.005638607984245771
+      ],
+      "parameter_restored": true,
+      "restore_max_excursion_rad": 1.7763568394002505e-15,
+      "api_pid": 367056,
+      "camera_errors": [],
+      "camera_frames": 2271
+    }
+  ]
+}

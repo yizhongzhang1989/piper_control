@@ -31,6 +31,62 @@ class StationaryFeedback:
         pass
 
 
+@pytest.mark.parametrize('kind', ['movel', 'movec'])
+def test_tcp_goal_requires_cartesian_accuracy_and_restarts_dwell(kind):
+    backend = StationaryFeedback()
+    model = RobotModel()
+    tracking = []
+    backend.set_tracking_active = tracking.append
+    controller = RobotController(backend, model, goal_tolerance=.02,
+                                 tcp_position_tolerance=.0005)
+    pose = model.pose(backend.q)
+    via = model.pose(backend.q)
+    pose['position'][2] += .002
+    via['position'][0] += .001
+    via['position'][2] += .001
+    motion = (controller.movel(pose, duration=1) if kind == 'movel'
+              else controller.movec(via, pose, duration=1))
+    start = controller._start
+    target = controller._plan.positions[-1].copy()
+    assert np.max(abs(target-backend.q)) < controller.goal_tolerance
+    controller._tick(start+1.01, .005)
+    assert controller.motion(motion['id'])['status'] == 'running'
+    assert controller.motion(motion['id'])['tcp_position_error'] == pytest.approx(.002, abs=1e-8)
+    assert tracking[-1]  # Joint tolerance alone must not freeze correction.
+    backend.q = target.copy()
+    controller._tick(start+1.02, .005)
+    controller._tick(start+1.12, .005)
+    backend.q[0] += .004
+    controller._tick(start+1.13, .005)
+    assert tracking[-1]
+    backend.q = target.copy()
+    controller._tick(start+1.14, .005)
+    controller._tick(start+1.26, .005)
+    assert controller.motion(motion['id'])['status'] == 'running'
+    controller._tick(start+1.30, .005)
+    assert controller.motion(motion['id'])['status'] == 'succeeded'
+    assert not tracking[-1]
+
+
+def test_tcp_goal_timeout_and_following_joint_motion_have_distinct_tolerances():
+    backend = StationaryFeedback()
+    model = RobotModel()
+    controller = RobotController(backend, model, goal_tolerance=.02, goal_timeout=.3,
+                                 tcp_position_tolerance=.0005)
+    pose = model.pose(backend.q)
+    pose['position'][2] += .002
+    motion = controller.movel(pose, duration=1)
+    controller._tick(controller._start+1.31, .005)
+    result = controller.motion(motion['id'])
+    assert result['status'] == 'aborted'
+    assert 'TCP position error' in result['error']
+    motion = controller.movej(controller._q, duration=1)
+    start = controller._start
+    for t in (1.01, 1.10, 1.18):
+        controller._tick(start+t, .005)
+    assert controller.motion(motion['id'])['status'] == 'succeeded'
+
+
 def test_invalid_path_has_no_execution_and_goal_uses_measured_feedback():
     backend = StationaryFeedback()
     controller = RobotController(backend, RobotModel(), goal_tolerance=0.005, goal_timeout=0.2)

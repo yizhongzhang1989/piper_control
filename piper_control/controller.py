@@ -12,7 +12,8 @@ from .planning import Planner, vector
 class RobotController:
     def __init__(self, backend, model, rate_hz=200., max_velocity=.3,
                  stream_timeout=.2, feedback_timeout=.2, goal_tolerance=.01,
-                 goal_timeout=5., goal_velocity_tolerance=.02, goal_settle_time=.15):
+                 goal_timeout=5., goal_velocity_tolerance=.02, goal_settle_time=.15,
+                 tcp_position_tolerance=None):
         for name, value in dict(rate_hz=rate_hz, stream_timeout=stream_timeout,
                                 feedback_timeout=feedback_timeout, goal_tolerance=goal_tolerance,
                                 goal_timeout=goal_timeout, goal_velocity_tolerance=goal_velocity_tolerance,
@@ -21,11 +22,15 @@ class RobotController:
                 raise ValueError(f"{name} must be positive and finite")
         if goal_settle_time > goal_timeout:
             raise ValueError("goal_settle_time cannot exceed goal_timeout")
+        if tcp_position_tolerance is not None and (not math.isfinite(tcp_position_tolerance) or tcp_position_tolerance <= 0):
+            raise ValueError("tcp_position_tolerance must be positive and finite")
         self.backend, self.model = backend, model
         self.rate_hz = rate_hz
         self.stream_timeout, self.feedback_timeout = stream_timeout, feedback_timeout
         self.goal_tolerance, self.goal_timeout = goal_tolerance, goal_timeout
         self.goal_velocity_tolerance, self.goal_settle_time = goal_velocity_tolerance, goal_settle_time
+        self.tcp_position_tolerance = tcp_position_tolerance
+        self._tcp_goal = None
         self.planner = Planner(model, max_velocity)
         self._lock = threading.RLock()
         self._closed = threading.Event()
@@ -77,6 +82,7 @@ class RobotController:
         if self._plan is not None:
             self._record("cancelled")
         self._plan = None
+        self._tcp_goal = None
         self._settled_since = self._settled_last = None
         self._goal_position_reached = False
         self._stream_time = None
@@ -122,6 +128,7 @@ class RobotController:
                     feedback_timeout=self.feedback_timeout, goal_tolerance=self.goal_tolerance,
                     goal_velocity_tolerance=self.goal_velocity_tolerance,
                     goal_settle_time=self.goal_settle_time, goal_timeout=self.goal_timeout,
+                    tcp_position_tolerance=self.tcp_position_tolerance,
                     units={"position":"m", "joint":"rad", "orientation":"quaternion_xyzw",
                            "time":"s", "effort":"Nm"},
                     capabilities=["servo_joints", "servo_pose", "servo_twist", "trajectory", "movej", "movel", "movec"])
@@ -181,6 +188,8 @@ class RobotController:
                 raise RuntimeError("robot command changed while planning; submit again")
             self._cancel()
             self._plan, self._start = plan, time.monotonic()
+            self._tcp_goal = (self.model.forward(plan.positions[-1])[:3, 3]
+                              if kind in ('movel', 'movec') and self.tcp_position_tolerance is not None else None)
             self._motion = dict(id=uuid.uuid4().hex, kind=kind, status="running", progress=0.,
                                 duration=plan.duration, error=None)
             self._mode, self._error = kind, None
@@ -309,7 +318,12 @@ class RobotController:
                 self._motion["progress"] = min(1., elapsed/self._plan.duration)
                 if elapsed >= self._plan.duration:
                     error = float(np.max(np.abs(measured-self._q)))
-                    self._goal_position_reached = error <= self.goal_tolerance
+                    tcp_error = (float(np.linalg.norm(self.model.forward(measured)[:3, 3]-self._tcp_goal))
+                                 if self._tcp_goal is not None else None)
+                    tcp_within = tcp_error is None or tcp_error <= self.tcp_position_tolerance
+                    self._goal_position_reached = error <= self.goal_tolerance and tcp_within
+                    if tcp_error is not None:
+                        self._motion['tcp_position_error'] = tcp_error
                     velocity = np.asarray(data.get("velocities", []), dtype=float)
                     speed = (float(np.max(np.abs(velocity)))
                              if velocity.shape == measured.shape and np.all(np.isfinite(velocity))
@@ -329,6 +343,8 @@ class RobotController:
                     elif elapsed > self._plan.duration+self.goal_timeout:
                         if error > self.goal_tolerance:
                             reason = f"goal tracking error {error:.4f} rad exceeds tolerance"
+                        elif not tcp_within:
+                            reason = f"TCP position error {tcp_error:.6f} m exceeds tolerance"
                         elif not math.isfinite(speed):
                             reason = "goal velocity feedback unavailable or invalid"
                         else:

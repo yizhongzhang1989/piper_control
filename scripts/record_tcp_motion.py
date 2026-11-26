@@ -2,7 +2,7 @@
 """Record a small hardware motion through the public API, plus passive CAN and camera evidence.
 
 This command moves the arm. Confirm the chosen local path is clear before running.
-Joint travel is capped at 0.4 rad; that is not a collision check.
+Joint travel defaults to a 0.4 rad envelope; that is not a collision check.
 """
 import argparse,collections,datetime,json,math,socket,struct,threading,time
 from pathlib import Path
@@ -13,12 +13,19 @@ from piper_control.model import RobotModel
 from piper_control.planning import Planner,matrix_pose
 parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--url',default='http://127.0.0.1:8090');parser.add_argument('--camera',default='/dev/video0');parser.add_argument('--camera-focus',type=float);parser.add_argument('--camera-resolution',type=int,nargs=2,default=[1280,720],metavar=('WIDTH','HEIGHT'));parser.add_argument('--camera-roi',type=int,nargs=4,metavar=('X','Y','WIDTH','HEIGHT'),help='record this full-resolution region instead of resizing to 960x540');parser.add_argument('--case',choices=['line_x','line_y','line_z','line_xy','line_xz','arc_xz','arc_xy','arc_yz','return','joint2','joint3','joint4'],required=True);parser.add_argument('--distance',type=float,default=.03);parser.add_argument('--speed',type=float,default=.02);parser.add_argument('--out',required=True);parser.add_argument('--return-pose')
 parser.add_argument('--post-motion-seconds',type=float,default=5.,help='record 2..30 seconds after the terminal motion result')
+parser.add_argument('--max-observed-joint-speed',type=float,default=.3,help='stop the trial if any measured joint speed exceeds this rad/s envelope')
+parser.add_argument('--max-joint-travel',type=float,default=.4,help='maximum planned joint excursion in rad; measured travel has an additional 0.05 rad margin')
 a=parser.parse_args()
 if not math.isfinite(a.post_motion_seconds) or not 2 <= a.post_motion_seconds <= 30:
  parser.error('--post-motion-seconds must be within 2..30')
+if not math.isfinite(a.max_observed_joint_speed) or a.max_observed_joint_speed <= 0:
+ parser.error('--max-observed-joint-speed must be positive and finite')
+if not math.isfinite(a.max_joint_travel) or not 0 < a.max_joint_travel <= math.pi:
+ parser.error('--max-joint-travel must be within (0, pi]')
 out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
 r=RobotClient(a.url,timeout=30);before=r.state();info=r.info();assert info['backend']=='hardware';assert before['command_ready'] and before['mode']=='idle' and not before['errors']
-m=RobotModel(tcp_offset=info['tcp_offset'],tcp_orientation=info['tcp_orientation'],end_effector=info['end_effector'],angle_offsets=info['angle_offsets']);q=np.array(before['target_positions']);T=m.forward(q);E=T.copy();V=T.copy();dist=a.distance;planr=Planner(m,min(x['velocity'] for x in info['joint_limits']))
+m=RobotModel(tcp_offset=info['tcp_offset'],tcp_orientation=info['tcp_orientation'],end_effector=info['end_effector'],angle_offsets=info['angle_offsets']);q=np.array(before['target_positions']);T=m.forward(q);E=T.copy();V=T.copy();dist=a.distance;planr=Planner(m,max(x['velocity'] for x in info['joint_limits']))
+planr.velocity=np.array([x['velocity'] for x in info['joint_limits']])
 if a.case=='return':E=m.forward(json.loads(Path(a.return_pose).read_text())['target_positions'])
 elif a.case.startswith('joint'):
  end_q=q.copy();end_q[int(a.case[-1])-1]+=dist;E=m.forward(end_q)
@@ -30,9 +37,11 @@ else:
  E[first,3]+=dist;V[first,3]+=dist/2;V[second,3]+=dist/2
 via=matrix_pose(V) if a.case.startswith('arc_') else None
 plan=planr.movej(q,end_q,duration=1.875*abs(dist)/a.speed) if a.case.startswith('joint') else planr.cartesian(q,matrix_pose(E),via,speed=a.speed)
-# Keep test travel within a 0.4 rad envelope per joint; no mode/enable actions.
-pts=np.array([plan.sample(t)[0] for t in np.linspace(0,plan.duration,200)]);assert np.max(abs(pts-q))<.4
-plan_ts=np.arange(0,plan.duration+.0001,.0025);qq=np.array([plan.sample(t)[0] for t in plan_ts]);vv=np.array([plan.sample(t)[1] for t in plan_ts]);np.savez_compressed(out/'reference.npz',times=plan_ts,q=qq,dq=vv)
+# Review larger excursions explicitly; no mode/enable actions.
+pts=np.array([plan.sample(t)[0] for t in np.linspace(0,plan.duration,200)]);assert np.max(abs(pts-q))<a.max_joint_travel
+plan_ts=np.r_[np.arange(0,plan.duration,.0025),plan.duration];qq=np.array([plan.sample(t)[0] for t in plan_ts]);vv=np.array([plan.sample(t)[1] for t in plan_ts]);np.savez_compressed(out/'reference.npz',times=plan_ts,q=qq,dq=vv)
+if np.max(np.abs(vv)) >= a.max_observed_joint_speed:
+ raise ValueError('planned speed exceeds the observation envelope; review the path and explicitly set a suitable --max-observed-joint-speed')
 receiver=socket.socket(socket.PF_CAN,socket.SOCK_RAW,socket.CAN_RAW);receiver.setsockopt(socket.SOL_SOCKET,35,1);receiver.bind((before['extra']['can_port'],));receiver.settimeout(.02);records=collections.defaultdict(list);stop=threading.Event();camera_errors=[]
 def can_rx():
  while not stop.is_set():
@@ -78,14 +87,18 @@ def camera():
 threads=[threading.Thread(target=can_rx),threading.Thread(target=camera)]
 for th in threads:th.start()
 report={'timestamp':datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),'case':a.case,'requested_speed':a.speed,'target_pose':matrix_pose(E),'via':via,'before':before,'info':info,'samples':[],'camera_timing_note':'Host read timestamps; no calibrated exposure/CAN alignment','capture_transmitted_frames':0,'post_motion_seconds':a.post_motion_seconds};failure=None;motion=None
+report['max_observed_joint_speed_rad_s']=a.max_observed_joint_speed
+report['max_joint_travel_rad']=a.max_joint_travel
 try:
  if not camera_ready.wait(5) or camera_errors:raise RuntimeError(str(camera_errors))
  time.sleep(.5);report['submitted_unix']=time.time()
  motion=r.movej(end_q.tolist(),duration=plan.duration) if a.case.startswith('joint') else (r.movec(via,matrix_pose(E),speed=a.speed) if via else r.movel(matrix_pose(E),speed=a.speed));report['motion']=motion;report['accepted_unix']=time.time();deadline=time.monotonic()+motion['duration']+7+a.post_motion_seconds;finished=None
+ if abs(motion['duration']-plan.duration)>1e-5:raise RuntimeError('server duration differs from the recorded reference')
  while time.monotonic()<deadline:
   st=r.state();report['samples'].append(st)
   if not st['command_ready'] or st['errors']:raise RuntimeError('feedback or readiness failure')
-  if np.max(np.abs(np.array(st['positions'])-np.array(before['positions'])))>.45:raise RuntimeError('observed travel exceeded trial envelope')
+  if max(map(abs,st['velocities']))>a.max_observed_joint_speed:raise RuntimeError('observed joint velocity exceeded trial envelope')
+  if np.max(np.abs(np.array(st['positions'])-np.array(before['positions'])))>a.max_joint_travel+.05:raise RuntimeError('observed travel exceeded trial envelope')
   result=r.motion(motion['id'])
   if result['status']!='running':
    if finished is None:finished=time.monotonic();report['motion_finished_unix']=time.time();report['result']=result

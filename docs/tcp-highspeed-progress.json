@@ -1,0 +1,1281 @@
+{
+  "status": "in_progress",
+  "requested_peak_speed_m_s": 1.0,
+  "repeatability_limit_mm": 1.0,
+  "tested_peak_reference_speed_m_s": 0.3,
+  "parameter_changes_adopted": false,
+  "baseline_repeatability": {
+    "measurement": "Output encoders + configured FK, not external 3D metrology",
+    "acceptance": "Maximum pairwise distance between repeated settled endpoints",
+    "groups": [
+      {
+        "records": [
+          ".runtime/tcp-smooth/fast-base-x80-v300",
+          ".runtime/tcp-smooth/fast-base-x80-v300-repeat2-line_x",
+          ".runtime/tcp-smooth/fast-base-x80-v300-repeat3-line_x"
+        ],
+        "count": 3,
+        "target_position_mm": [
+          376.3814486730043,
+          4.341337952764303,
+          108.63194403035446
+        ],
+        "centroid_mm": [
+          376.43446344058793,
+          3.8355252382771425,
+          107.14776823874683
+        ],
+        "centroid_error_mm": 1.5688960603280708,
+        "maximum_radius_mm": 0.25098887019623056,
+        "maximum_pairwise_distance_mm": 0.47380802158806556,
+        "mean_radius_plus_3sd_mm": 0.4888411451304513,
+        "endpoint_errors_mm": [
+          1.6013738630349226,
+          1.3340581857070106,
+          1.777094250322198
+        ],
+        "completion_delays_s": [
+          0.46956586837768544,
+          1.3943743705749512,
+          0.5122067928314208
+        ],
+        "limit_mm": 1.0,
+        "enough_repetitions": true,
+        "pairwise_limit_passed": true
+      },
+      {
+        "records": [
+          ".runtime/tcp-smooth/fast-base-x80-v300-return",
+          ".runtime/tcp-smooth/fast-base-x80-v300-repeat2-return",
+          ".runtime/tcp-smooth/fast-base-x80-v300-repeat3-return"
+        ],
+        "count": 3,
+        "target_position_mm": [
+          296.3814486604418,
+          4.341337952786382,
+          108.6319440414019
+        ],
+        "centroid_mm": [
+          296.17783189757097,
+          3.331251088790081,
+          109.62411267949813
+        ],
+        "centroid_error_mm": 1.430431356396244,
+        "maximum_radius_mm": 0.11656406595486223,
+        "maximum_pairwise_distance_mm": 0.20732491504853334,
+        "mean_radius_plus_3sd_mm": 0.17560564046835475,
+        "endpoint_errors_mm": [
+          1.4956748038974768,
+          1.4116914563129064,
+          1.3913444821997076
+        ],
+        "completion_delays_s": [
+          0.26894092559814453,
+          0.5331985950469971,
+          0.2744772434234619
+        ],
+        "limit_mm": 1.0,
+        "enough_repetitions": true,
+        "pairwise_limit_passed": true
+      }
+    ]
+  },
+  "trials": [
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x-return-recover",
+      "case": "return",
+      "requested_speed": 0.05,
+      "result": {
+        "id": "5cc91ca0635042b18813fcb45ed31d0d",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.218973487156636,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.05,
+        "duration_s": 2.218973487156636,
+        "reference_peak_speed_m_s": 0.04999997746945307,
+        "measured_peak_speed_m_s": 0.0823925989212816,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.25521506437331515,
+        "path_error_rms_mm": 0.7686377410292582,
+        "path_error_max_mm": 1.3803331912959858,
+        "final_position_mm": [
+          296.32685076671896,
+          4.340809048759108,
+          107.85728370826801
+        ],
+        "target_position_mm": [
+          296.3814486604418,
+          4.341337952786382,
+          108.6319440414019
+        ],
+        "final_position_error_mm": 0.7765821537155795,
+        "final_orientation_error_deg": 0.1640000000001156,
+        "final_joint_positions_rad": [
+          0.00968657734856851,
+          1.5588233681262134,
+          -1.2865345515225786,
+          1.426370331192364,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          7.350944505879475e-12,
+          0.0027925257588536923,
+          -0.00019198506187545483,
+          0.0002617989267901244,
+          1.0976141870400191e-12,
+          1.1407128590033733e-11
+        ],
+        "final_position_excursion_mm": 6.120624621500328e-13,
+        "post_plan_max_distance_from_final_mm": 6.120624621500328e-13,
+        "post_success_max_distance_from_final_mm": 6.120624621500328e-13,
+        "completion_delay_s": 0.1761995856583054,
+        "raw_joint_velocity_peak_rad_s": [
+          0.0,
+          0.20600000000000002,
+          0.273,
+          0.245,
+          0.0,
+          0.0
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002216551375447904,
+          0.002562635362278442,
+          0.003021649890406987,
+          0.003305676935213111,
+          0.004540041299371626,
+          0.006401085845385922
+        ],
+        "encoder_max_gap_s": 0.005605936050415039
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v050",
+      "case": "line_x",
+      "requested_speed": 0.05,
+      "result": {
+        "id": "edc9cc1dd8ed439c87672ca645befcaa",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.0000000000000004,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.05,
+        "duration_s": 3.0000000000000004,
+        "reference_peak_speed_m_s": 0.049999999828806686,
+        "measured_peak_speed_m_s": 0.07992279736093526,
+        "fitted_delay_s": -2.7755575615628914e-17,
+        "velocity_vector_nrmse": 0.2748180805845151,
+        "path_error_rms_mm": 1.1798390153899214,
+        "path_error_max_mm": 1.9686308929390328,
+        "final_position_mm": [
+          376.9126704101878,
+          5.121434560706171,
+          108.94933569644567
+        ],
+        "target_position_mm": [
+          376.3814486604418,
+          4.341337952786382,
+          108.6319440414019
+        ],
+        "final_position_error_mm": 0.9957332613620024,
+        "final_orientation_error_deg": 0.07999999999987925,
+        "final_joint_positions_rad": [
+          0.00968657734856851,
+          1.843486569126495,
+          -1.6532631339516297,
+          1.5041771092462735,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          0.0020190759507527642,
+          0.0005786225641457587,
+          -0.0020294874438873123,
+          3.946618621819553e-05,
+          -7.653706662992185e-05,
+          0.0020176815554897925
+        ],
+        "final_position_excursion_mm": 1.2420244548603318e-13,
+        "post_plan_max_distance_from_final_mm": 1.2420244548603318e-13,
+        "post_success_max_distance_from_final_mm": 1.2420244548603318e-13,
+        "completion_delay_s": 0.1596279144287105,
+        "raw_joint_velocity_peak_rad_s": [
+          0.017,
+          0.217,
+          0.269,
+          0.28500000000000003,
+          0.0,
+          0.0
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.013935207210515386,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002804955436366138,
+          0.004258165684892936,
+          0.0029627014699425912,
+          0.011143693283647033,
+          0.004661542126807395,
+          0.0055994999776765786
+        ],
+        "encoder_max_gap_s": 0.005930423736572266
+      },
+      "camera_performance": {
+        "translation_px": 74.68925660209041,
+        "fitted_delay_s": 0.04499999999999994,
+        "velocity_nrmse": 0.05731292067585072,
+        "peak_ratio": 1.0569836854065189,
+        "middle_minimum_ratio": 0.8482295327381493,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.07913627159199332,
+        "post_plan_excursion_px": 0.08707595633301543,
+        "final_window_excursion_px": 0.02058697996883688,
+        "cross_track_rms_px": 0.37768754761485307,
+        "completion_delay_s": 0.1596279144287105
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v050-return",
+      "case": "return",
+      "requested_speed": 0.05,
+      "result": null,
+      "failure": "RuntimeError('observed joint velocity exceeded trial envelope')"
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v100-retry",
+      "case": "line_x",
+      "requested_speed": 0.1,
+      "result": {
+        "id": "d4f6131b10004882820dcb5289518e22",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.5000000000000002,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.1,
+        "duration_s": 1.5000000000000002,
+        "reference_peak_speed_m_s": 0.09999999586779819,
+        "measured_peak_speed_m_s": 0.12844625057290082,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.11177989302569993,
+        "path_error_rms_mm": 1.0991202506750908,
+        "path_error_max_mm": 1.8518853703210256,
+        "final_position_mm": [
+          377.18897896367014,
+          5.12411114239475,
+          109.43131985467667
+        ],
+        "target_position_mm": [
+          376.38144866402183,
+          4.341337952797599,
+          108.6319440392319
+        ],
+        "final_position_error_mm": 1.379797356686915,
+        "final_orientation_error_deg": 0.20600001965537407,
+        "final_joint_positions_rad": [
+          0.00968657734856851,
+          1.8422473853575785,
+          -1.6533504004142296,
+          1.5033044446202746,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          0.002019075951178604,
+          -0.0006605597273035002,
+          -0.002116755951514948,
+          -0.0008331964597196873,
+          -7.653706603590136e-05,
+          0.002017681544184589
+        ],
+        "final_position_excursion_mm": 4.126308812316209e-13,
+        "post_plan_max_distance_from_final_mm": 4.126308812316209e-13,
+        "post_success_max_distance_from_final_mm": 4.126308812316209e-13,
+        "completion_delay_s": 0.35355544090270974,
+        "raw_joint_velocity_peak_rad_s": [
+          0.004,
+          0.40900000000000003,
+          0.504,
+          0.483,
+          0.0,
+          0.0
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.01059764124699454,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0029290570154915014,
+          0.00340556896861597,
+          0.0032130631802066993,
+          0.010818769569595241,
+          0.004582837548942795,
+          0.006183849933496123
+        ],
+        "encoder_max_gap_s": 0.0051958560943603516
+      },
+      "camera_performance": {
+        "translation_px": 74.76210831421027,
+        "fitted_delay_s": 0.04999999999999995,
+        "velocity_nrmse": 0.028958143979052494,
+        "peak_ratio": 1.0948035690786118,
+        "middle_minimum_ratio": 0.8862649284833066,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.04901994462716792,
+        "post_plan_excursion_px": 0.10400875610866595,
+        "final_window_excursion_px": 0.022802292341385144,
+        "cross_track_rms_px": 0.5070267071923843,
+        "completion_delay_s": 0.35355544090270974
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v100-return",
+      "case": "return",
+      "requested_speed": 0.1,
+      "result": {
+        "id": "ead2022e8c484580b65598eba7eda139",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.499999999781348,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.1,
+        "duration_s": 1.499999999781348,
+        "reference_peak_speed_m_s": 0.10000000159727224,
+        "measured_peak_speed_m_s": 0.11153244355095204,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.1083064679590873,
+        "path_error_rms_mm": 0.899218726695528,
+        "path_error_max_mm": 1.6762869685131967,
+        "final_position_mm": [
+          296.1596993857247,
+          4.339189872337933,
+          107.84254587320531
+        ],
+        "target_position_mm": [
+          296.3814486604418,
+          4.341337952786382,
+          108.6319440414019
+        ],
+        "final_position_error_mm": 0.8199553786879205,
+        "final_orientation_error_deg": 0.14400000000011995,
+        "final_joint_positions_rad": [
+          0.00968657734856851,
+          1.55791579691518,
+          -1.2854699006788624,
+          1.425864185709287,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          3.622335070785354e-12,
+          0.001884954368417402,
+          0.0008726659170685824,
+          -0.00024434740795054033,
+          4.769042799557255e-12,
+          1.809336240651445e-11
+        ],
+        "final_position_excursion_mm": 5.75729607099718e-13,
+        "post_plan_max_distance_from_final_mm": 5.75729607099718e-13,
+        "post_success_max_distance_from_final_mm": 5.75729607099718e-13,
+        "completion_delay_s": 0.16545581839492152,
+        "raw_joint_velocity_peak_rad_s": [
+          0.024,
+          0.4,
+          0.499,
+          0.281,
+          0.0,
+          0.0
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002205770641559378,
+          0.0032842655191077487,
+          0.0031358571396031486,
+          0.003363034344160046,
+          0.004277896679444234,
+          0.006046821102399152
+        ],
+        "encoder_max_gap_s": 0.005719423294067383
+      },
+      "camera_performance": {
+        "translation_px": 75.4707999995498,
+        "fitted_delay_s": 0.03499999999999996,
+        "velocity_nrmse": 0.027680273282484655,
+        "peak_ratio": 1.0440182031858722,
+        "middle_minimum_ratio": 0.8972717307076042,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.055379746183738005,
+        "post_plan_excursion_px": 0.048196328237380855,
+        "final_window_excursion_px": 0.025936575184775653,
+        "cross_track_rms_px": 0.6490505997699921,
+        "completion_delay_s": 0.16545581839492152
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v200",
+      "case": "line_x",
+      "requested_speed": 0.2,
+      "result": {
+        "id": "1a4861a4984146248a6cc121d68814e2",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.7500000000000001,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.2,
+        "duration_s": 0.7500000000000001,
+        "reference_peak_speed_m_s": 0.19999999173559663,
+        "measured_peak_speed_m_s": 0.2096517378495593,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.06674301058248285,
+        "path_error_rms_mm": 0.5291923372161836,
+        "path_error_max_mm": 1.0366846370694829,
+        "final_position_mm": [
+          376.72365365017123,
+          4.192421607040639,
+          108.81647932829122
+        ],
+        "target_position_mm": [
+          376.38144867300434,
+          4.341337952764304,
+          108.63194403035449
+        ],
+        "final_position_error_mm": 0.41633352087730985,
+        "final_orientation_error_deg": 0.16673934228690343,
+        "final_joint_positions_rad": [
+          0.007225663103256533,
+          1.8425789979154577,
+          -1.6515003514071143,
+          1.5031648182801143,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          -0.00044183829298574933,
+          -0.00032894812470996015,
+          -0.0002667056604632734,
+          -0.0009728240307740332,
+          -7.653706434455291e-05,
+          0.0020176815557485846
+        ],
+        "final_position_excursion_mm": 2.5481546757544526e-13,
+        "post_plan_max_distance_from_final_mm": 0.17319727199972296,
+        "post_success_max_distance_from_final_mm": 2.5481546757544526e-13,
+        "completion_delay_s": 0.41774678230285633,
+        "raw_joint_velocity_peak_rad_s": [
+          0.051000000000000004,
+          0.762,
+          0.986,
+          0.78,
+          0.0,
+          0.078
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.013999466940811198,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0062348997586168155,
+          0.0033343065246014985,
+          0.003971284426983295,
+          0.013476349275758352,
+          0.004542202109109633,
+          0.006479228349116892
+        ],
+        "encoder_max_gap_s": 0.005351543426513672
+      },
+      "camera_performance": {
+        "translation_px": 74.87931263583746,
+        "fitted_delay_s": 0.04499999999999994,
+        "velocity_nrmse": 0.02557206762339473,
+        "peak_ratio": 1.0284069636626072,
+        "middle_minimum_ratio": 0.922630828849456,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.04353691654204744,
+        "post_plan_excursion_px": 0.11706269374914068,
+        "final_window_excursion_px": 0.02313851425446859,
+        "cross_track_rms_px": 0.42275788656534036,
+        "completion_delay_s": 0.41774678230285633
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v200-return",
+      "case": "return",
+      "requested_speed": 0.2,
+      "result": {
+        "id": "bc63ab14a9d0457f8eafd7efdf2a5598",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.7499999999748848,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.2,
+        "duration_s": 0.7499999999748848,
+        "reference_peak_speed_m_s": 0.2000000031945145,
+        "measured_peak_speed_m_s": 0.22046238175196423,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.05907818861587042,
+        "path_error_rms_mm": 0.9328458299695805,
+        "path_error_max_mm": 1.7936100650588573,
+        "final_position_mm": [
+          296.07870507286174,
+          3.609697941822158,
+          108.74556853865755
+        ],
+        "target_position_mm": [
+          296.3814486604418,
+          4.341337952786382,
+          108.6319440414019
+        ],
+        "final_position_error_mm": 0.7999133152043166,
+        "final_orientation_error_deg": 0.14103191134610257,
+        "final_joint_positions_rad": [
+          0.007225663103256533,
+          1.5549487371867878,
+          -1.285539713848945,
+          1.4264401443624468,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          -0.002460914241689643,
+          -0.001082105359974772,
+          0.0008028527469856606,
+          0.0003316112452091957,
+          4.769041932195517e-12,
+          1.8093142172925523e-11
+        ],
+        "final_position_excursion_mm": 4.126491130169488e-13,
+        "post_plan_max_distance_from_final_mm": 0.20187058627725088,
+        "post_success_max_distance_from_final_mm": 4.126491130169488e-13,
+        "completion_delay_s": 0.18545889856942677,
+        "raw_joint_velocity_peak_rad_s": [
+          0.035,
+          0.766,
+          0.98,
+          0.504,
+          0.0,
+          0.007
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.004185304648409719,
+          0.004058568097248093,
+          0.002893630937075425,
+          0.003088037402623227,
+          0.003966245075635141,
+          0.006125337897803538
+        ],
+        "encoder_max_gap_s": 0.005217313766479492
+      },
+      "camera_performance": {
+        "translation_px": 75.38709114043967,
+        "fitted_delay_s": 0.03499999999999996,
+        "velocity_nrmse": 0.028887695016593017,
+        "peak_ratio": 1.0806695449048396,
+        "middle_minimum_ratio": 0.9172142319850212,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.05682049895689282,
+        "post_plan_excursion_px": 0.22674770710697106,
+        "final_window_excursion_px": 0.025121240016866282,
+        "cross_track_rms_px": 0.5717201654592117,
+        "completion_delay_s": 0.18545889856942677
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v300",
+      "case": "line_x",
+      "requested_speed": 0.3,
+      "result": {
+        "id": "22b52b7243184f88a0d4507616a45dc8",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.5000000000000001,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.3,
+        "duration_s": 0.5000000000000001,
+        "reference_peak_speed_m_s": 0.2999999876033959,
+        "measured_peak_speed_m_s": 0.3203811422993456,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.05798639225594924,
+        "path_error_rms_mm": 1.4265518785883269,
+        "path_error_max_mm": 1.9394514063911545,
+        "final_position_mm": [
+          376.4868575908173,
+          3.8358544441136244,
+          107.11610313113744
+        ],
+        "target_position_mm": [
+          376.3814486730043,
+          4.341337952764303,
+          108.63194403035446
+        ],
+        "final_position_error_mm": 1.6013738630349226,
+        "final_orientation_error_deg": 0.27295776198744504,
+        "final_joint_positions_rad": [
+          0.006283185307179597,
+          1.8468201479977984,
+          -1.6510989256791528,
+          1.5034091643753973,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          -0.0013843160890626913,
+          0.0039122019576305345,
+          0.0001347200674981508,
+          -0.0007284779354912452,
+          -7.653706434456765e-05,
+          0.0020176815557485786
+        ],
+        "final_position_excursion_mm": 4.4437456827190093e-13,
+        "post_plan_max_distance_from_final_mm": 0.5571049097305237,
+        "post_success_max_distance_from_final_mm": 4.4437456827190093e-13,
+        "completion_delay_s": 0.46956586837768544,
+        "raw_joint_velocity_peak_rad_s": [
+          0.039,
+          1.1360000000000001,
+          1.418,
+          0.705,
+          0.0,
+          0.099
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.00799624912068152,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.012229550277912922,
+          0.004280934477424301,
+          0.0047919513718886805,
+          0.007705004866967964,
+          0.0046777176644654155,
+          0.0076694765643116405
+        ],
+        "encoder_max_gap_s": 0.005832672119140625
+      },
+      "camera_performance": {
+        "translation_px": 74.98207649787153,
+        "fitted_delay_s": 0.04499999999999994,
+        "velocity_nrmse": 0.023519664999466845,
+        "peak_ratio": 1.0219845282296844,
+        "middle_minimum_ratio": 0.9838479968304074,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.04763559637046041,
+        "post_plan_excursion_px": 0.10777716391559701,
+        "final_window_excursion_px": 0.021886338395532598,
+        "cross_track_rms_px": 0.5156611466219303,
+        "completion_delay_s": 0.46956586837768544
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v300-repeat2-line_x",
+      "case": "line_x",
+      "requested_speed": 0.3,
+      "result": {
+        "id": "946a3d5018374c9b9225c0e5d7934534",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.5000000000000001,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.3,
+        "duration_s": 0.5000000000000001,
+        "reference_peak_speed_m_s": 0.29999998760339125,
+        "measured_peak_speed_m_s": 0.3196824422168069,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.0559667479841378,
+        "path_error_rms_mm": 1.7606546424712335,
+        "path_error_max_mm": 2.2112531526069374,
+        "final_position_mm": [
+          376.43710225825316,
+          3.835541825348361,
+          107.39874323616407
+        ],
+        "target_position_mm": [
+          376.3814486730043,
+          4.341337952764302,
+          108.63194403035448
+        ],
+        "final_position_error_mm": 1.3340581857070106,
+        "final_orientation_error_deg": 0.2554407019336359,
+        "final_joint_positions_rad": [
+          0.006283185307179597,
+          1.8461394695895232,
+          -1.6511861921417528,
+          1.5037233236407535,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          -0.0013843160890627051,
+          0.0032315235493558525,
+          4.745360489799566e-05,
+          -0.0004143186701348611,
+          -7.653706434459628e-05,
+          0.0020176815557486722
+        ],
+        "final_position_excursion_mm": 4.4957878224928355e-13,
+        "post_plan_max_distance_from_final_mm": 0.8335540113678215,
+        "post_success_max_distance_from_final_mm": 4.4957878224928355e-13,
+        "completion_delay_s": 1.3943743705749512,
+        "raw_joint_velocity_peak_rad_s": [
+          0.021,
+          1.139,
+          1.421,
+          0.73,
+          0.0,
+          0.145
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.011334460728239347,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.01318260596392079,
+          0.004160528812542934,
+          0.004943478026652891,
+          0.010356629519298256,
+          0.004965873538462292,
+          0.0073524893743547835
+        ],
+        "encoder_max_gap_s": 0.005715370178222656
+      },
+      "camera_performance": {
+        "translation_px": 75.29676513718066,
+        "fitted_delay_s": 0.03999999999999995,
+        "velocity_nrmse": 0.026490807599754747,
+        "peak_ratio": 1.0530199255026917,
+        "middle_minimum_ratio": 0.9795012992529795,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.04627982573586897,
+        "post_plan_excursion_px": 0.47027037853916875,
+        "final_window_excursion_px": 0.027387133383656028,
+        "cross_track_rms_px": 0.5976510119692403,
+        "completion_delay_s": 1.3943743705749512
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v300-repeat2-return",
+      "case": "return",
+      "requested_speed": 0.3,
+      "result": {
+        "id": "78ed117d43504bf5a511ee5e2b8c52de",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.5,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.3,
+        "duration_s": 0.5,
+        "reference_peak_speed_m_s": 0.3000000047816975,
+        "measured_peak_speed_m_s": 0.32677783400417704,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.057246748245847245,
+        "path_error_rms_mm": 2.1199584949613626,
+        "path_error_max_mm": 3.4010291813525972,
+        "final_position_mm": [
+          296.12907827141396,
+          3.330944755475735,
+          109.58498524795971
+        ],
+        "target_position_mm": [
+          296.3814486604418,
+          4.341337952786382,
+          108.6319440414019
+        ],
+        "final_position_error_mm": 1.4116914563129064,
+        "final_orientation_error_deg": 0.2567371639456578,
+        "final_joint_positions_rad": [
+          0.006283185307179597,
+          1.552016584043438,
+          -1.2854349940938221,
+          1.4263005180222874,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          -0.0034033920377665823,
+          -0.004014258503324708,
+          0.000907572502108378,
+          0.0001919849050500133,
+          4.769028921769447e-12,
+          1.809335674421831e-11
+        ],
+        "final_position_excursion_mm": 6.329839335014734e-13,
+        "post_plan_max_distance_from_final_mm": 1.3497858254735697,
+        "post_success_max_distance_from_final_mm": 6.329839335014734e-13,
+        "completion_delay_s": 0.5331985950469971,
+        "raw_joint_velocity_peak_rad_s": [
+          0.03,
+          1.157,
+          1.418,
+          0.644,
+          0.0,
+          0.03
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.006000247911544989,
+          0.0031803382870395232,
+          0.0028686407931283494,
+          0.0032553187247948566,
+          0.00458959420864198,
+          0.004820764980788837
+        ],
+        "encoder_max_gap_s": 0.005715131759643555
+      },
+      "camera_performance": {
+        "translation_px": 75.59140411884272,
+        "fitted_delay_s": 0.03499999999999996,
+        "velocity_nrmse": 0.026695359526896525,
+        "peak_ratio": 1.0790609252452052,
+        "middle_minimum_ratio": 0.9407135391695094,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.0520050157380344,
+        "post_plan_excursion_px": 0.14544567451056814,
+        "final_window_excursion_px": 0.029404115525750032,
+        "cross_track_rms_px": 0.809587107690672,
+        "completion_delay_s": 0.5331985950469971
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v300-repeat3-line_x",
+      "case": "line_x",
+      "requested_speed": 0.3,
+      "result": {
+        "id": "903a613c60db4c7da4eac1d1be445de0",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.5000000000000001,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.3,
+        "duration_s": 0.5000000000000001,
+        "reference_peak_speed_m_s": 0.29999998760339125,
+        "measured_peak_speed_m_s": 0.3238196616179176,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.055365548973711855,
+        "path_error_rms_mm": 1.6473928688492403,
+        "path_error_max_mm": 2.3094434621871893,
+        "final_position_mm": [
+          376.37943047269334,
+          3.8351794453694437,
+          106.928458348939
+        ],
+        "target_position_mm": [
+          376.3814486730043,
+          4.341337952764302,
+          108.63194403035448
+        ],
+        "final_position_error_mm": 1.777094250322198,
+        "final_orientation_error_deg": 0.3146965343668042,
+        "final_joint_positions_rad": [
+          0.006283185307179597,
+          1.8474310132359977,
+          -1.6512385520193191,
+          1.5039153098584734,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          -0.0013843160890627051,
+          0.004523067195830288,
+          -4.90627266835908e-06,
+          -0.0002223324524148751,
+          -7.653706434459628e-05,
+          0.0020176815557486722
+        ],
+        "final_position_excursion_mm": 2.020641059171706e-13,
+        "post_plan_max_distance_from_final_mm": 0.29954021494272265,
+        "post_success_max_distance_from_final_mm": 2.020641059171706e-13,
+        "completion_delay_s": 0.5122067928314208,
+        "raw_joint_velocity_peak_rad_s": [
+          0.032,
+          1.1440000000000001,
+          1.426,
+          0.588,
+          0.0,
+          0.111
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.016456305782282972,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.012649407100730058,
+          0.004040284643437883,
+          0.004915933278635916,
+          0.010731214982470531,
+          0.004535901233492635,
+          0.006415411132577553
+        ],
+        "encoder_max_gap_s": 0.005724668502807617
+      },
+      "camera_performance": {
+        "translation_px": 75.34073045374866,
+        "fitted_delay_s": 0.03999999999999995,
+        "velocity_nrmse": 0.029693878837331773,
+        "peak_ratio": 1.0400995205559298,
+        "middle_minimum_ratio": 0.9557388663739221,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.05013163733605447,
+        "post_plan_excursion_px": 0.09629664836817246,
+        "final_window_excursion_px": 0.03372361781959533,
+        "cross_track_rms_px": 0.44779122042949776,
+        "completion_delay_s": 0.5122067928314208
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v300-repeat3-return",
+      "case": "return",
+      "requested_speed": 0.3,
+      "result": {
+        "id": "97767c4b4ac94123b53d1647a8263f51",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.5,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.3,
+        "duration_s": 0.5,
+        "reference_peak_speed_m_s": 0.3000000047816975,
+        "measured_peak_speed_m_s": 0.3243704767722713,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.06078965600261406,
+        "path_error_rms_mm": 1.6404431893217462,
+        "path_error_max_mm": 2.3685567144894137,
+        "final_position_mm": [
+          296.287604879854,
+          3.3319408212135175,
+          109.58491321391747
+        ],
+        "target_position_mm": [
+          296.3814486604418,
+          4.341337952786382,
+          108.6319440414019
+        ],
+        "final_position_error_mm": 1.3913444821997076,
+        "final_orientation_error_deg": 0.27225900019464844,
+        "final_joint_positions_rad": [
+          0.006283185307179597,
+          1.5521911169686378,
+          -1.2856444336040627,
+          1.4259339988793696,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          -0.0034033920377665823,
+          -0.003839725578124842,
+          0.0006981329918678281,
+          -0.0001745342378678405,
+          4.769028921769447e-12,
+          1.809335674421831e-11
+        ],
+        "final_position_excursion_mm": 6.866487153527694e-13,
+        "post_plan_max_distance_from_final_mm": 0.9256874467878716,
+        "post_success_max_distance_from_final_mm": 6.866487153527694e-13,
+        "completion_delay_s": 0.2744772434234619,
+        "raw_joint_velocity_peak_rad_s": [
+          0.033,
+          1.141,
+          1.432,
+          0.72,
+          0.0,
+          0.088
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.005894554690559754,
+          0.002894892053255185,
+          0.0026604404927111354,
+          0.003296831812513339,
+          0.0038025780728342716,
+          0.005576737397439474
+        ],
+        "encoder_max_gap_s": 0.005176067352294922
+      },
+      "camera_performance": {
+        "translation_px": 75.57863527997576,
+        "fitted_delay_s": 0.03999999999999995,
+        "velocity_nrmse": 0.02735767206679485,
+        "peak_ratio": 1.0737602444093555,
+        "middle_minimum_ratio": 0.8866550334658536,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.05361999197874791,
+        "post_plan_excursion_px": 0.0800527383319983,
+        "final_window_excursion_px": 0.017960826764060953,
+        "cross_track_rms_px": 0.6014795437967289,
+        "completion_delay_s": 0.2744772434234619
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-base-x80-v300-return",
+      "case": "return",
+      "requested_speed": 0.3,
+      "result": {
+        "id": "0c948be960614a6982492cb53ca4a1d1",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.5,
+        "error": null
+      },
+      "failure": null,
+      "encoder_performance": {
+        "measurement": "CAN output encoders + configured FK; no external spatial calibration",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative on 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.3,
+        "duration_s": 0.5,
+        "reference_peak_speed_m_s": 0.30000000478177363,
+        "measured_peak_speed_m_s": 0.3298280944656236,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_vector_nrmse": 0.061364391173693335,
+        "path_error_rms_mm": 1.7016791033802199,
+        "path_error_max_mm": 2.5639376350331102,
+        "final_position_mm": [
+          296.1168125414451,
+          3.3308676896809897,
+          109.70243957661717
+        ],
+        "target_position_mm": [
+          296.3814486604418,
+          4.341337952786382,
+          108.6319440414019
+        ],
+        "final_position_error_mm": 1.4956748038974768,
+        "final_orientation_error_deg": 0.2660563220506835,
+        "final_joint_positions_rad": [
+          0.006283185307179597,
+          1.5517024247780824,
+          -1.2855222605564223,
+          1.426457597654964,
+          -0.007539822368615502,
+          0.0
+        ],
+        "final_joint_error_rad": [
+          -0.0034033920377665823,
+          -0.004328417768680204,
+          0.0008203060395082229,
+          0.000349064537726651,
+          4.769028921769447e-12,
+          1.8093356316069626e-11
+        ],
+        "final_position_excursion_mm": 6.77765503034495e-13,
+        "post_plan_max_distance_from_final_mm": 0.8050577769723624,
+        "post_success_max_distance_from_final_mm": 6.77765503034495e-13,
+        "completion_delay_s": 0.26894092559814453,
+        "raw_joint_velocity_peak_rad_s": [
+          0.014,
+          1.157,
+          1.435,
+          0.6,
+          0.0,
+          0.009000000000000001
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.005050126236045986,
+          0.0028740215726399863,
+          0.0028034576865007313,
+          0.0034642423414074273,
+          0.0039467423275405256,
+          0.005225779846109096
+        ],
+        "encoder_max_gap_s": 0.00552058219909668
+      },
+      "camera_performance": {
+        "translation_px": 75.73184798902508,
+        "fitted_delay_s": 0.03999999999999995,
+        "velocity_nrmse": 0.025293261397509804,
+        "peak_ratio": 1.0307387013661635,
+        "middle_minimum_ratio": 0.9666749663079922,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.052643376943904245,
+        "post_plan_excursion_px": 0.11907332280981878,
+        "final_window_excursion_px": 0.023194926170115662,
+        "cross_track_rms_px": 0.6501444402499271,
+        "completion_delay_s": 0.26894092559814453
+      }
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-precision-restore-return",
+      "case": "return",
+      "requested_speed": 0.3,
+      "result": {
+        "id": "4e434bdbe2a94d2aaa009de386c1aa9e",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 0.5,
+        "error": null
+      },
+      "failure": null
+    },
+    {
+      "artifact": ".runtime/tcp-smooth/fast-precision-x80-v300",
+      "case": "line_x",
+      "requested_speed": 0.3,
+      "result": {
+        "id": "e370208c2c604caf9751f8da937ad93e",
+        "kind": "movel",
+        "status": "aborted",
+        "progress": 1.0,
+        "duration": 0.5000000000000001,
+        "error": "goal tracking error 0.0020 rad exceeds tolerance"
+      },
+      "failure": "motion did not succeed"
+    }
+  ]
+}
