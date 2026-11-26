@@ -77,7 +77,9 @@ class RobotController:
 
     def _record(self, status, error=None):
         if self._motion:
-            self._motion.update(status=status, error=error)
+            self._motion.update(status=status, error=error,
+                                finished_timestamp=time.time(),
+                                finished_monotonic_time=time.monotonic())
             self._history[self._motion["id"]] = copy.deepcopy(self._motion)
             if len(self._history) > 100:
                 self._history.pop(next(iter(self._history)))

@@ -103,7 +103,7 @@ report['requested_angular_speed_rad_s']=a.angular_speed
 try:
  if not camera_ready.wait(5) or camera_errors:raise RuntimeError(str(camera_errors))
  time.sleep(.5);report['submitted_unix']=time.time()
- motion=r.movej(end_q.tolist(),duration=plan.duration) if a.case.startswith('joint') else (r.movec(via,matrix_pose(E),speed=a.speed,angular_speed=a.angular_speed) if via else r.movel(matrix_pose(E),speed=a.speed,angular_speed=a.angular_speed));report['motion']=motion;report['accepted_unix']=time.time();deadline=time.monotonic()+motion['duration']+7+a.post_motion_seconds;finished=None
+ motion=r.movej(end_q.tolist(),duration=plan.duration) if a.case.startswith('joint') else (r.movec(via,matrix_pose(E),speed=a.speed,angular_speed=a.angular_speed) if via else r.movel(matrix_pose(E),speed=a.speed,angular_speed=a.angular_speed));report['motion']=motion;report['accepted_unix']=time.time();deadline=time.monotonic()+motion['duration']+info.get('goal_timeout',5.)+2+a.post_motion_seconds;finished=None
  if abs(motion['duration']-plan.duration)>1e-5:raise RuntimeError('server duration differs from the recorded reference')
  while time.monotonic()<deadline:
   st=r.state();report['samples'].append(st)

@@ -41,6 +41,9 @@ TCP 固定变换由启动参数确定。默认是上游驱动原始 `link6` 坐�
 
 可用 `--tcp-position-tolerance 0.001` 为 `movel`/`movec` 额外要求 TCP 位置误差不超过 1 mm。
 该检查使用控制反馈和当前 TCP 模型，与关节误差、速度及持续稳定时间同时满足才成功；
+终态另含 `finished_timestamp`（Unix 秒）和 `finished_monotonic_time`（服务端单调时钟秒），
+记录控制器实际宣布完成、中止或取消的时刻。客户端轮询到终态可能更晚；停稳评估应使用事件时间。
+
 `motion.tcp_position_error` 报告终点检查时的误差（m）。默认不启用这项附加检查，
 `movej` 和 `trajectory` 仍使用关节到位条件。此值是控制反馈误差，不代表已完成外部绝对精度标定。
 

@@ -18,6 +18,14 @@ from piper_control.model import RobotModel
 from piper_control.planning import pose_matrix
 
 
+def terminal_timestamp(report):
+    """Prefer the controller's event time over a later client polling time."""
+    stamp = report.get('result', {}).get('finished_timestamp', report['motion_finished_unix'])
+    if not np.isfinite(stamp) or stamp <= 0:
+        raise ValueError('Invalid motion completion timestamp')
+    return stamp
+
+
 def reconstructed_stop_metrics(report, model, reference_q, succeeded):
     """Use the service's marked estimates at rest, retaining raw CAN separately."""
     rows = report['samples']
@@ -28,7 +36,7 @@ def reconstructed_stop_metrics(report, model, reference_q, succeeded):
     transforms = np.array([model.forward(v) for v in q])
     xyz = transforms[:, :3, 3]
     tail = stamps > stamps[-1]-.5
-    post = stamps > report['motion_finished_unix']
+    post = stamps > terminal_timestamp(report)
     if sum(tail) < 10 or sum(post) < 10:
         raise ValueError('Insufficient reconstructed final hold coverage')
     center, final_q = np.mean(xyz[tail], axis=0), np.mean(q[tail], axis=0)
@@ -114,7 +122,7 @@ def analyze(folder, include_failed=False):
     tail_rotation = Rotation.from_matrix(transforms[tail, :3, :3]).mean()
     rotation_error = (Rotation.from_matrix(target[:3, :3]).inv() * tail_rotation).magnitude()
     late = t > duration
-    finished_t = report['motion_finished_unix'] - accepted
+    finished_t = terminal_timestamp(report) - accepted
     post_success = t > finished_t
     raw_velocity_peaks = []
     static_velocity_rms = []
@@ -162,6 +170,7 @@ def analyze(folder, include_failed=False):
                                                  if succeeded else None),
         post_terminal_max_distance_from_final_mm=float(np.max(np.linalg.norm(xyz[post_success]-terminal_xyz, axis=1))*1000),
         completion_delay_s=finished_t-duration,
+        completion_time_source=('controller' if 'finished_timestamp' in report.get('result', {}) else 'client_poll'),
         raw_joint_velocity_peak_rad_s=raw_velocity_peaks,
         final_2s_velocity_rms_rad_s=static_velocity_rms,
         final_2s_current_ac_rms_a=static_current_ac_rms,

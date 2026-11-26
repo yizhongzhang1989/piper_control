@@ -43,3 +43,13 @@ def test_missing_stop_samples_are_not_a_zero_motion_measurement():
     report['samples'] = report['samples'][::10]
     with pytest.raises(ValueError, match='Insufficient'):
         reconstructed_stop_metrics(report, model, q, True)
+
+
+def test_motion_between_completion_and_client_poll_is_included():
+    model, q, report = record(4, True)
+    report['result'] = dict(finished_timestamp=1000.3)
+    report['samples'][13]['positions'] = (q+[.003, 0, 0, 0, 0, 0]).tolist()
+    result = reconstructed_stop_metrics(report, model, q, True)
+    assert result['post_success_max_distance_from_final_mm'] > .5
+    del report['result']
+    assert reconstructed_stop_metrics(report, model, q, True)['post_success_max_distance_from_final_mm'] < 1e-8

@@ -188,6 +188,20 @@ def test_goal_dwell_cannot_bridge_a_long_control_gap():
     assert controller.motion(motion['id'])['status'] == 'succeeded'
 
 
+def test_terminal_event_timestamp_is_not_client_poll_time(monkeypatch):
+    backend = StationaryFeedback()
+    controller = RobotController(backend, RobotModel())
+    motion = controller.movej(backend.q, duration=1)
+    monkeypatch.setattr(time, 'time', lambda: 1234.)
+    monkeypatch.setattr(time, 'monotonic', lambda: 567.)
+    controller.stop()
+    monkeypatch.setattr(time, 'time', lambda: 1235.)
+    result = controller.motion(motion['id'])
+    assert result['status'] == 'cancelled'
+    assert result['finished_timestamp'] == 1234.
+    assert result['finished_monotonic_time'] == 567.
+
+
 def test_following_error_does_not_step_targets_at_command_boundaries():
     backend = StationaryFeedback()
     backend.initial_target = np.asarray(backend.q) + [0, 0, 0, .012, 0, 0]
