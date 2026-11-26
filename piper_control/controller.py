@@ -236,7 +236,10 @@ class RobotController:
                     self._record("aborted", "feedback lost or hardware fault")
                 self._plan = None
                 self._stream_time = None
-                self._q = None
+                # Feedback outages do not invalidate the commanded hold target.
+                # The hardware watchdog holds this same target while feedback is
+                # unavailable. Replacing it with measured position on recovery
+                # would turn the following error into an unrequested motion.
                 self._mode = "fault"
                 self._epoch += 1
                 return
@@ -252,6 +255,8 @@ class RobotController:
                 return
             if self._q is None:
                 self._q = measured.copy()
+            if self._mode == "fault" and self._error is None:
+                self._mode = "idle"
             dq = np.zeros(len(measured))
             if not data.get("command_ready", True):
                 if self._plan is not None:
@@ -317,7 +322,6 @@ class RobotController:
                         self._record("aborted", str(exc))
                     self._plan = None
                     self._stream_time = None
-                    self._q = None
                     self._error = str(exc)
                     self._mode = "fault"
                     self._epoch += 1

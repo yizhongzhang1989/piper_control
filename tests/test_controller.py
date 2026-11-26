@@ -104,6 +104,30 @@ def test_enable_is_idempotent_during_an_active_motion(monkeypatch):
     assert controller._plan is not None and controller._epoch == epoch
 
 
+@pytest.mark.parametrize("during_motion", [False, True])
+def test_feedback_outage_preserves_nominal_target_on_recovery(monkeypatch, during_motion):
+    backend = StationaryFeedback()
+    backend.initial_target = np.asarray(backend.q) + [0, .02, 0, .009, 0, 0]
+    controller = RobotController(backend, RobotModel())
+    if during_motion:
+        controller.movej(backend.initial_target + [.04, 0, 0, 0, 0, 0], duration=1)
+        controller._tick(controller._start + .5, .005)
+    expected = controller._q.copy()
+    read = backend.read
+    monkeypatch.setattr(backend, "read", lambda: dict(read(), connected=False, feedback_age=.3))
+    count = len(backend.commands)
+    controller._tick(time.monotonic(), .005)
+    assert controller.state()["mode"] == "fault"
+    assert len(backend.commands) == count
+    monkeypatch.setattr(backend, "read", read)
+    controller._tick(time.monotonic(), .005)
+    assert np.array_equal(backend.commands[-1], expected)
+    assert np.array_equal(backend.command_velocities[-1], np.zeros(6))
+    assert controller.state()["mode"] == "idle"
+    if during_motion:
+        assert controller.state()["motion"]["status"] == "aborted"
+
+
 def test_stream_timeout_stop_and_physics_motion_success():
     model = RobotModel()
     backend = SimulationBackend(model)

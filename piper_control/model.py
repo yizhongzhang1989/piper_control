@@ -146,6 +146,10 @@ class RobotModel:
         """Return the nearest seeded solution; never return an unconverged result."""
         target = matrix_from_pose(target)
         seed = np.clip(finite_vector(seed, 6, "seed"), self.lower, self.upper)
+        # Consecutive Cartesian path samples can be micrometres apart near a
+        # smooth start/stop. A coarse early-exit tolerance creates held samples
+        # followed by jumps, which become velocity/acceleration spikes.
+        position_tolerance, rotation_tolerance = 1e-9, 1e-8
         if self._native is not None:
             native_target = target.copy()
             native_target[:3, :3] = target[:3, :3] @ self.tool_transform[:3, :3].T
@@ -155,8 +159,8 @@ class RobotModel:
                 tool_offset_m=self.tcp_offset,
                 lower_limits=self.lower + self.angle_offsets,
                 upper_limits=self.upper + self.angle_offsets,
-                pos_tol_m=1e-5,
-                rot_tol_rad=1e-4,
+                pos_tol_m=position_tolerance,
+                rot_tol_rad=rotation_tolerance,
                 max_iters=80,
                 return_result=True,
             )
@@ -175,7 +179,7 @@ class RobotModel:
         best_error = float("inf")
         for _ in range(35):
             residual = error(q)
-            if np.linalg.norm(residual[:3]) < 1e-5 and np.linalg.norm(residual[3:]) < 1e-4:
+            if np.linalg.norm(residual[:3]) < position_tolerance and np.linalg.norm(residual[3:]) < rotation_tolerance:
                 return q
             magnitude = np.linalg.norm(residual)
             if magnitude >= best_error * 1.001:
@@ -194,10 +198,10 @@ class RobotModel:
         # Bounded optimization handles limits and more distant Cartesian targets.
         result = least_squares(
             error, q, bounds=(self.lower, self.upper), max_nfev=160,
-            ftol=1e-10, xtol=1e-10, gtol=1e-10,
+            ftol=1e-12, xtol=1e-12, gtol=1e-12,
         )
         residual = error(result.x)
-        if np.linalg.norm(residual[:3]) < 1e-5 and np.linalg.norm(residual[3:]) < 1e-4:
+        if np.linalg.norm(residual[:3]) < position_tolerance and np.linalg.norm(residual[3:]) < rotation_tolerance:
             return result.x
         raise ValueError(
             "TCP target is unreachable from the supplied joint seed within URDF limits "

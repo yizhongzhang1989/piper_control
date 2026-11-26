@@ -2,8 +2,8 @@
 from dataclasses import dataclass
 import math
 import numpy as np
-from scipy.interpolate import CubicHermiteSpline
-from scipy.spatial.transform import Rotation, Slerp
+from scipy.interpolate import CubicHermiteSpline, CubicSpline
+from scipy.spatial.transform import Rotation, RotationSpline, Slerp
 
 
 def vector(value, n, name):
@@ -165,10 +165,16 @@ class Planner:
             position = lambda u: center+radius*(math.cos(ae*u)*e1+math.sin(ae*u)*e2)
             knots, transforms = [0., fraction, 1.], [begin, via, end]
         rotations = Rotation.from_matrix(np.array([T[:3, :3] for T in transforms]))
-        slerp = Slerp(knots, rotations)
+        orientation = (Slerp(knots, rotations) if via_pose is None
+                       else RotationSpline(knots, rotations))
         angle = sum((rotations[i].inv()*rotations[i+1]).magnitude() for i in range(len(transforms)-1))
         angular_slope = max((rotations[i].inv()*rotations[i+1]).magnitude()/(knots[i+1]-knots[i])
                             for i in range(len(transforms)-1))
+        if via_pose is not None:
+            # Interpolating each rotation segment independently changes angular
+            # velocity abruptly at the via pose. RotationSpline is C2 there.
+            rotation_samples = np.concatenate([np.linspace(a, b, 257) for a, b in zip(knots[:-1], knots[1:])])
+            angular_slope = float(np.max(np.linalg.norm(orientation(rotation_samples, 1), axis=1))) * 1.01
         auto = duration is None
         duration = max(.5, 1.875*distance/speed, 1.875*angular_slope/angular_speed) if auto else float(duration)
         if not math.isfinite(duration) or duration <= 0:
@@ -182,13 +188,16 @@ class Planner:
             u = t/duration
             s = 10*u**3-15*u**4+6*u**5
             T = np.eye(4)
-            T[:3, :3], T[:3, 3] = slerp(s).as_matrix(), position(s)
+            T[:3, :3], T[:3, 3] = orientation(s).as_matrix(), position(s)
             q = self.joints(self.model.inverse(T, seed))
             if np.max(np.abs(q-seed)) > .3:
                 raise ValueError("Cartesian path crosses an IK branch discontinuity")
             qs.append(q)
             seed = q
         qs = np.asarray(qs)
-        vs = np.gradient(qs, times, axis=0)
-        vs[[0, -1]] = 0
+        # Consistent derivatives from one clamped C2 spline prevent acceleration
+        # jumps at every sampled IK waypoint. The resulting Hermite segments
+        # exactly reproduce that spline, including zero endpoint velocity.
+        zero = np.zeros(len(start))
+        vs = CubicSpline(times, qs, bc_type=((1, zero), (1, zero)))(times, 1)
         return self.validate(Plan(times, qs, vs), retime=auto)
