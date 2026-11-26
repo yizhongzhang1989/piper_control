@@ -148,7 +148,9 @@ function updateState(next) {
   $('motion-kind').textContent = motion.kind || '空闲';
   const motionStatus = {running: '执行中', succeeded: '已完成', completed: '已完成', canceled: '已停止', cancelled: '已停止', failed: '执行失败', aborted: '执行中止', idle: '等待指令'};
   const progress = Number.isFinite(motion.progress) && motion.status === 'running' ? ` · ${(motion.progress * 100).toFixed(0)}%` : '';
-  $('motion-state').textContent = (motionStatus[motion.status] || motion.status || '等待指令') + progress;
+  const settling = motion.status === 'running' && motion.progress >= 1;
+  const endpointError = Number.isFinite(motion.tcp_position_error) ? ` · TCP 偏差 ${(motion.tcp_position_error * 1000).toFixed(2)} mm` : '';
+  $('motion-state').textContent = settling ? '等待停稳' + endpointError : (motionStatus[motion.status] || motion.status || '等待指令') + progress;
   if (motion.error && motion.error !== latestFault) feedback(motion.error, 'error');
   latestFault = motion.error || '';
   const errors = Array.isArray(next.errors) ? next.errors : next.errors ? [next.errors] : [];
