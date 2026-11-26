@@ -39,6 +39,8 @@ double compute_adaptive_stiffness_scale(
   double b = 0.08,
   double power = 3.0);
 
+bool mit_feedback_ready(const Feedback & sample) noexcept;
+
 class RateMeter {
 public:
   explicit RateMeter(double window = 1.0) noexcept : window_(window) {}

@@ -54,6 +54,16 @@ python -m piper_control --backend hardware --workspace "$PIPER_WORKSPACE" --arm 
 构建仓库内的修订驱动仅供下一次有计划启动使用；不要在运行中的机械臂上热替换 CAN
 控制进程。原始 `~/Documents/Piper_workspace` 未修改。
 
+修订驱动还会在丢失新鲜 CAN/MIT 确认时清除 `mit_ready`，同模式服务也重新检查
+固件状态。这个修复防止旧就绪标志被误用，不代表它能解除固件示教状态。
+
+固件 `reset()`（`0x150 B0=2`）会关闭电机，不能用于无支撑的在线恢复。
+[厂商说明](https://github.com/agilexrobotics/piper_sdk/issues/66#issuecomment-3162642963)
+明确写明“令机械臂立刻掉电”，随后需至少两次使能。持续发送 MIT 也不能保证跨
+复位保持姿态。2026-11-26 调试中已实际发生复位后移动，用户确认稳定且无碰撞；
+见[记录](hardware-recovery-2026-11-26.json)。需要这类恢复时，必须先提供电机
+失能也不会下落的物理支撑；通用 API 不自动发送该复位指令。
+
 ```bash
 PIPER_BUILD_TESTING=ON bash scripts/build_vendor.sh --parallel-workers 2
 export PIPER_WORKSPACE="$PWD/vendor/Piper_workspace"

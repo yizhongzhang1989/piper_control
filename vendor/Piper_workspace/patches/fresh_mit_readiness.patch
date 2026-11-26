@@ -1,0 +1,178 @@
+diff --git a/src/piper_x_driver/include/piper_x_driver/controller.hpp b/src/piper_x_driver/include/piper_x_driver/controller.hpp
+index ab1195c..28a9b89 100644
+--- a/src/piper_x_driver/include/piper_x_driver/controller.hpp
++++ b/src/piper_x_driver/include/piper_x_driver/controller.hpp
+@@ -39,6 +39,8 @@ double compute_adaptive_stiffness_scale(
+   double b = 0.08,
+   double power = 3.0);
+ 
++bool mit_feedback_ready(const Feedback & sample) noexcept;
++
+ class RateMeter {
+ public:
+   explicit RateMeter(double window = 1.0) noexcept : window_(window) {}
+diff --git a/src/piper_x_driver/src/controller.cpp b/src/piper_x_driver/src/controller.cpp
+index 7d9dd44..bcdb07f 100644
+--- a/src/piper_x_driver/src/controller.cpp
++++ b/src/piper_x_driver/src/controller.cpp
+@@ -41,6 +41,12 @@ void check_finite_3(const Vec3 & v, const std::string & name) {
+ 
+ }  // namespace
+ 
++bool mit_feedback_ready(const Feedback & sample) noexcept {
++  return sample.status.has_value() && fresh(sample.age) &&
++    sample.status->ctrl_mode == 1 && sample.status->mode_feedback == 6 &&
++    sample.status->teach_status != 1;
++}
++
+ double compute_adaptive_stiffness_scale(
+   double position_error,
+   double scale,
+@@ -306,7 +312,7 @@ void Controller::start_mit() {
+   target_hold_time_ = {{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+   previous_target_.reset();
+   mit_started = clock_();
+-  mit_ready = (sample.status->ctrl_mode == 1 && sample.status->mode_feedback == 6);
++  mit_ready = mit_feedback_ready(sample);
+   send_mit(command, sample);
+   arm_.mode("mit");
+   mode = "mit";
+@@ -1018,6 +1024,9 @@ Feedback Controller::watchdog(bool compute_wrench) {
+     try {
+       sample = healthy();
+       const double now = clock_();
++      const bool was_ready = mit_ready;
++      const bool ready = mit_feedback_ready(*sample);
++      mit_ready = ready;
+       MitTarget command;
+       const bool fresh_rx = mit_received.has_value() && (now - *mit_received <= 0.2);
+       if (fresh_rx && cartesian_mit_target.has_value()) {
+@@ -1041,7 +1050,6 @@ Feedback Controller::watchdog(bool compute_wrench) {
+         }
+         command = gravity_command(*sample);
+       }
+-      const bool ready = (sample->status->ctrl_mode == 1 && sample->status->mode_feedback == 6);
+       if (!ready) {
+         if (sample->status->ctrl_mode == 0 || sample->status->ctrl_mode == 2) {
+           if (sample->status->teach_status == 1) {
+@@ -1053,7 +1061,7 @@ Feedback Controller::watchdog(bool compute_wrench) {
+           hold_reason.clear();
+           return *sample;
+         }
+-        if (mit_ready || now - mit_started > 0.2) {
++        if (was_ready || now - mit_started > 0.2) {
+           throw std::invalid_argument("Arm did not acknowledge or left external MIT mode");
+         }
+         return *sample;
+@@ -1062,6 +1070,7 @@ Feedback Controller::watchdog(bool compute_wrench) {
+       send_mit(command, *sample, compute_wrench);
+       hold_reason.clear();
+     } catch (const std::exception & error) {
++      mit_ready = false;
+       hold_reason = error.what();
+       try {
+         arm_.retain_mit();
+diff --git a/src/piper_x_driver/src/node.cpp b/src/piper_x_driver/src/node.cpp
+index 576800c..00eb78b 100644
+--- a/src/piper_x_driver/src/node.cpp
++++ b/src/piper_x_driver/src/node.cpp
+@@ -844,13 +844,17 @@ void DriverNode::handle_set_mode(
+     if (calibration_active_) {
+       throw std::invalid_argument("Wait for effector calibration to finish before changing modes");
+     }
+-    if (request->mode == "mit" && control_->mode == "mit" && control_->mit_ready) {
+-      control_->release_mit();
+-      last_error_.clear();
+-      response->success = true;
+-      response->message = "MIT target released; holding gravity compensation";
+-      publish_control_state();
+-      return;
++    if (request->mode == "mit" && control_->mode == "mit") {
++      control_->mit_ready = false;
++      control_->mit_ready = mit_feedback_ready(control_->healthy());
++      if (control_->mit_ready) {
++        control_->release_mit();
++        last_error_.clear();
++        response->success = true;
++        response->message = "MIT target released; holding gravity compensation";
++        publish_control_state();
++        return;
++      }
+     }
+     control_->set_mode(request->mode, true);
+     last_error_.clear();
+diff --git a/src/piper_x_driver/test/test_cpp_driver.cpp b/src/piper_x_driver/test/test_cpp_driver.cpp
+index 34699c0..dd982e9 100644
+--- a/src/piper_x_driver/test/test_cpp_driver.cpp
++++ b/src/piper_x_driver/test/test_cpp_driver.cpp
+@@ -1,6 +1,7 @@
+ #include <gtest/gtest.h>
+ #include <yaml-cpp/yaml.h>
+ 
++#include <algorithm>
+ #include <chrono>
+ #include <cmath>
+ #include <filesystem>
+@@ -213,6 +214,62 @@ TEST(PiperXDriverCppTest, FleetConfigAndDynamicsLoadCleanly) {
+   }
+ }
+ 
++TEST(PiperXDriverCppTest, MitReadyClearsOnFeedbackLossAndServiceReenters) {
++  MockArm arm;
++  double now = 0.0;
++  const Vec6 kp{{17.0, 16.0, 15.0, 4.0, 3.0, 3.0}};
++  const Vec6 kd{{6.0, 6.0, 3.0, 0.6, 0.4, 0.1}};
++  Controller ctrl(arm, [&] { return now; }, std::nullopt, 1.0, std::nullopt,
++                  0.0, std::nullopt, 0.05, 0.02, 5.0, 0.0, 0.08, 3.0, 0.0, kp, kd);
++  ctrl.start_mit();
++  ctrl.watchdog(false);
++  ASSERT_TRUE(ctrl.mit_ready);
++  arm.status_.ctrl_mode = 2;
++  arm.status_.teach_status = 1;
++  now += .01;
++  ctrl.watchdog(false);  // Recovery's early return must not leave stale readiness.
++  EXPECT_FALSE(ctrl.mit_ready);
++  ctrl.watchdog(false);
++  ctrl.watchdog(false);
++  ASSERT_TRUE(ctrl.mit_ready);
++  arm.status_.err_code = 1;
++  EXPECT_THROW(ctrl.watchdog(false), std::invalid_argument);
++  EXPECT_FALSE(ctrl.mit_ready);
++
++  if (!rclcpp::ok()) rclcpp::init(0, nullptr);
++  auto mock = std::make_unique<MockArm>();
++  auto * raw = mock.get();
++  rclcpp::NodeOptions options;
++  options.arguments({"--ros-args", "-r", "__ns:=/arm_1"});
++  auto driver = std::make_shared<DriverNode>(options, std::move(mock), false);
++  auto client_node = std::make_shared<rclcpp::Node>("mit_ready_test_client");
++  auto client = client_node->create_client<piper_x_interfaces::srv::SetMode>("/arm_1/set_mode");
++  rclcpp::executors::SingleThreadedExecutor executor;
++  executor.add_node(driver);
++  executor.add_node(client_node);
++  ASSERT_TRUE(client->wait_for_service(std::chrono::seconds(2)));
++  driver->controller().mit_ready = true;  // Simulate status loss before the next tick.
++  raw->status_.ctrl_mode = 2;
++  raw->status_.teach_status = 1;
++  raw->calls.clear();
++  auto request = std::make_shared<piper_x_interfaces::srv::SetMode::Request>();
++  request->mode = "mit";
++  auto future = client->async_send_request(request);
++  ASSERT_EQ(executor.spin_until_future_complete(future, std::chrono::seconds(2)),
++            rclcpp::FutureReturnCode::SUCCESS);
++  EXPECT_TRUE(future.get()->success);
++  EXPECT_EQ(raw->status_.ctrl_mode, 1);
++  EXPECT_EQ(raw->status_.mode_feedback, 6);
++  EXPECT_NE(std::find(raw->calls.begin(), raw->calls.end(), "mode:mit"), raw->calls.end());
++  driver->controller().mit_ready = true;
++  raw->status_.err_code = 1;
++  auto failed = client->async_send_request(request);
++  ASSERT_EQ(executor.spin_until_future_complete(failed, std::chrono::seconds(2)),
++            rclcpp::FutureReturnCode::SUCCESS);
++  EXPECT_FALSE(failed.get()->success);
++  EXPECT_FALSE(driver->controller().mit_ready);
++}
++
+ TEST(PiperXDriverCppTest, InverseKinematicsAndFeedbackAgeSkewHandling) {
+   const Vec6 q_true{{0.25, 0.95, -1.35, 0.2, 0.45, -0.4}};
+   const Vec3 tool_off{{0.0, 0.0, 0.16}};

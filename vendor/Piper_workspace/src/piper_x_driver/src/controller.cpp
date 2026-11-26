@@ -41,6 +41,12 @@ void check_finite_3(const Vec3 & v, const std::string & name) {
 
 }  // namespace
 
+bool mit_feedback_ready(const Feedback & sample) noexcept {
+  return sample.status.has_value() && fresh(sample.age) &&
+    sample.status->ctrl_mode == 1 && sample.status->mode_feedback == 6 &&
+    sample.status->teach_status != 1;
+}
+
 double compute_adaptive_stiffness_scale(
   double position_error,
   double scale,
@@ -306,7 +312,7 @@ void Controller::start_mit() {
   target_hold_time_ = {{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
   previous_target_.reset();
   mit_started = clock_();
-  mit_ready = (sample.status->ctrl_mode == 1 && sample.status->mode_feedback == 6);
+  mit_ready = mit_feedback_ready(sample);
   send_mit(command, sample);
   arm_.mode("mit");
   mode = "mit";
@@ -1018,6 +1024,9 @@ Feedback Controller::watchdog(bool compute_wrench) {
     try {
       sample = healthy();
       const double now = clock_();
+      const bool was_ready = mit_ready;
+      const bool ready = mit_feedback_ready(*sample);
+      mit_ready = ready;
       MitTarget command;
       const bool fresh_rx = mit_received.has_value() && (now - *mit_received <= 0.2);
       if (fresh_rx && cartesian_mit_target.has_value()) {
@@ -1041,7 +1050,6 @@ Feedback Controller::watchdog(bool compute_wrench) {
         }
         command = gravity_command(*sample);
       }
-      const bool ready = (sample->status->ctrl_mode == 1 && sample->status->mode_feedback == 6);
       if (!ready) {
         if (sample->status->ctrl_mode == 0 || sample->status->ctrl_mode == 2) {
           if (sample->status->teach_status == 1) {
@@ -1053,7 +1061,7 @@ Feedback Controller::watchdog(bool compute_wrench) {
           hold_reason.clear();
           return *sample;
         }
-        if (mit_ready || now - mit_started > 0.2) {
+        if (was_ready || now - mit_started > 0.2) {
           throw std::invalid_argument("Arm did not acknowledge or left external MIT mode");
         }
         return *sample;
@@ -1062,6 +1070,7 @@ Feedback Controller::watchdog(bool compute_wrench) {
       send_mit(command, *sample, compute_wrench);
       hold_reason.clear();
     } catch (const std::exception & error) {
+      mit_ready = false;
       hold_reason = error.what();
       try {
         arm_.retain_mit();

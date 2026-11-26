@@ -6,7 +6,7 @@ AgileX Piper X 的通用机械臂服务：启动后等待上层命令，通过�
 
 本仓库复用 `~/Documents/Piper_workspace` 的 C++ SocketCAN 驱动、重力/摩擦补偿
 与标定代码。`vendor/Piper_workspace` 只保留驱动、接口、模型及两种标定包，
-附一个可选的超时位置保持补丁；本机原工作空间不改动。无需启动原工作空间的
+附可选的超时位置保持补丁，以及就绪状态失效修复；本机原工作空间不改动。无需启动原工作空间的
 摄像头、插孔、示教等应用。
 
 ![Dashboard](docs/dashboard-desktop.png)

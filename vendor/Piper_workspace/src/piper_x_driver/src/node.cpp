@@ -844,13 +844,17 @@ void DriverNode::handle_set_mode(
     if (calibration_active_) {
       throw std::invalid_argument("Wait for effector calibration to finish before changing modes");
     }
-    if (request->mode == "mit" && control_->mode == "mit" && control_->mit_ready) {
-      control_->release_mit();
-      last_error_.clear();
-      response->success = true;
-      response->message = "MIT target released; holding gravity compensation";
-      publish_control_state();
-      return;
+    if (request->mode == "mit" && control_->mode == "mit") {
+      control_->mit_ready = false;
+      control_->mit_ready = mit_feedback_ready(control_->healthy());
+      if (control_->mit_ready) {
+        control_->release_mit();
+        last_error_.clear();
+        response->success = true;
+        response->message = "MIT target released; holding gravity compensation";
+        publish_control_state();
+        return;
+      }
     }
     control_->set_mode(request->mode, true);
     last_error_.clear();

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <yaml-cpp/yaml.h>
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <filesystem>
@@ -211,6 +212,62 @@ TEST(PiperXDriverCppTest, FleetConfigAndDynamicsLoadCleanly) {
   for (double val : g) {
     EXPECT_TRUE(std::isfinite(val));
   }
+}
+
+TEST(PiperXDriverCppTest, MitReadyClearsOnFeedbackLossAndServiceReenters) {
+  MockArm arm;
+  double now = 0.0;
+  const Vec6 kp{{17.0, 16.0, 15.0, 4.0, 3.0, 3.0}};
+  const Vec6 kd{{6.0, 6.0, 3.0, 0.6, 0.4, 0.1}};
+  Controller ctrl(arm, [&] { return now; }, std::nullopt, 1.0, std::nullopt,
+                  0.0, std::nullopt, 0.05, 0.02, 5.0, 0.0, 0.08, 3.0, 0.0, kp, kd);
+  ctrl.start_mit();
+  ctrl.watchdog(false);
+  ASSERT_TRUE(ctrl.mit_ready);
+  arm.status_.ctrl_mode = 2;
+  arm.status_.teach_status = 1;
+  now += .01;
+  ctrl.watchdog(false);  // Recovery's early return must not leave stale readiness.
+  EXPECT_FALSE(ctrl.mit_ready);
+  ctrl.watchdog(false);
+  ctrl.watchdog(false);
+  ASSERT_TRUE(ctrl.mit_ready);
+  arm.status_.err_code = 1;
+  EXPECT_THROW(ctrl.watchdog(false), std::invalid_argument);
+  EXPECT_FALSE(ctrl.mit_ready);
+
+  if (!rclcpp::ok()) rclcpp::init(0, nullptr);
+  auto mock = std::make_unique<MockArm>();
+  auto * raw = mock.get();
+  rclcpp::NodeOptions options;
+  options.arguments({"--ros-args", "-r", "__ns:=/arm_1"});
+  auto driver = std::make_shared<DriverNode>(options, std::move(mock), false);
+  auto client_node = std::make_shared<rclcpp::Node>("mit_ready_test_client");
+  auto client = client_node->create_client<piper_x_interfaces::srv::SetMode>("/arm_1/set_mode");
+  rclcpp::executors::SingleThreadedExecutor executor;
+  executor.add_node(driver);
+  executor.add_node(client_node);
+  ASSERT_TRUE(client->wait_for_service(std::chrono::seconds(2)));
+  driver->controller().mit_ready = true;  // Simulate status loss before the next tick.
+  raw->status_.ctrl_mode = 2;
+  raw->status_.teach_status = 1;
+  raw->calls.clear();
+  auto request = std::make_shared<piper_x_interfaces::srv::SetMode::Request>();
+  request->mode = "mit";
+  auto future = client->async_send_request(request);
+  ASSERT_EQ(executor.spin_until_future_complete(future, std::chrono::seconds(2)),
+            rclcpp::FutureReturnCode::SUCCESS);
+  EXPECT_TRUE(future.get()->success);
+  EXPECT_EQ(raw->status_.ctrl_mode, 1);
+  EXPECT_EQ(raw->status_.mode_feedback, 6);
+  EXPECT_NE(std::find(raw->calls.begin(), raw->calls.end(), "mode:mit"), raw->calls.end());
+  driver->controller().mit_ready = true;
+  raw->status_.err_code = 1;
+  auto failed = client->async_send_request(request);
+  ASSERT_EQ(executor.spin_until_future_complete(failed, std::chrono::seconds(2)),
+            rclcpp::FutureReturnCode::SUCCESS);
+  EXPECT_FALSE(failed.get()->success);
+  EXPECT_FALSE(driver->controller().mit_ready);
 }
 
 TEST(PiperXDriverCppTest, InverseKinematicsAndFeedbackAgeSkewHandling) {

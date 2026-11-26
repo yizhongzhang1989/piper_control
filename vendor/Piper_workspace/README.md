@@ -7,7 +7,7 @@ Only the existing driver, its interfaces, robot description, gravity calibration
 and friction calibration packages are included. Cameras, insertion tasks,
 teaching controllers, and the original dashboard are not included.
 `SHA256SUMS` records the original upstream snapshot; `SHA256SUMS.patched` records
-the shipped version. The sole source change is documented below. The original
+the shipped version. The two small source patches are documented below. The original
 `~/Documents/Piper_workspace` remains untouched.
 
 `config/arms/arm_2.yaml` and the matching gravity/friction calibration files are
@@ -41,8 +41,18 @@ The original default-false behavior and shutdown-to-drag semantics remain
 unchanged. Do not terminate or hot-swap an active driver to apply this patch.
 Legacy running drivers use the API's separate ROS-only guardian instead.
 
-All seven existing/new C++ tests passed against a MockArm, including fixed-pose
+## Fresh MIT readiness patch
+
+Apply `patches/fresh_mit_readiness.patch` after the position hold patch. It clears
+`mit_ready` when fresh CAN/MIT acknowledgement is lost or a hardware check fails.
+The same-mode MIT service checks current feedback before taking its idempotent
+branch. This fixes a stale status flag; it does not fix a firmware teaching latch
+or make mode recovery safe across motor power loss. The original retry frequency
+and teaching-end commands are unchanged.
+
+All eight existing/new C++ tests passed against a MockArm, including fixed-pose
 timeout retention, continued compensation, no mode writes, and command resumption.
+The readiness regression also covers loss, recovery, errors, and ROS service calls.
 The example arm configurations are included solely to keep the original tests
 reproducible. Build and verify with:
 

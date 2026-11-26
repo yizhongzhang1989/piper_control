@@ -1,0 +1,306 @@
+{
+  "recorded_at": "2026-11-26T08:57:30.850575+08:00",
+  "hardware_acceptance_passed": false,
+  "physical_button": "User confirmed released and not stuck",
+  "isolation": {
+    "description": "Original driver paused <=0.4s while exact captured six MIT frames repeated at200Hz and same mode requested at10Hz; original driver resumed. No reset/power command in this first experiment.",
+    "before": {
+      "timestamp": 1795654243.2039936,
+      "positions": [
+        -0.036861353802120245,
+        0.257313891621524,
+        -0.5843711401527414,
+        0.9060876811728562,
+        0.04569271981721155,
+        1.1460879066145964
+      ],
+      "velocities": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "enabled": true,
+      "connected": true,
+      "command_ready": false,
+      "target_positions": [
+        -0.036861353802120245,
+        0.257313891621524,
+        -0.5843711401527414,
+        0.9060876811728562,
+        0.04569271981721155,
+        1.1460879066145964
+      ],
+      "firmware": {
+        "ctrl_mode": 2,
+        "mode_feedback": 6,
+        "teach_status": 2,
+        "arm_status": 0,
+        "err_code": 0,
+        "command_ready": false
+      }
+    },
+    "after": {
+      "timestamp": 1795654244.0548882,
+      "positions": [
+        -0.036861353802120245,
+        0.257313891621524,
+        -0.5843711401527414,
+        0.9060876811728562,
+        0.04569271981721155,
+        1.1460879066145964
+      ],
+      "velocities": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "enabled": true,
+      "connected": true,
+      "command_ready": false,
+      "target_positions": [
+        -0.036861353802120245,
+        0.257313891621524,
+        -0.5843711401527414,
+        0.9060876811728562,
+        0.04569271981721155,
+        1.1460879066145964
+      ],
+      "firmware": {
+        "ctrl_mode": 2,
+        "mode_feedback": 6,
+        "teach_status": 1,
+        "arm_status": 0,
+        "err_code": 0,
+        "command_ready": false
+      }
+    },
+    "max_reported_joint_delta_during_record": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "result": "ctrl_mode2/teach_status1 persisted without original retry loop"
+  },
+  "reset_incident": {
+    "command": {
+      "t": 0.5082079030107707,
+      "phase": "isolated",
+      "tx": true,
+      "id": "0x150",
+      "hex": "0200000000000000"
+    },
+    "description": "One documented SDK reset under fixed-target relay. This was an inadequate risk assessment: official maintainer documentation discovered afterward states immediate motor power loss. The reset effect occurred after the short isolation window.",
+    "before": {
+      "timestamp": 1795654351.8222926,
+      "positions": [
+        -0.036861353802120245,
+        0.257313891621524,
+        -0.5843711401527414,
+        0.9055640823972578,
+        0.04569271981721155,
+        1.1460879066145964
+      ],
+      "velocities": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "enabled": true,
+      "connected": true,
+      "command_ready": false,
+      "target_positions": [
+        -0.036861353802120245,
+        0.257313891621524,
+        -0.5843711401527414,
+        0.9055640823972578,
+        0.04569271981721155,
+        1.1460879066145964
+      ],
+      "firmware": {
+        "ctrl_mode": 2,
+        "mode_feedback": 6,
+        "teach_status": 1,
+        "arm_status": 0,
+        "err_code": 0,
+        "command_ready": false
+      }
+    },
+    "first_error_status": {
+      "t": 1.0535203230101615,
+      "phase": "after",
+      "id": "0x2a1",
+      "hex": "0205060200000007"
+    },
+    "raw_after": {
+      "timestamp": 1795654352.6568787,
+      "positions": [
+        -0.012095131716320704,
+        -0.004974188368183839,
+        0.008377580409572781,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "velocities": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "enabled": true,
+      "connected": true,
+      "command_ready": false,
+      "target_positions": [
+        0.0,
+        -0.007661995416255106,
+        0.008377580409572781,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "firmware": {
+        "ctrl_mode": 2,
+        "mode_feedback": 6,
+        "teach_status": 2,
+        "arm_status": 0,
+        "err_code": 0,
+        "command_ready": false
+      }
+    },
+    "operator_confirmation": "Actual movement occurred; currently stable with no collision (user confirmed).",
+    "physical_distance": "Not measured. Reset transient zero feedback prevents interpreting encoder jumps as exact physical displacement.",
+    "manufacturer_source": "https://github.com/agilexrobotics/piper_sdk/issues/66#issuecomment-3162642963"
+  },
+  "subsequent_enable": {
+    "description": "Two batches of individual 0x471 joint enables, 0.12s apart, no reset or mode change; fixed target refreshed to current measured pose.",
+    "transmitted": [
+      {
+        "t": 6.918999133631587e-06,
+        "tx": "0x471",
+        "data": "0102000000000000"
+      },
+      {
+        "t": 6.918999133631587e-06,
+        "tx": "0x471",
+        "data": "0202000000000000"
+      },
+      {
+        "t": 6.918999133631587e-06,
+        "tx": "0x471",
+        "data": "0302000000000000"
+      },
+      {
+        "t": 6.918999133631587e-06,
+        "tx": "0x471",
+        "data": "0402000000000000"
+      },
+      {
+        "t": 6.918999133631587e-06,
+        "tx": "0x471",
+        "data": "0502000000000000"
+      },
+      {
+        "t": 6.918999133631587e-06,
+        "tx": "0x471",
+        "data": "0602000000000000"
+      },
+      {
+        "t": 0.12000352700124495,
+        "tx": "0x471",
+        "data": "0102000000000000"
+      },
+      {
+        "t": 0.12000352700124495,
+        "tx": "0x471",
+        "data": "0202000000000000"
+      },
+      {
+        "t": 0.12000352700124495,
+        "tx": "0x471",
+        "data": "0302000000000000"
+      },
+      {
+        "t": 0.12000352700124495,
+        "tx": "0x471",
+        "data": "0402000000000000"
+      },
+      {
+        "t": 0.12000352700124495,
+        "tx": "0x471",
+        "data": "0502000000000000"
+      },
+      {
+        "t": 0.12000352700124495,
+        "tx": "0x471",
+        "data": "0602000000000000"
+      }
+    ],
+    "status_counts": {
+      "0200060100000000": 202,
+      "0200060200000000": 180,
+      "0100060100000000": 6
+    },
+    "max_reported_joint_delta": [
+      0.0,
+      0.0,
+      0.0,
+      0.001919862177193754,
+      0.0,
+      0.0
+    ],
+    "after": {
+      "timestamp": 1795654533.5263948,
+      "positions": [
+        -0.03499385150248631,
+        -0.008569566627292158,
+        0.0209614043164519,
+        0.6132388859807277,
+        0.04389503068765739,
+        1.0940945481976854
+      ],
+      "velocities": [
+        0.0,
+        0.0,
+        0.0,
+        -0.001,
+        0.0,
+        0.053
+      ],
+      "enabled": true,
+      "connected": true,
+      "command_ready": false,
+      "target_positions": [
+        -0.03499385150248631,
+        -0.008569566627292158,
+        0.0209614043164519,
+        0.613465778783487,
+        0.04389503068765739,
+        1.0940945481976854
+      ],
+      "firmware": {
+        "ctrl_mode": 2,
+        "mode_feedback": 6,
+        "teach_status": 2,
+        "arm_status": 0,
+        "err_code": 0,
+        "command_ready": false
+      }
+    },
+    "result": "Control authority not restored"
+  },
+  "next_physical_prerequisite": "Reliable support such that disabling motors cannot cause a fall; pending user confirmation. No further reset while unsupported."
+}
