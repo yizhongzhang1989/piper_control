@@ -72,6 +72,33 @@ def backend(tmp_path):
                            state_path=tmp_path/'coordinates.json')
 
 
+def test_stationary_encoder_changes_cannot_move_a_held_actuator_target(tmp_path):
+    b = backend(tmp_path)
+    try:
+        b._freeze_until = 0
+        b.command(Q)
+        held = b.raw.sent[-1][0]
+        offset = b.mapper.offset
+        b.receiver.value = EncoderSample(tuple(m+.004 for m in MOTOR), Q, (0.,)*6, .001)
+        for _ in range(100):
+            b.step(.005)
+            b.command(Q)
+        assert b.raw.sent[-1][0] == held
+        assert b.mapper.offset == offset
+        assert b.read()['extra']['motor_mapping']['observer_frozen']
+        # A moving axis can update, while all other axes keep their conversion.
+        b.command(Q, [.02, 0, 0, 0, 0, 0])
+        b.step(.005)
+        assert b.mapper.offset[0] > offset[0]
+        assert b.mapper.offset[1:] == offset[1:]
+        b.command(Q)
+        offset = b.mapper.offset
+        b.step(.005)
+        assert b.mapper.offset == offset
+    finally:
+        b.close()
+
+
 def test_coordinate_target_and_restart_hold_do_not_double_apply_offset(tmp_path):
     first = backend(tmp_path)
     target = [v+.003 for v in Q]

@@ -159,10 +159,12 @@ class CoordinateMapper:
         if max(map(abs, self.offset)) > max_offset:
             raise ValueError("Initial encoder offset exceeds the configured bound")
 
-    def advance(self, sample, dt):
+    def advance(self, sample, dt, active=(True,)*6):
         if not math.isfinite(dt) or dt <= 0:
             raise ValueError("Mapping timestep must be positive and finite")
         sample.validate()
+        if len(active) != 6 or any(type(value) is not bool for value in active):
+            raise ValueError('Coordinate update mask must contain six booleans')
         goal = tuple(m-q for m, q in zip(sample.motor, sample.joints))
         if max(map(abs, goal)) > self.max_offset:
             raise RuntimeError("Motor/output encoder difference exceeds the configured bound")
@@ -170,7 +172,8 @@ class CoordinateMapper:
         dt = min(dt, .02)
         alpha = -math.expm1(-2 * math.pi * self.cutoff_hz * dt)
         step = self.rate * dt
-        self.offset = tuple(o + max(-step, min(step, alpha*(g-o))) for o, g in zip(self.offset, goal))
+        self.offset = tuple(o + max(-step, min(step, alpha*(g-o))) if moving else o
+                            for o, g, moving in zip(self.offset, goal, active))
 
     def to_motor(self, joints):
         return tuple(q+o for q, o in zip(_six(joints), self.offset))

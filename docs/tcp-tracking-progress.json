@@ -1,0 +1,2532 @@
+{
+  "goal_status": "incomplete",
+  "scope": "Local robot/fixture tests only; original failed windows retained. Optical projection is not a spatial calibration.",
+  "software_tests": {
+    "passed": 78,
+    "source": ".runtime/tcp-smooth/stationary-mapping-full-tests.log"
+  },
+  "trials": [
+    {
+      "record": ".runtime/tcp-smooth/phase10-line-z20/report.json",
+      "case": "line_z",
+      "timestamp": "2026-11-26T14:25:47.325026+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "17a23568eb1d46deb167d3288425172f",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.812500000000001,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0008180412539160464,
+      "camera_frames": 378,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0010409356385867497,
+          -0.00041181975328465835,
+          -0.0003290323010638784,
+          -0.0003636908232246125,
+          0.004221054277551758,
+          -0.0012247665749506092
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.001
+      },
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 36.03539225270697,
+        "fitted_delay_s": 0.03499999999999996,
+        "velocity_nrmse": 0.11376748999206199,
+        "peak_ratio": 1.367828242999509,
+        "middle_minimum_ratio": 0.6263422893675682,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/phase10-line-z20-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004519911503558449,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004103108577651837,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0031122866100210915,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004977779022817303,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0035722799442372936,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006950684570601661,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/phase10-return-z20/report.json",
+      "case": "return",
+      "timestamp": "2026-11-26T14:27:39.892925+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "62dc9a6f9537479c90f77b99a8ae4cfd",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.812499999921183,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0016868959253595328,
+      "camera_frames": 417,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0010409356385867497,
+          -0.0053287973548705,
+          -7.917169044655051e-05,
+          -5.9236912960550915e-05,
+          0.004221054277551758,
+          -0.0012247665749506092
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.001
+      },
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 35.76265961449561,
+        "fitted_delay_s": 0.00499999999999997,
+        "velocity_nrmse": 0.10885970097809917,
+        "peak_ratio": 1.1951618425168111,
+        "middle_minimum_ratio": 0.6450015392661366,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": []
+    },
+    {
+      "record": ".runtime/tcp-smooth/j1cg-line-y20/report.json",
+      "case": "line_y",
+      "timestamp": "2026-11-26T14:30:36.164483+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "f944c3d461d24c86985b10bc0a73c628",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.875,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0012394331861991237,
+      "camera_frames": 368,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0010409356385867497,
+          0.008539516353785314,
+          -0.0005474809016851512,
+          -0.0004476936575832698,
+          0.004221054277551758,
+          -0.0012247665749506092
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.001
+      },
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 12.589792968641818,
+        "fitted_delay_s": 0.07999999999999995,
+        "velocity_nrmse": 0.19268439273389598,
+        "peak_ratio": 1.8510112363338596,
+        "middle_minimum_ratio": 0.44287908784401475,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/j1cg-line-y20-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003742557414389257,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004257353168342981,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0026642642511582834,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0024485946990059444,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.00342116412935714,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0063372233667435135,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/j1cg-return-y20/report.json",
+      "case": "return",
+      "timestamp": "2026-11-26T14:33:21.268126+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "ba207a33b44b4c24a721c360e503eb68",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8749999998219389,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0014257329368301264,
+      "camera_frames": 508,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0019482444266956287,
+          0.008618513385113415,
+          -0.0019123118870386223,
+          -0.0004476936575832698,
+          0.004221054277551758,
+          0.0023552739289556717
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.001
+      },
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 11.221168162269969,
+        "fitted_delay_s": 0.06499999999999993,
+        "velocity_nrmse": 0.11644347899374115,
+        "peak_ratio": 1.3014716166182867,
+        "middle_minimum_ratio": 0.5495897770862559,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": []
+    },
+    {
+      "record": ".runtime/tcp-smooth/scheduled-arc-xy20/report.json",
+      "case": "arc_xy",
+      "timestamp": "2026-11-26T13:49:29.079503+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.01,
+      "result": {
+        "id": "1cca25dc0ddf44569fc019b2b14fcc6f",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.945243112740432,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.009240284695906764,
+      "camera_frames": 331,
+      "integral": null,
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.17380596960478406,
+        "fitted_delay_s": 0.05999999999999994,
+        "peak_speed_ratio": 1.1806694196404832,
+        "middle_stopped_fraction": 0.04716981132075472,
+        "position_rms_px": 3.048568980511265,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/scheduled-arc-xy20-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003297152711052371,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0026456757170900615,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003159478437970384,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0070186893363362365,
+              "current_ac_rms_a": 0.009571102339856155,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0030525864443124297,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005549665215127847,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/scheduled-arc-xz20/report.json",
+      "case": "arc_xz",
+      "timestamp": "2026-11-26T13:49:54.198243+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.01,
+      "result": {
+        "id": "17bc1b4efe594c48b30c25a680d709e6",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.008402526666756671,
+      "camera_frames": 331,
+      "integral": null,
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.17418177427116707,
+        "fitted_delay_s": 0.05499999999999995,
+        "peak_speed_ratio": 1.2777093199046548,
+        "middle_stopped_fraction": 0.0,
+        "position_rms_px": 2.8728318744434755,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/scheduled-arc-xz20-hold.json",
+          "passed": false,
+          "errors": [
+            "joint4 speed_rms_rad_s=0.0100094 exceeds 0.01"
+          ],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003364907725332152,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0029497688044997704,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.001073312629199899,
+              "current_ac_rms_a": 0.0038511213951263616,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.010009395586148046,
+              "current_ac_rms_a": 0.010719745519367519,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0030796694627833036,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005193384638171912,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        },
+        {
+          "record": ".runtime/tcp-smooth/scheduled-arc-xz20-steady-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0035156756107468158,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0026973876250920986,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0026903969967274374,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.007466768779063674,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0030176149522429135,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.00505437790435183,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/scheduled-arc-yz20/report.json",
+      "case": "arc_yz",
+      "timestamp": "2026-11-26T13:59:06.167021+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.01,
+      "result": {
+        "id": "365f22c93b0f458c853927b2934fe61f",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.003908938657308403,
+      "camera_frames": 331,
+      "integral": null,
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.24007362089502213,
+        "fitted_delay_s": 0.03499999999999996,
+        "peak_speed_ratio": 1.2760723948276445,
+        "middle_stopped_fraction": 0.0,
+        "position_rms_px": 0.9843475293350914,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/scheduled-arc-yz20-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.007427247134706101,
+              "current_ac_rms_a": 0.009962678153990523,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0031147256701032325,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002536532278525162,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.00022360679774997898,
+              "current_ac_rms_a": 0.011496499641195139,
+              "high_speed_position_peak_to_peak_rad": 0.0009999999999998899
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003067336955732122,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0073985403965917485,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/final-arc-xy20/report.json",
+      "case": "arc_xy",
+      "timestamp": "2026-11-26T14:42:30.081396+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "3e430065ebd54edb9bfb8cb8b0f9bb66",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.945243112740432,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.00152129263161771,
+      "camera_frames": 393,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0007787213637236986,
+          -0.0012747841282411186,
+          0.0064288132625876055,
+          -0.0004476936575832698,
+          0.004221054277551758,
+          0.0008046343364417924
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.001
+      },
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.168544195080209,
+        "fitted_delay_s": 0.07499999999999994,
+        "peak_speed_ratio": 1.2888483272104159,
+        "middle_stopped_fraction": 0.03773584905660377,
+        "position_rms_px": 1.4456079041023102,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/final-arc-xy20-hold.json",
+          "passed": false,
+          "errors": [
+            "joint2 current_ac_rms_a=0.119622 exceeds 0.02",
+            "joint3 current_ac_rms_a=0.0817471 exceeds 0.02",
+            "joint4 speed_rms_rad_s=0.0123424 exceeds 0.01"
+          ],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003663481950276267,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0030753861546153846,
+              "current_ac_rms_a": 0.11962224709476077,
+              "high_speed_position_peak_to_peak_rad": 0.0040000000000000036
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0022320394261750843,
+              "current_ac_rms_a": 0.08174707028389458,
+              "high_speed_position_peak_to_peak_rad": 0.0029999999999998916
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0123424470831355,
+              "current_ac_rms_a": 0.014408360212043569,
+              "high_speed_position_peak_to_peak_rad": 0.001000000000000112
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0033018176812174226,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005414683370244285,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        },
+        {
+          "record": ".runtime/tcp-smooth/final-arc-xy20-steady-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004713381376464247,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.00258379488349985,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004063862202388271,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.008097075768448755,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0035166403000591344,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006968890801268161,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/final-arc-xz20/report.json",
+      "case": "arc_xz",
+      "timestamp": "2026-11-26T14:44:26.634095+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "891451a10b2041de9645634a6c22f5b2",
+        "kind": "movec",
+        "status": "aborted",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": "goal tracking error 0.0035 rad exceeds tolerance"
+      },
+      "failure": "motion did not succeed",
+      "max_final_joint_error_rad": 0.0021392620152875796,
+      "camera_frames": 631,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0008797253515624386,
+          -0.002668875307995355,
+          -0.0002371743493259429,
+          -0.0004855781604400123,
+          0.004221054277551758,
+          0.000782825441876401
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.001
+      },
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.1981062829643864,
+        "fitted_delay_s": 0.03499999999999996,
+        "peak_speed_ratio": 1.2719763921053764,
+        "middle_stopped_fraction": 0.018867924528301886,
+        "position_rms_px": 2.1098984865634574,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/final-arc-xz20-steady-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004647593355705725,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002584583331989905,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004028200590834576,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.007332523440126179,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0033986444356537207,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006870370514026155,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/gated-arc-xz20/report.json",
+      "case": "arc_xz",
+      "timestamp": "2026-11-26T14:47:51.202036+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "bfacb8e4392e488897464b35730a69c7",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0016306491690194491,
+      "camera_frames": 443,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0008797253515624386,
+          -0.0026857577397213493,
+          0.0047833476831055256,
+          -0.0013435862204336875,
+          0.004221054277551758,
+          0.000782825441876401
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.001,
+        "motion_cutoff": 0.01
+      },
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.2062902439220616,
+        "fitted_delay_s": 0.07499999999999994,
+        "peak_speed_ratio": 1.1313651006442569,
+        "middle_stopped_fraction": 0.0,
+        "position_rms_px": 2.752896366091019,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/gated-arc-xz20-hold.json",
+          "passed": false,
+          "errors": [
+            "joint2 current_ac_rms_a=0.118276 exceeds 0.02",
+            "joint3 current_ac_rms_a=0.0237783 exceeds 0.02"
+          ],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0037971836932126422,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0008809086218218097,
+              "current_ac_rms_a": 0.11827576000178566,
+              "high_speed_position_peak_to_peak_rad": 0.001000000000000112
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.004793954526275776,
+              "current_ac_rms_a": 0.023778332574005242,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.007755127336156386,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0035328736178923802,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006050634346909421,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        },
+        {
+          "record": ".runtime/tcp-smooth/gated-arc-xz20-steady-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.00453755176279015,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0026169531902577076,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004119996966018303,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.007477949184101215,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003625330881450685,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006673033418168982,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/deadband2-arc-xz20/report.json",
+      "case": "arc_xz",
+      "timestamp": "2026-11-26T14:50:46.242663+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "4ff8ae6a1dea411f83d53ce57f665862",
+        "kind": "movec",
+        "status": "aborted",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": "goal tracking error 0.0031 rad exceeds tolerance"
+      },
+      "failure": "motion did not succeed",
+      "max_final_joint_error_rad": 0.0021542479446177154,
+      "camera_frames": 631,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0008797253515624386,
+          -0.0027166885108568543,
+          8.431396216762356e-05,
+          -0.001288494787071765,
+          0.004221054277551758,
+          0.000782825441876401
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.002
+      },
+      "friction_factors": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.17924166198965308,
+        "fitted_delay_s": 0.03999999999999995,
+        "peak_speed_ratio": 1.301829597887868,
+        "middle_stopped_fraction": 0.009433962264150943,
+        "position_rms_px": 2.0396217318850507,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/deadband2-arc-xz20-steady-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.00375932121532598,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.00410203071660855,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003641393139994641,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006976833020791024,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003522978143559792,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005825488048223943,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/friction175-arc-xz20/report.json",
+      "case": "arc_xz",
+      "timestamp": "2026-11-26T14:54:01.456822+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.002,
+      "result": {
+        "id": "bdbaec2d6a01414fba1eede0fdd3e104",
+        "kind": "movec",
+        "status": "aborted",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": "goal tracking error 0.0025 rad exceeds tolerance"
+      },
+      "failure": "motion did not succeed",
+      "max_final_joint_error_rad": 0.0024580577698221084,
+      "camera_frames": 630,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0008797253515624386,
+          -0.0026846375665595928,
+          0.0002701838036586327,
+          -0.0010927430105920153,
+          0.004221054277551758,
+          0.000782825441876401
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.002
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.17390969129431072,
+        "fitted_delay_s": 0.03499999999999996,
+        "peak_speed_ratio": 1.3009059213870189,
+        "middle_stopped_fraction": 0.018867924528301886,
+        "position_rms_px": 2.0378979167173212,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/friction175-arc-xz20-steady-hold.json",
+          "passed": false,
+          "errors": [
+            "joint3 speed_rms_rad_s=0.0141949 exceeds 0.01",
+            "joint3 current_ac_rms_a=0.0503769 exceeds 0.02"
+          ],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.00356624606554287,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004179156733122105,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.014194893447997417,
+              "current_ac_rms_a": 0.050376884222825866,
+              "high_speed_position_peak_to_peak_rad": 0.006000000000000005
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.007845629356527111,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0034921499108715253,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005768760612124584,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/steady3-arc-xy20/report.json",
+      "case": "arc_xy",
+      "timestamp": "2026-11-26T14:59:20.849333+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "b1dedf507e8341e4a0b39ac287d09f6a",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.945243112740432,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.002136794586563795,
+      "camera_frames": 420,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0008797253515624386,
+          -0.0024177182887058003,
+          0.0029572005346692894,
+          -0.0009526110467460352,
+          0.004221054277551758,
+          0.000782825441876401
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.17073044942451096,
+        "fitted_delay_s": 0.05999999999999994,
+        "peak_speed_ratio": 1.1824357715477714,
+        "middle_stopped_fraction": 0.04716981132075472,
+        "position_rms_px": 1.9256446155168614,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/steady3-arc-xy20-hold.json",
+          "passed": false,
+          "errors": [
+            "joint4 current_ac_rms_a=0.0265063 exceeds 0.02"
+          ],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0034470068175157416,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0029629687814757694,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0036662220336471747,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.000761577310586391,
+              "current_ac_rms_a": 0.026506336978164294,
+              "high_speed_position_peak_to_peak_rad": 0.001000000000000112
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0034108409520234154,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.008942930168574505,
+              "current_ac_rms_a": 0.005801700095661616,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/steady3-arc-xy20-return/report.json",
+      "case": "return",
+      "timestamp": "2026-11-26T15:01:24.781963+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "e72e55a9bc38451f8dd0a6b44066ff1a",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8750000001924572,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0007686325538656114,
+      "camera_frames": 335,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0009469527800056789,
+          0.008753847343460403,
+          0.0027856262293135528,
+          -0.0009526110467460352,
+          0.004221054277551758,
+          0.0012652023224556748
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/steady3-arc-xy20-return-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004147440656597753,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002932381966934051,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0035584597791741344,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0024108952693968197,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0033026892072975924,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006030937240595362,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/steady3-arc-xz20/report.json",
+      "case": "arc_xz",
+      "timestamp": "2026-11-26T14:57:58.113576+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "d25aca5a3e9d4a79a56dbdd08d09fde3",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0024160473324168485,
+      "camera_frames": 418,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0008797253515624386,
+          -0.0022604513741786205,
+          0.0029595853929884654,
+          -0.0009627520669860503,
+          0.004221054277551758,
+          0.000782825441876401
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.1843880479994545,
+        "fitted_delay_s": 0.04999999999999995,
+        "peak_speed_ratio": 1.2619425765667882,
+        "middle_stopped_fraction": 0.018867924528301886,
+        "position_rms_px": 2.254725581910565,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/steady3-arc-xz20-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003587614249051868,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003330496059147929,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003827450326261598,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.008515609197233046,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003728311145813879,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005558252962937185,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/steady3-arc-xz20-return/report.json",
+      "case": "return",
+      "timestamp": "2026-11-26T14:58:12.735903+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "7ef4bdd29d8c42f19309aacfa6aea749",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.875000000153129,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.00041280545033073324,
+      "camera_frames": 336,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0008797253515624386,
+          0.00855858712049026,
+          0.0029572005346692894,
+          -0.0009561368140367691,
+          0.004221054277551758,
+          0.000782825441876401
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 24.255736920508724,
+        "fitted_delay_s": 0.04999999999999995,
+        "velocity_nrmse": 0.0888116443627521,
+        "peak_ratio": 1.2708233009790315,
+        "middle_minimum_ratio": 0.6426710223651717,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/steady3-arc-xz20-return-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004184387649346078,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0027883894993346973,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003889135636616445,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0027244162677535176,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0035132070818555514,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006488729921949287,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/steady3-arc-yz20/report.json",
+      "case": "arc_yz",
+      "timestamp": "2026-11-26T15:01:43.250379+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "6a720194478047e88ea232ae0a6e06c4",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0033113104885256206,
+      "camera_frames": 330,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0009469527800056789,
+          -0.0022952575823185608,
+          0.0027856262293135528,
+          -0.0009499499979988146,
+          0.004221054277551758,
+          0.0012652023224556748
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.27808155208825036,
+        "fitted_delay_s": 0.03499999999999996,
+        "peak_speed_ratio": 1.5160958150882282,
+        "middle_stopped_fraction": 0.03773584905660377,
+        "position_rms_px": 1.193140266732513,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/steady3-arc-yz20-hold.json",
+          "passed": false,
+          "errors": [
+            "joint2 current_ac_rms_a=0.0210518 exceeds 0.02"
+          ],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0063120519642981395,
+              "current_ac_rms_a": 0.007776342585046007,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.021051777217137718,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0029671562142900417,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0023610167301397855,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003623863132073285,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0030916015267171805,
+              "current_ac_rms_a": 0.013886370152059178,
+              "high_speed_position_peak_to_peak_rad": 0.0010000000000000009
+            }
+          }
+        },
+        {
+          "record": ".runtime/tcp-smooth/steady3-arc-yz20-steady-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0012501999840025594,
+              "current_ac_rms_a": 0.005931601807269264,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0028740617599488072,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002877932591288411,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0023019363588075072,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0033149184002023335,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005647856141935629,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/steady3-arc-yz20-return/report.json",
+      "case": "return",
+      "timestamp": "2026-11-26T15:03:13.465593+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "75a63b246a4a461c9c08fa08aca3d64d",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.874999999997055,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0035718515958143016,
+      "camera_frames": 265,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0010001663288895747,
+          0.006506046468555811,
+          0.0025813636125983303,
+          -0.0009319714496811627,
+          0.004221054277551758,
+          0.002021805907731211
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 11.421025231716085,
+        "fitted_delay_s": 0.06999999999999994,
+        "velocity_nrmse": 0.13536720181549178,
+        "peak_ratio": 1.415562947954451,
+        "middle_minimum_ratio": 0.5715101985775088,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/steady3-arc-yz20-return-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003397421963783716,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0030190488568421704,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 8.944271909999158e-05,
+              "current_ac_rms_a": 0.0060050575351115664,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002468731658159704,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0035825862166876036,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0057548904420501356,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/j6f15-arc-yz20/report.json",
+      "case": "arc_yz",
+      "timestamp": "2026-11-26T15:08:01.449705+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "05bc643373d34c459e8242c18ae472a7",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0025126837878789443,
+      "camera_frames": 332,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0014091209420470628,
+          0.006506046468555811,
+          0.0033828403812418252,
+          -0.0009319714496811627,
+          -0.0015710642899103295,
+          0.0011772129829196948
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.5
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.22338428789565212,
+        "fitted_delay_s": 0.03499999999999996,
+        "peak_speed_ratio": 1.1885976225228334,
+        "middle_stopped_fraction": 0.0,
+        "position_rms_px": 1.4845990432519103,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/j6f15-arc-yz20-hold.json",
+          "passed": false,
+          "errors": [
+            "joint1 current_ac_rms_a=0.0377101 exceeds 0.02"
+          ],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0026049952015310893,
+              "current_ac_rms_a": 0.0377100795013747,
+              "high_speed_position_peak_to_peak_rad": 0.0010000000000000009
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003336726539589362,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 8.944271909999158e-05,
+              "current_ac_rms_a": 0.004293762452674811,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002620133584380768,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0025233501540610644,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0004939635614091387,
+              "current_ac_rms_a": 0.005862837538257393,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        },
+        {
+          "record": ".runtime/tcp-smooth/j6f15-arc-yz20-steady-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004074431371369507,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003225073642570042,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0028485722739646302,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002558339305096181,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0024121274841931543,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005492549134964566,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/frozenmap-arc-yz20/report.json",
+      "case": "arc_yz",
+      "timestamp": "2026-11-26T15:11:52.025064+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "e84c897b954b481194997747a72b38f7",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0018669120427237673,
+      "camera_frames": 331,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0014034995938142314,
+          0.005631955339482827,
+          0.003044133840369168,
+          -0.0009222110673426174,
+          -0.0015710642899103295,
+          0.0013094028784390902
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.5
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.2310106279206153,
+        "fitted_delay_s": 0.03499999999999996,
+        "peak_speed_ratio": 1.1765113525111335,
+        "middle_stopped_fraction": 0.0,
+        "position_rms_px": 1.645702256477334,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/frozenmap-arc-yz20-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0036213257240960803,
+              "current_ac_rms_a": 0.0062515953163972465,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0032901574430412974,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002755482534874792,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0028081566907849024,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0023904811231214526,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0063315018755426425,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/frozenmap-arc-yz20-return/report.json",
+      "case": "return",
+      "timestamp": "2026-11-26T15:12:05.171272+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "71a49f7b483c4575982a6b5a4a060d9e",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8750000001762073,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.0029609863576169904,
+      "camera_frames": 267,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0014100108374191533,
+          0.004757797671698828,
+          0.002894551278085725,
+          -0.0009073096470958089,
+          -0.0015710642899103295,
+          0.001612384607108271
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.5
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 11.350220403430097,
+        "fitted_delay_s": 0.06499999999999993,
+        "velocity_nrmse": 0.17794533520164893,
+        "peak_ratio": 1.2568402444189701,
+        "middle_minimum_ratio": 0.4884305322585075,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/frozenmap-arc-yz20-return-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004661158654240382,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0029195205085767104,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0029265515543041467,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0023314167366646423,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002601368101595774,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006368678355828625,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/frozenmap-arc-xy20/report.json",
+      "case": "arc_xy",
+      "timestamp": "2026-11-26T15:13:13.672086+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "7260e206a55a4f9aac3da5857ba77456",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.945243112740432,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.002773805377574327,
+      "camera_frames": 422,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.001385357989018358,
+          0.004757797671698828,
+          0.002894551278085725,
+          -0.0009073096470958089,
+          -0.0015710642899103295,
+          0.0013873848774998807
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.5
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.17198364621792056,
+        "fitted_delay_s": 0.03999999999999995,
+        "peak_speed_ratio": 1.2587032207065372,
+        "middle_stopped_fraction": 0.018867924528301886,
+        "position_rms_px": 2.0919240897411573,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/frozenmap-arc-xy20-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.004336897969747502,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0028502631457463733,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003426888384526117,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006448318850677283,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0025631574278611913,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005739434118447567,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/frozenmap-arc-xy20-return/report.json",
+      "case": "return",
+      "timestamp": "2026-11-26T15:13:28.395540+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "526e5a39d365467d974423282132ba4a",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8749999999892395,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.002777211354041833,
+      "camera_frames": 343,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0013851867068838508,
+          0.009717737669041607,
+          0.0028436452077392625,
+          -0.0009073096470958089,
+          -0.0015710642899103295,
+          0.0012806171944466697
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.5
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 23.856491964548482,
+        "fitted_delay_s": 0.04999999999999995,
+        "velocity_nrmse": 0.10253959905249917,
+        "peak_ratio": 1.3709417059245272,
+        "middle_minimum_ratio": 0.5767248255228811,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/frozenmap-arc-xy20-return-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005346349782795735,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0027305120398928863,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0036025857380497807,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0027561560188059035,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0025497890108791346,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0028586710198971826,
+              "current_ac_rms_a": 0.006650556367703382,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/frozenmap-arc-xz20/report.json",
+      "case": "arc_xz",
+      "timestamp": "2026-11-26T15:13:47.068678+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "79366c9e6d694f5cbbfc936913c04988",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.00277380547316598,
+      "camera_frames": 417,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0013851867068838508,
+          -0.002462340552709391,
+          0.0028436452077392625,
+          -0.0009073096470958089,
+          -0.0015710642899103295,
+          0.0012806171944466697
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.5
+      ],
+      "camera-stabilized-reference": {
+        "velocity_nrmse": 0.1720671021770043,
+        "fitted_delay_s": 0.04499999999999994,
+        "peak_speed_ratio": 1.2140101445894322,
+        "middle_stopped_fraction": 0.018867924528301886,
+        "position_rms_px": 1.970992467295362,
+        "projection_sources": [
+          ".runtime/tcp-smooth/gravity089-line-x20",
+          ".runtime/tcp-smooth/gravity089-line-y20",
+          ".runtime/tcp-smooth/production-line-z20"
+        ]
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/frozenmap-arc-xz20-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0044616122646415615,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0033004508782892056,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0037388656033615353,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0067467159418490305,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0023854718610790615,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.005758645326810812,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "record": ".runtime/tcp-smooth/frozenmap-arc-xz20-return/report.json",
+      "case": "return",
+      "timestamp": "2026-11-26T15:14:01.642854+08:00",
+      "speed_m_s": 0.02,
+      "goal_tolerance_rad": 0.005,
+      "result": {
+        "id": "92731aabef0e4df69fb6d0b41c6db429",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.875000000153129,
+        "error": null
+      },
+      "failure": null,
+      "max_final_joint_error_rad": 0.002777211354041833,
+      "camera_frames": 334,
+      "integral": {
+        "gains": [
+          1.0,
+          1.0,
+          1.0,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "bias": [
+          0.0013851867068838508,
+          0.008664993903761435,
+          0.002728883906960485,
+          -0.0008974049726684594,
+          -0.0015710642899103295,
+          0.0012806171944466697
+        ],
+        "limit": 0.02,
+        "rate": 0.005,
+        "deadband": 0.003
+      },
+      "friction_factors": [
+        1.0,
+        1.75,
+        1.0,
+        1.0,
+        1.0,
+        1.5
+      ],
+      "camera-stabilized-timing": {
+        "translation_px": 23.69095213118153,
+        "fitted_delay_s": 0.04499999999999994,
+        "velocity_nrmse": 0.09569994044917135,
+        "peak_ratio": 1.324871125696087,
+        "middle_minimum_ratio": 0.6281801261495212,
+        "middle_stopped_fraction": 0.0
+      },
+      "holds": [
+        {
+          "record": ".runtime/tcp-smooth/frozenmap-arc-xz20-return-hold.json",
+          "passed": true,
+          "errors": [],
+          "joints": {
+            "joint1": {
+              "speed_rms_rad_s": 0.00013416407864998739,
+              "current_ac_rms_a": 0.005003548740643983,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint2": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.002843701109469842,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint3": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.003741590570866887,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint4": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0025399803148843415,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint5": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.0024059459678055953,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            },
+            "joint6": {
+              "speed_rms_rad_s": 0.0,
+              "current_ac_rms_a": 0.006765206279190606,
+              "high_speed_position_peak_to_peak_rad": 0.0
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "hardware_interfaces": {
+    "record": ".runtime/tcp-smooth/frozenmap-hardware-interfaces/acceptance.json",
+    "passed": true,
+    "tests": [
+      "movej",
+      "follow_trajectory",
+      "movel",
+      "movec",
+      "return_before_stream",
+      "servo_joints_watchdog",
+      "servo_tcp_watchdog",
+      "servo_twist_watchdog",
+      "stop_cancel",
+      "return_to_start"
+    ],
+    "max_final_joint_error_rad": 0.002110375167058122
+  },
+  "simulation_interfaces": {
+    "record": ".runtime/tcp-smooth/frozenmap-simulation-acceptance.json",
+    "passed": true,
+    "tests": [
+      "movej",
+      "follow_trajectory",
+      "movel",
+      "movec",
+      "return_before_stream",
+      "servo_joints_watchdog",
+      "servo_tcp_watchdog",
+      "servo_twist_watchdog",
+      "stop_cancel",
+      "return_to_start"
+    ],
+    "max_final_joint_error_rad": 0.0019836901091758175
+  },
+  "ros_trajectory": {
+    "passed": true,
+    "status": 4,
+    "error_code": 0,
+    "measured_excursion_rad": 0.014695672301792256,
+    "max_final_error_rad": 0.001588249619314839,
+    "record": ".runtime/tcp-smooth/frozenmap-ros-trajectory.json"
+  },
+  "hardware_interface_hold": {
+    "record": ".runtime/tcp-smooth/frozenmap-hardware-interfaces-hold.json",
+    "passed": true,
+    "errors": []
+  },
+  "ros_hold": {
+    "record": ".runtime/tcp-smooth/frozenmap-ros-hold.json",
+    "passed": true,
+    "errors": []
+  }
+}

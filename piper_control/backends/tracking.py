@@ -132,6 +132,8 @@ class TrackingBackend:
                 or max(abs(h-m) for h, m in zip(self._hold_kd, self._moving_kd)) > 2*self._gain_rate):
             raise ValueError('Tracking damping requires gains in 0..100 and a 0.1..5 ramp reaching hold within 2 s')
         self._dt = .005
+        self._last_velocity = (0.,)*6
+        self._mapping_active = (False,)*6
         self.receiver = receiver or MotorFeedbackReceiver(raw.config["can_port"])
         self._done = threading.Event()
         self._file_lock = threading.Lock()
@@ -216,9 +218,15 @@ class TrackingBackend:
             sample.validate()
             # Feedback groups are asynchronous. At higher speeds their timing
             # skew must not be learned as a changing mechanical offset.
-            self._observer_frozen = time.monotonic() < self._freeze_until or max(map(abs, sample.velocity)) > .2
+            active = tuple(abs(v) > 1e-6 for v in self._last_velocity)
+            self._observer_frozen = (time.monotonic() < self._freeze_until
+                                    or max(map(abs, sample.velocity)) > .2 or not any(active))
+            self._mapping_active = (False,)*6 if self._observer_frozen else active
             if not self._observer_frozen:
-                self.mapper.advance(sample, dt)
+                # Following a stationary motor's quantized motion would move
+                # its target again and cancel part of the inner position loop.
+                # Keep the last load-dependent conversion during static hold.
+                self.mapper.advance(sample, dt, active)
 
     def command(self, q, dq=None):
         with self._command_lock:
@@ -246,6 +254,7 @@ class TrackingBackend:
         kd = state['extra']['driver'].get('applied_kd', self.raw.kd)
         torque = self.feedforward.evaluate(target, dq, state, sample, self.raw.kp, kd, self._dt)
         self.raw.command(target, dq, torque=torque)
+        self._last_velocity = dq
         self._nominal, self._actuator = list(q), list(target)
         self._queue_checkpoint()
 
@@ -267,6 +276,7 @@ class TrackingBackend:
             offset=list(self.mapper.offset), nominal_target=list(self._nominal),
             actuator_target=list(self._actuator), observer_frozen=self._observer_frozen,
             checkpoint_error=self._checkpoint_error, handoff_in_progress=self._holding,
+            observer_active_joints=list(self._mapping_active),
         )
         state['extra']['tracking_feedforward'] = self.feedforward.last.copy()
         state['extra']['tracking_damping'] = dict(hold=self._hold_kd, moving=self._moving_kd,
@@ -302,6 +312,7 @@ class TrackingBackend:
         with self._command_lock:
             self._holding = True
             self._observer_frozen = True
+            self._mapping_active = (False,)*6
             self._queue_checkpoint()
         try:
             self._checkpoint()

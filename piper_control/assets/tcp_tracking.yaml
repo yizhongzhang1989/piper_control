@@ -14,7 +14,7 @@ tracking:
   moving_kd: [8.0, 12.12, 20.0, 1.6, 0.30, 0.08]
   gain_ramp_rate: 2.0
   friction_scale: 0.88
-  friction_factors: [1.0, 1.75, 1.0, 1.0, 1.0, 1.0]
+  friction_factors: [1.0, 1.75, 1.0, 1.0, 1.0, 1.5]
   velocity_remainder: true
   phase_filter_hz: 10.0
   spatial_prediction: 0.005
