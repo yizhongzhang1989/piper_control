@@ -63,7 +63,9 @@ def main():
         from .backends.simulation import SimulationBackend
         backend = SimulationBackend(model, arm_config=args.arm_config,
                                     reference_friction_scale=None if tracking is None else tracking.get('friction_scale', .88),
+                                    reference_friction_factors=None if tracking is None else tracking.get('friction_factors'),
                                     moving_kd=None if tracking is None else tracking.get('moving_kd'),
+                                    position_integral=None if tracking is None else tracking.get('position_integral'),
                                     gain_ramp_rate=2. if tracking is None else tracking.get('gain_ramp_rate', 2.), **gains)
     else:
         from .backends.hardware import HardwareBackend

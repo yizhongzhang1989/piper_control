@@ -11,7 +11,7 @@ import cv2,numpy as np
 from piper_control.client import RobotClient
 from piper_control.model import RobotModel
 from piper_control.planning import Planner,matrix_pose
-parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--url',default='http://127.0.0.1:8090');parser.add_argument('--camera',default='/dev/video0');parser.add_argument('--case',choices=['line_x','line_y','line_z','line_xy','line_xz','arc_xz','arc_xy','arc_yz','return','joint2','joint3','joint4'],required=True);parser.add_argument('--distance',type=float,default=.03);parser.add_argument('--speed',type=float,default=.02);parser.add_argument('--out',required=True);parser.add_argument('--return-pose');a=parser.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
+parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--url',default='http://127.0.0.1:8090');parser.add_argument('--camera',default='/dev/video0');parser.add_argument('--camera-focus',type=float);parser.add_argument('--case',choices=['line_x','line_y','line_z','line_xy','line_xz','arc_xz','arc_xy','arc_yz','return','joint2','joint3','joint4'],required=True);parser.add_argument('--distance',type=float,default=.03);parser.add_argument('--speed',type=float,default=.02);parser.add_argument('--out',required=True);parser.add_argument('--return-pose');a=parser.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
 r=RobotClient(a.url,timeout=30);before=r.state();info=r.info();assert info['backend']=='hardware';assert before['command_ready'] and before['mode']=='idle' and not before['errors']
 m=RobotModel(tcp_offset=info['tcp_offset'],tcp_orientation=info['tcp_orientation'],end_effector=info['end_effector'],angle_offsets=info['angle_offsets']);q=np.array(before['target_positions']);T=m.forward(q);E=T.copy();V=T.copy();dist=a.distance;planr=Planner(m,min(x['velocity'] for x in info['joint_limits']))
 if a.case=='return':E=m.forward(json.loads(Path(a.return_pose).read_text())['target_positions'])
@@ -40,12 +40,15 @@ def can_rx():
    if level==socket.SOL_SOCKET and kind==35:
     sec,ns=struct.unpack('=qq',data[:16]);stamp=sec+ns*1e-9
   records[cid].append((stamp,*d[:n]))
-frame_times=[];camera_ready=threading.Event()
+camera_controls={};frame_times=[];camera_ready=threading.Event()
 def camera():
  cap=cv2.VideoCapture(a.camera,cv2.CAP_V4L2);writer=None
  try:
   if not cap.isOpened():raise RuntimeError('camera unavailable')
   cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc(*'MJPG'));cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280);cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720);cap.set(cv2.CAP_PROP_FPS,60);cap.set(cv2.CAP_PROP_BUFFERSIZE,2)
+  if a.camera_focus is not None:
+   if not cap.set(cv2.CAP_PROP_AUTOFOCUS,0) or not cap.set(cv2.CAP_PROP_FOCUS,a.camera_focus):raise RuntimeError('could not set fixed camera focus')
+  camera_controls.update({key:cap.get(getattr(cv2,key)) for key in ['CAP_PROP_AUTOFOCUS','CAP_PROP_FOCUS','CAP_PROP_AUTO_EXPOSURE','CAP_PROP_EXPOSURE','CAP_PROP_FPS']})
   for _ in range(30):ok,fr=cap.read()
   if not ok:raise RuntimeError('camera read failed')
   writer=cv2.VideoWriter(str(out/'camera.avi'),cv2.VideoWriter_fourcc(*'MJPG'),cap.get(cv2.CAP_PROP_FPS),(960,540))
@@ -84,7 +87,7 @@ except Exception as exc:
 finally:
  report['after']=r.state();report['capture_finished_unix']=time.time();stop.set()
  for th in threads:th.join(timeout=3)
- receiver.close();r.close();report['camera_errors']=camera_errors;report['camera_frames']=len(frame_times)
+ receiver.close();r.close();report['camera_controls']=camera_controls;report['camera_errors']=camera_errors;report['camera_frames']=len(frame_times)
  if not failure and (camera_errors or not frame_times):failure='camera acquisition failed'
  if not failure and report.get('result',{}).get('status')!='succeeded':failure='motion did not succeed'
  report['failure']=failure

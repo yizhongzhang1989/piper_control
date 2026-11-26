@@ -12,7 +12,8 @@ from pathlib import Path
 import threading
 import time
 
-from .motor_feedback import CoordinateMapper, MotorFeedbackReceiver, _six
+from .motor_feedback import CoordinateMapper, MotorFeedbackReceiver, MotorPhaseEstimator, _six
+from .position_integral import PositionIntegral
 
 
 class ReferenceFeedforward:
@@ -24,16 +25,20 @@ class ReferenceFeedforward:
         from piper_x_driver.friction import load_friction_model, SpatialHarmonic
         from piper_x_driver.gravity import load_gravity_model
 
-        allowed = {"friction_scale", "velocity_remainder", "spatial_harmonics",
-                   "spatial_prediction", "spatial_decay", "torque_limits"}
+        allowed = {"friction_scale", "friction_factors", "velocity_remainder", "spatial_harmonics",
+                   "spatial_prediction", "spatial_decay", "torque_limits", "phase_filter_hz"}
         if set(settings) - allowed:
             raise ValueError(f"Unknown tracking settings: {sorted(set(settings)-allowed)}")
         self.scale = float(settings.get("friction_scale", .88))
+        self.friction_factors = _six(settings.get('friction_factors', [1.]*6))
         self.prediction = float(settings.get("spatial_prediction", .005))
         self.decay = float(settings.get("spatial_decay", .2))
         self.remainder = settings.get("velocity_remainder", True)
+        cutoff = float(settings.get('phase_filter_hz', 0.))
+        self.phase = None if cutoff == 0 else MotorPhaseEstimator(cutoff)
         self.limits = _six(settings.get("torque_limits", [4, 4, 4, .8, .5, .5]))
         if (not isinstance(self.remainder, bool) or not 0 <= self.scale <= 1
+                or any(not 0 <= x <= 2 for x in self.friction_factors)
                 or not 0 <= self.prediction <= .02 or not .01 <= self.decay <= 1
                 or any(not 0 < x <= 4 for x in self.limits)):
             raise ValueError("Invalid tracking feedforward bounds")
@@ -60,9 +65,10 @@ class ReferenceFeedforward:
         self.gain_scale = MIT_GAIN_SCALE
         self.last = {"torque": [0.]*6, "spatial_torque": [0.]*6, "clipped": [False]*6}
 
-    def evaluate(self, target, velocity, state, sample, kp, kd):
+    def evaluate(self, target, velocity, state, sample, kp, kd, dt=.005):
         target, velocity, kp, kd = map(_six, (target, velocity, kp, kd))
         sample.validate()
+        phase = self.phase.update(sample, dt) if self.phase else None
         desired = [v if abs(v) > 1e-6 else 0. for v in velocity]
         gravity = _six(state["extra"]["driver"]["gravity_torque"])
         ff = list(self.friction.torques(
@@ -70,6 +76,8 @@ class ReferenceFeedforward:
             static_frictions=self.static, active_impedances=[True]*6,
             friction_scale=self.scale, cogging_scale=self.scale,
         ))
+        ff = [factor*f for factor, f in zip(self.friction_factors, ff)]
+        friction = [f if v else 0. for f, v in zip(ff, desired)]
         if self.remainder:
             # Use the vendor's encoder as a pure calculation, never to transmit.
             # Preserve the legacy zero-velocity wire bias, including during hold.
@@ -83,7 +91,8 @@ class ReferenceFeedforward:
         for i, harmonic in self.harmonics:
             if not desired[i]:
                 continue
-            theta = sample.motor[i] + velocity[i] * (sample.age + self.prediction)
+            theta = (phase[i] + velocity[i]*self.prediction if phase is not None else
+                     sample.motor[i] + velocity[i]*(sample.age+self.prediction))
             direction = math.tanh(velocity[i]/.008)
             spatial[i] += ((harmonic.cogging(theta) + direction*harmonic.modulation(theta))
                            * abs(direction) * math.exp(-(velocity[i]/self.decay)**2))
@@ -92,7 +101,9 @@ class ReferenceFeedforward:
             raise RuntimeError("Nonfinite tracking feedforward")
         torque = [max(-limit, min(limit, f)) for f, limit in zip(requested, self.limits)]
         self.last = {"torque": torque, "spatial_torque": spatial,
-                     "clipped": [a != b for a, b in zip(requested, torque)]}
+                     "friction_torque": friction, "friction_factors": self.friction_factors,
+                     "clipped": [a != b for a, b in zip(requested, torque)],
+                     "motor_phase": phase, "phase_filter_hz": self.phase.cutoff_hz if self.phase else 0.}
         return torque
 
 
@@ -108,7 +119,11 @@ class TrackingBackend:
         from piper_control.hold_guardian import state_directory
 
         self.raw = raw
+        self._command_lock = threading.RLock()
+        self._holding = False
         settings = dict(settings)
+        integral_settings = settings.pop('position_integral', {})
+        self.integral = PositionIntegral(**integral_settings)
         self._hold_kd = _six(raw.kd)
         self._moving_kd = _six(settings.pop('moving_kd', self._hold_kd))
         self._gain_rate = float(settings.pop('gain_ramp_rate', 2.))
@@ -144,13 +159,16 @@ class TrackingBackend:
                 if (all(saved.get(k) == v for k, v in self._identity.items())
                         and max(abs(a-b) for a, b in zip(_six(saved['actuator_target']), initial)) < 1e-8):
                     candidate = CoordinateMapper(saved['offset'])
-                    if max(abs(a-b) for a, b in zip(candidate.to_motor(saved['nominal_target']), initial)) < 1e-8:
+                    integral = PositionIntegral(**dict(integral_settings, bias=saved.get('tracking_bias', [0.]*6)))
+                    if max(abs(a-b) for a, b in zip(integral.apply(candidate.to_motor(saved['nominal_target'])), initial)) < 1e-8:
                         offset = candidate.offset
+                        self.integral = integral
             except (OSError, KeyError, ValueError, TypeError):
                 pass
             self.mapper = CoordinateMapper(offset)
             enabled = raw.read()['enabled']
-            self.initial_target = list(self.mapper.to_joints(initial) if enabled else sample.joints)
+            corrected = tuple(q-b for q, b in zip(initial, self.integral.bias))
+            self.initial_target = list(self.mapper.to_joints(corrected) if enabled else sample.joints)
             self._nominal = list(self.initial_target)
             self._actuator = list(initial)
             self.feedforward = feedforward or ReferenceFeedforward(
@@ -169,6 +187,7 @@ class TrackingBackend:
 
     def _queue_checkpoint(self):
         self._pending = dict(self._identity, offset=list(self.mapper.offset),
+                             tracking_bias=list(self.integral.bias),
                              nominal_target=list(self._nominal), actuator_target=list(self._actuator))
 
     def _checkpoint(self):
@@ -189,17 +208,29 @@ class TrackingBackend:
 
     def step(self, dt):
         self.raw.step(dt)
-        self._dt = min(.02, max(.00001, dt))
-        sample = self.receiver.sample()
-        sample.validate()
-        # Different CAN feedback groups are asynchronous. At higher speeds their
-        # timing skew must not be learned as a changing mechanical offset.
-        self._observer_frozen = time.monotonic() < self._freeze_until or max(map(abs, sample.velocity)) > .2
-        if not self._observer_frozen:
-            self.mapper.advance(sample, dt)
+        with self._command_lock:
+            if self._holding:
+                return
+            self._dt = min(.02, max(.00001, dt))
+            sample = self.receiver.sample()
+            sample.validate()
+            # Feedback groups are asynchronous. At higher speeds their timing
+            # skew must not be learned as a changing mechanical offset.
+            self._observer_frozen = time.monotonic() < self._freeze_until or max(map(abs, sample.velocity)) > .2
+            if not self._observer_frozen:
+                self.mapper.advance(sample, dt)
 
     def command(self, q, dq=None):
+        with self._command_lock:
+            return self._command(q, dq)
+
+    def _command(self, q, dq=None):
         q, dq = _six(q), _six([0.]*6 if dq is None else dq)
+        if self._holding:
+            if max(abs(a-b) for a, b in zip(q, self._nominal)) > 1e-10 or any(dq):
+                raise RuntimeError('Hardware hold handoff is in progress')
+            self.raw.command(self._actuator, [0.]*6, torque=[0.]*6)
+            return
         sample = self.receiver.sample()
         sample.validate()
         # Only a commanded moving axis needs its motion damping. The measured
@@ -208,9 +239,12 @@ class TrackingBackend:
                   for h, m, v in zip(self._hold_kd, self._moving_kd, dq)]
         self._ramp_damping(wanted, self._dt)
         state = self.raw.read()
-        target = self.mapper.to_motor(q)
+        if (time.monotonic() >= self._freeze_until and state.get('command_ready', False)
+                and state.get('connected', True) and state['enabled']):
+            self.integral.advance(q, sample.joints, self._dt)
+        target = self.integral.apply(self.mapper.to_motor(q))
         kd = state['extra']['driver'].get('applied_kd', self.raw.kd)
-        torque = self.feedforward.evaluate(target, dq, state, sample, self.raw.kp, kd)
+        torque = self.feedforward.evaluate(target, dq, state, sample, self.raw.kp, kd, self._dt)
         self.raw.command(target, dq, torque=torque)
         self._nominal, self._actuator = list(q), list(target)
         self._queue_checkpoint()
@@ -232,11 +266,14 @@ class TrackingBackend:
             feedback_age=sample.age if math.isfinite(sample.age) else None,
             offset=list(self.mapper.offset), nominal_target=list(self._nominal),
             actuator_target=list(self._actuator), observer_frozen=self._observer_frozen,
-            checkpoint_error=self._checkpoint_error,
+            checkpoint_error=self._checkpoint_error, handoff_in_progress=self._holding,
         )
         state['extra']['tracking_feedforward'] = self.feedforward.last.copy()
         state['extra']['tracking_damping'] = dict(hold=self._hold_kd, moving=self._moving_kd,
                                                  command=list(self.raw.kd), ramp_rate=self._gain_rate)
+        state['extra']['position_integral'] = dict(gains=self.integral.gains, bias=self.integral.bias,
+                                                  limit=self.integral.limit, rate=self.integral.rate,
+                                                  deadband=self.integral.deadband)
         return state
 
     def enable(self, enabled):
@@ -247,6 +284,8 @@ class TrackingBackend:
             sample = self.receiver.sample()
             sample.validate()
             self.mapper = CoordinateMapper(tuple(m-q for m, q in zip(sample.motor, sample.joints)))
+            self.integral.bias = (0.,)*6
+            self._freeze_until = time.monotonic()+6.
             # The controller chose this same public joint snapshot before enable.
             target = self.mapper.to_motor(state['positions'])
             self.raw.enable(True, hold_target=target)
@@ -257,6 +296,13 @@ class TrackingBackend:
 
     def hold(self):
         # Raw backend owns the actuator hold; never apply the offset twice.
+        # The controller's keepalive thread is still running during handoff.
+        # Freeze observers/integrators first; both publishers must send the same
+        # actuator target even when the public target has a residual error.
+        with self._command_lock:
+            self._holding = True
+            self._observer_frozen = True
+            self._queue_checkpoint()
         try:
             self._checkpoint()
         except OSError as exc:
@@ -264,9 +310,12 @@ class TrackingBackend:
         if not self.raw.read()['enabled']:
             self.raw.kd = list(self._hold_kd)
         while max(abs(a-b) for a, b in zip(self.raw.kd, self._hold_kd)) > 1e-10:
-            self._ramp_damping(self._hold_kd, .005)
-            self.raw.command(self._actuator, [0.]*6, torque=[0.]*6)
+            with self._command_lock:
+                self._ramp_damping(self._hold_kd, .005)
+                self.raw.command(self._actuator, [0.]*6, torque=[0.]*6)
             time.sleep(.005)
+        # A failed handoff may still have started another hold owner. Continue
+        # the identical frozen keepalive until handoff can be retried.
         self.raw.hold()
 
     def close(self):

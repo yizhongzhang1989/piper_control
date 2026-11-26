@@ -33,6 +33,7 @@ class EncoderSample:
     velocity: tuple
     age: float
     error: str | None = None
+    motor_age: tuple = ()
 
     def validate(self, timeout=.1):
         if self.error:
@@ -41,6 +42,9 @@ class EncoderSample:
                 or any(len(values) != 6 or any(v is None or not math.isfinite(v) for v in values)
                        for values in (self.motor, self.joints, self.velocity))):
             raise RuntimeError("Fresh motor and output encoder feedback is required")
+        if self.motor_age and (len(self.motor_age) != 6 or any(
+                not math.isfinite(v) or not 0 <= v <= timeout for v in self.motor_age)):
+            raise RuntimeError('Fresh per-motor timestamps are required')
 
 
 class EncoderCache:
@@ -70,7 +74,8 @@ class EncoderCache:
 
     def sample(self, now, error=None):
         age = math.inf if any(t is None for t in self.stamps) else now - min(self.stamps)
-        return EncoderSample(tuple(self.motor), tuple(self.joints), tuple(self.velocity), age, error)
+        motor_age = tuple(math.inf if stamp is None else now-stamp for stamp in self.stamps[:6])
+        return EncoderSample(tuple(self.motor), tuple(self.joints), tuple(self.velocity), age, error, motor_age)
 
 
 class MotorFeedbackReceiver:
@@ -172,3 +177,34 @@ class CoordinateMapper:
 
     def to_joints(self, motor):
         return tuple(q-o for q, o in zip(_six(motor), self.offset))
+
+
+class MotorPhaseEstimator:
+    """Dequantize spatial phase using measured velocity plus bounded-bandwidth correction.
+
+    Position feedback is only 1 mrad; at omega=540 this is a 0.54 rad phase step.
+    Predict to the current time from each motor's kernel RX stamp, propagate with
+    measured velocity, then correct the slow error using position observations.
+    This estimator changes only bounded spatial feedforward, never servo targets.
+    """
+
+    def __init__(self, cutoff_hz=10.):
+        if not math.isfinite(cutoff_hz) or not 1 <= cutoff_hz <= 30:
+            raise ValueError('Motor phase cutoff must be within 1..30 Hz')
+        self.cutoff_hz = cutoff_hz
+        self.position = None
+
+    def update(self, sample, dt):
+        sample.validate()
+        if not math.isfinite(dt) or dt <= 0:
+            raise ValueError('Phase timestep must be positive and finite')
+        dt = min(dt, .02)
+        ages = sample.motor_age or (sample.age,)*6
+        observed = tuple(q+v*age for q, v, age in zip(sample.motor, sample.velocity, ages))
+        if self.position is None:
+            self.position = observed
+        else:
+            alpha = -math.expm1(-2*math.pi*self.cutoff_hz*dt)
+            predicted = tuple(q+v*dt for q, v in zip(self.position, sample.velocity))
+            self.position = tuple(p+alpha*(o-p) for p, o in zip(predicted, observed))
+        return self.position

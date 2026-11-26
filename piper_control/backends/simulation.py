@@ -14,6 +14,7 @@ import yaml
 from scipy.spatial.transform import Rotation
 
 from piper_control.model import RobotModel, finite_vector
+from .position_integral import PositionIntegral
 
 
 class SimulationBackend:
@@ -30,7 +31,7 @@ class SimulationBackend:
 
     def __init__(self, model: RobotModel | None = None, initial_positions=None, arm_config=None,
                  kp=None, kd=None, friction_scale=None, gravity_scale=None, reference_friction_scale=None,
-                 moving_kd=None, gain_ramp_rate=2.):
+                 moving_kd=None, gain_ramp_rate=2., position_integral=None, reference_friction_factors=None):
         import pybullet as bullet
 
         self._p = bullet
@@ -44,6 +45,7 @@ class SimulationBackend:
         if np.any(self.kp < 0) or np.any(self.kd <= 0):
             raise ValueError("kp must be nonnegative and kd must be positive")
         self._hold_kd = self.kd.copy()
+        self._integral = PositionIntegral(**(position_integral or {}))
         self._moving_kd = finite_vector(self.kd if moving_kd is None else moving_kd, 6, 'moving_kd')
         self._gain_rate = float(gain_ramp_rate)
         if (not math.isfinite(self._gain_rate) or not .1 <= self._gain_rate <= 5
@@ -53,6 +55,10 @@ class SimulationBackend:
         self._gravity_model = self._friction_model = None
         self._gravity_scale = float(self.config.get("gravity_scale", 1) if gravity_scale is None else gravity_scale)
         self._reference_friction_scale = reference_friction_scale
+        self._reference_friction_factors = finite_vector(
+            [1.]*6 if reference_friction_factors is None else reference_friction_factors, 6, 'reference_friction_factors')
+        if np.any(self._reference_friction_factors < 0) or np.any(self._reference_friction_factors > 2):
+            raise ValueError('reference friction factors must be within 0..2')
         if reference_friction_scale is not None and not 0 <= reference_friction_scale <= 1:
             raise ValueError('reference_friction_scale must be within 0..1')
         self._friction_scale = float(
@@ -167,6 +173,7 @@ class SimulationBackend:
             raise RuntimeError("simulation is closed")
         if enabled and not self._enabled:
             self.kd = self._hold_kd.copy()
+            self._integral.bias = (0.,)*6
             self._target = np.asarray(self.read()["positions"])
             self._target_velocity = np.zeros(6)
             self._adaptive_applied = 0.0 if self._offset_ramp_s > 0 else self._adaptive_amount
@@ -207,7 +214,9 @@ class SimulationBackend:
                 self._body, q.tolist(), zeros, zeros, physicsClientId=self._client
             ))
             arm_q, arm_dq = q[self._arm_slots], dq[self._arm_slots]
-            error = self._target - arm_q
+            self._integral.advance(self._target, arm_q, dt)
+            servo_target = np.asarray(self._integral.apply(self._target))
+            error = servo_target - arm_q
             if self._offset_ramp_s > 0:
                 self._adaptive_applied = min(
                     self._adaptive_amount,
@@ -238,7 +247,8 @@ class SimulationBackend:
                     desired = np.where(np.abs(self._target_velocity) > 1e-6, self._target_velocity, 0.)
                     reference = self._friction_model.torques(
                         arm_q, desired, target_velocities=desired, **common)
-                    self._friction_efforts += self._reference_friction_scale * np.where(desired != 0, reference, 0.)
+                    self._friction_efforts += (self._reference_friction_scale * self._reference_friction_factors
+                                               * np.where(desired != 0, reference, 0.))
             for index in range(count):
                 if index:
                     states = self._p.getJointStates(self._body, self._movable, physicsClientId=self._client)
@@ -253,7 +263,7 @@ class SimulationBackend:
                     # Physical friction responds to current motion at every
                     # physics step; holding it for 5 ms can inject numerical energy.
                     self._plant_friction = np.asarray(self._friction_model.torques(arm_q, arm_dq, **common))
-                error = self._target - arm_q
+                error = servo_target - arm_q
                 arm_torque = (self._effective_kp * error
                               + self._effective_kd * (self._target_velocity - arm_dq)
                               + self._gravity_efforts + self._friction_efforts)
@@ -297,6 +307,7 @@ class SimulationBackend:
                 "hold_kd": self._hold_kd.tolist(),
                 "moving_kd": self._moving_kd.tolist(),
                 "command_kd": self.kd.tolist(),
+                "position_integral_bias": list(self._integral.bias),
                 "effective_kp": self._effective_kp.tolist(),
                 "effective_kd": self._effective_kd.tolist(),
                 "gravity_compensation": self._gravity_efforts.tolist(),

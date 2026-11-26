@@ -160,7 +160,7 @@ def make_feedforward(settings):
     pytest.importorskip('piper_x_driver._core')
     config_path = Path('vendor/Piper_workspace/config/arms/arm_2.yaml')
     return ReferenceFeedforward(yaml.safe_load(config_path.read_text()), config_path,
-                                {k:v for k, v in settings.items() if k not in ('moving_kd', 'gain_ramp_rate')})
+                                {k:v for k, v in settings.items() if k not in ('moving_kd', 'gain_ramp_rate', 'position_integral')})
 
 
 def test_reference_feedforward_is_zero_at_rest_and_bounded_at_high_speed():
@@ -178,6 +178,8 @@ def test_reference_feedforward_is_zero_at_rest_and_bounded_at_high_speed():
 
 @pytest.mark.parametrize('settings', [
     {'friction_scale': float('nan')}, {'velocity_remainder': 'true'},
+    {'friction_factors': [1, 2.01, 1, 1, 1, 1]},
+    {'friction_factors': [1, float('nan'), 1, 1, 1, 1]},
     {'spatial_harmonics': [{'joint': 3.0, 'omega': 540, 'b': .45}]},
     {'spatial_harmonics': [{'joint': 3, 'omega': 540, 'b': .9}]},
     {'spatial_harmonics': [{'joint': 3, 'omega': float('inf')}]},
@@ -185,6 +187,19 @@ def test_reference_feedforward_is_zero_at_rest_and_bounded_at_high_speed():
 def test_invalid_feedforward_configuration_rejected(settings):
     with pytest.raises(ValueError):
         make_feedforward(settings)
+
+
+def test_joint_friction_factor_preserves_other_axes_and_stationary_hold():
+    base = make_feedforward({'velocity_remainder': False})
+    scaled = make_feedforward({'velocity_remainder': False, 'friction_factors': [1, 1.75, 1, 1, 1, 1]})
+    raw = Raw()
+    for speed in (-.03, 0., .03):
+        a = base.evaluate(MOTOR, [speed]*6, raw.read(), Receiver.value, raw.kp, raw.kd)
+        b = scaled.evaluate(MOTOR, [speed]*6, raw.read(), Receiver.value, raw.kp, raw.kd)
+        assert b == pytest.approx([x*(1.75 if j == 1 else 1) for j,x in enumerate(a)])
+        assert not any(scaled.last['clipped'])
+        if speed == 0:
+            assert b == [0.]*6
 
 
 def test_gravity_override_uses_real_service_and_retains_source_file(tmp_path):
@@ -228,7 +243,7 @@ def test_candidate_profile_loads_all_bounded_harmonics():
     from piper_control.__main__ import load_control_profile
     profile = load_control_profile('piper_control/assets/tcp_tracking.yaml')
     ff = make_feedforward(profile['tracking'])
-    assert len(ff.harmonics) == 3
+    assert {i for i, _ in ff.harmonics} == {0, 2}
     assert profile['gravity_scale'] == .89
 
 
@@ -254,4 +269,51 @@ def test_motion_damping_ramps_and_shutdown_restores_hold_gain(tmp_path):
         assert all(q == held and dq == (0.,)*6 and torque == (0.,)*6
                    for q, dq, torque in raw.sent[count:])
     finally:
+        b.close()
+
+
+def test_handoff_freezes_integral_while_controller_keepalive_is_running(tmp_path):
+    raw = Raw()
+    raw.kd = [8., 12., 20., .53, .3, .08]
+    moving = list(raw.kd)
+    moving[3] = 1.6
+    b = TrackingBackend(raw, {'moving_kd': moving, 'position_integral': {'gains': [1.]*6}},
+                        receiver=Receiver(), feedforward=Feedforward(), state_path=tmp_path/'state.json')
+    done = threading.Event()
+    captured, failures = [], []
+    original = raw.command
+
+    def capture(q, dq=None, torque=None):
+        if b._holding:
+            captured.append((tuple(q), tuple(dq), b.integral.bias, b.mapper.offset))
+        original(q, dq, torque)
+
+    raw.command = capture
+    target = [q+.004 for q in Q]
+
+    def keepalive():
+        while not done.is_set():
+            try:
+                b.step(.005)
+                b.command(target)
+            except Exception as exc:
+                failures.append(exc)
+            done.wait(.005)
+
+    worker = threading.Thread(target=keepalive)
+    try:
+        b._freeze_until = 0
+        b.command(target)
+        raw.kd[3] = 1.2  # Force a ramp while the controller keeps publishing.
+        worker.start()
+        b.hold()
+        assert not failures
+        assert len(captured) > 10
+        assert all(row == captured[0] for row in captured)
+        assert raw.held == captured[0][0]
+        with pytest.raises(RuntimeError, match='handoff'):
+            b.command([q+.01 for q in target])
+    finally:
+        done.set()
+        worker.join(timeout=1)
         b.close()

@@ -15,7 +15,9 @@ def test_tracking_profile_movel_movec_and_stationary_damping():
     sim = SimulationBackend(model, initial_positions=start,
                             arm_config='vendor/Piper_workspace/config/arms/arm_2.yaml',
                             reference_friction_scale=tracking['friction_scale'],
-                            moving_kd=tracking['moving_kd'], gain_ramp_rate=tracking['gain_ramp_rate'], **profile)
+                            reference_friction_factors=tracking.get('friction_factors'),
+                            moving_kd=tracking['moving_kd'], gain_ramp_rate=tracking['gain_ramp_rate'],
+                            position_integral=tracking.get('position_integral'), **profile)
     try:
         sim.enable()
         planner = Planner(model, .3)

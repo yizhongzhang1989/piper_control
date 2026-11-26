@@ -29,6 +29,20 @@ Python 对应 `SimulationBackend(arm_config=..., friction_scale=0.0)`。这个�
 控制器的摩擦前馈，仿真中的标定摩擦负载、重力补偿和自适应增益仍然保留。
 不传覆盖值时沿用臂配置；原配置文件不变。
 
+候选 TCP 跟踪配置可以在两种后端间复用：
+
+```bash
+source scripts/env.sh
+python -m piper_control --backend sim \
+  --arm-config vendor/Piper_workspace/config/arms/arm_2.yaml \
+  --control-profile piper_control/assets/tcp_tracking.yaml
+```
+
+此时仿真采用同样的慢速位置积分、死区、限幅、限速与运动/静止阻尼切换，并以
+目标速度计算控制侧摩擦前馈。物理摩擦仍用实际速度更新。仿真没有复现双编码器
+柔性差值、固件量化及实测空间残差，所以不应用对应的硬件边界补偿；仿真通过
+不能替代真机平滑性与停车振荡检查。
+
 | 参数/行为 | 对应关系 |
 | --- | --- |
 | 机械几何、质量、质心、惯性张量 | 从原 `piper_description` URDF 与 STL 复用；与 dashboard 使用同一模型 |

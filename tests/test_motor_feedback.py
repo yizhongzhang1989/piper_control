@@ -79,3 +79,38 @@ def test_failed_observation_cannot_corrupt_previous_conversion():
         assert mapper.to_motor((.2,)*6) == held
     with pytest.raises(ValueError):
         mapper.to_motor((0.,)*5 + (math.nan,))
+
+
+def test_spatial_phase_filters_position_quantization_without_velocity_lag():
+    import numpy as np
+    from piper_control.backends.motor_feedback import EncoderSample, MotorPhaseEstimator
+
+    estimator = MotorPhaseEstimator(10.)
+    raw_error, filtered_error = [], []
+    velocity = .061
+    for tick in range(600):
+        now = tick*.005
+        received_at = (tick//2)*.01
+        age = now-received_at
+        true = velocity*now
+        measured = round(velocity*received_at, 3)
+        sample = EncoderSample((measured,)*6, (true,)*6, (velocity,)*6, age, motor_age=(age,)*6)
+        phase = estimator.update(sample, .005)[0]
+        if now > .5:
+            raw_error.append(np.sin(540*(measured+velocity*age))-np.sin(540*true))
+            filtered_error.append(np.sin(540*phase)-np.sin(540*true))
+    rms = lambda x: float(np.sqrt(np.mean(np.square(x))))
+    assert rms(filtered_error) < .7*rms(raw_error)
+    assert abs(np.mean(filtered_error)) < .01
+
+
+def test_spatial_phase_rejects_stale_axis_without_changing_estimate():
+    from piper_control.backends.motor_feedback import EncoderSample, MotorPhaseEstimator
+
+    estimator = MotorPhaseEstimator()
+    valid = EncoderSample((0.,)*6, (0.,)*6, (0.,)*6, .001, motor_age=(.001,)*6)
+    before = estimator.update(valid, .005)
+    stale = EncoderSample((1.,)*6, (1.,)*6, (0.,)*6, .001, motor_age=(.001,)*5+(.2,))
+    with pytest.raises(RuntimeError):
+        estimator.update(stale, .005)
+    assert estimator.position == before
