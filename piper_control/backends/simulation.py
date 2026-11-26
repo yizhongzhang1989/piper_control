@@ -196,7 +196,7 @@ class SimulationBackend(BulletModel):
             ))
             arm_q, arm_dq = q[self._arm_slots], dq[self._arm_slots]
             if self._tracking_active:
-                self._integral.advance(self._target, arm_q, dt)
+                self._integral.advance(self._target, arm_q, dt, self._target_velocity)
             servo_target = np.asarray(self._integral.apply(self._target))
             error = servo_target - arm_q
             if self._offset_ramp_s > 0:
@@ -294,6 +294,8 @@ class SimulationBackend(BulletModel):
                 "command_kd": self.kd.tolist(),
                 "position_integral_bias": list(self._integral.bias),
                 "position_integral_active": self._tracking_active,
+                "position_integral_max_velocity": self._integral.max_velocity,
+                "position_integral_velocity_gated": self._tracking_active and self._integral.velocity_gated,
                 "effective_kp": self._effective_kp.tolist(),
                 "effective_kd": self._effective_kd.tolist(),
                 "gravity_compensation": self._gravity_efforts.tolist(),

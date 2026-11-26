@@ -309,7 +309,7 @@ class TrackingBackend:
             state['positions'] = list(sample.joints)
         if (self._tracking_active and time.monotonic() >= self._freeze_until and state.get('command_ready', False)
                 and state.get('connected', True) and state['enabled']):
-            self.integral.advance(q, sample.joints, self._dt)
+            self.integral.advance(q, sample.joints, self._dt, dq)
         target = self.integral.apply(self.mapper.to_motor(q))
         kd = state['extra']['driver'].get('applied_kd', self.raw.kd)
         torque = self.feedforward.evaluate(target, dq, state, sample, self.raw.kp, kd, self._feedforward_dt, q)
@@ -356,7 +356,9 @@ class TrackingBackend:
                                                  command=list(self.raw.kd), ramp_rate=self._gain_rate)
         state['extra']['position_integral'] = dict(gains=self.integral.gains, bias=self.integral.bias,
                                                   limit=self.integral.limit, rate=self.integral.rate,
-                                                  deadband=self.integral.deadband, active=self._tracking_active)
+                                                  deadband=self.integral.deadband, active=self._tracking_active,
+                                                  max_velocity=self.integral.max_velocity,
+                                                  velocity_gated=self._tracking_active and self.integral.velocity_gated)
         return state
 
     def enable(self, enabled):

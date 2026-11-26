@@ -30,6 +30,35 @@ def test_static_load_bias_converges_without_unbounded_windup():
     assert max(abs(b-.006) for b in integral.bias) < .00101
 
 
+def test_fast_delayed_feedback_does_not_wind_up_then_static_load_converges():
+    integral = PositionIntegral(gains=[2.]*6, deadband=.0002, max_velocity=.02)
+    # A 10 ms measurement lag during a 2 rad/s sweep is not static load error.
+    for direction in (-1, 1):
+        for step in range(100):
+            target = [direction*2*step*.005]+[0.]*5
+            measured = [target[0]-direction*.02]+[-.003]*5
+            integral.advance(target, measured, .005, [direction*2]+[0.]*5)
+    assert integral.bias == (0.,)*6
+    assert integral.velocity_gated
+    for _ in range(1000):
+        measured = [b-.003 for b in integral.bias]
+        integral.advance([0.]*6, measured, .005, [0.]*6)
+    assert not integral.velocity_gated
+    assert max(abs(b-.003) for b in integral.bias) < .00021
+
+
+@pytest.mark.parametrize('maximum', [0, -.01, float('nan'), float('inf')])
+def test_velocity_gate_requires_a_valid_limit(maximum):
+    with pytest.raises(ValueError):
+        PositionIntegral(max_velocity=maximum)
+
+
+def test_velocity_gate_does_not_treat_missing_velocity_as_stationary():
+    integral = PositionIntegral(max_velocity=.02)
+    with pytest.raises(ValueError, match='requires reference velocity'):
+        integral.advance([0.]*6, [0.]*6, .005)
+
+
 def test_restart_preserves_integral_and_mechanical_coordinates(tmp_path):
     from piper_control.backends.tracking import TrackingBackend
     from test_tracking import Raw, Receiver, Feedforward, Q, MOTOR
