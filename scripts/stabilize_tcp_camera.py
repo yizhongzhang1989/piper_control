@@ -5,19 +5,32 @@ Offline only. Inspect camera-stabilization-features.jpg: green features must be 
  the tool, red features on the fixed scene. These ROIs are specific to this setup.
 The fitted background transform is stored with the measurements for auditing.
 """
-import cv2,json,sys,numpy as np
+import argparse,cv2,json,numpy as np
 from pathlib import Path
 from scipy.signal import savgol_filter
-for folder in sys.argv[1:]:
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--tool-region',type=float,nargs=4,metavar=('X0','Y0','X1','Y1'),help='rigid tool rectangle, in full-frame coordinates normalized to 960 pixels wide')
+parser.add_argument('--background-region',type=float,nargs=4,action='append',metavar=('X0','Y0','X1','Y1'),help='fixed background rectangle in the same coordinates; repeat for multiple regions')
+parser.add_argument('folders',nargs='+')
+args=parser.parse_args()
+tool_region=args.tool_region or [254,260,340,316]
+background_regions=args.background_region or [[480,350,610,480],[180,460,300,530],[800,20,940,180]]
+for rectangle in [tool_region,*background_regions]:
+ if not np.all(np.isfinite(rectangle)) or not (0<=rectangle[0]<rectangle[2]<=960 and 0<=rectangle[1]<rectangle[3]):
+  parser.error('Regions must be finite, nonempty rectangles within the full frame')
+for folder in args.folders:
  p=Path(folder);r=json.loads((p/'report.json').read_text());ts=np.load(p/'camera-times.npy');cap=cv2.VideoCapture(str(p/'camera.avi'));ok,im=cap.read();assert ok;prev=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
  controls=r.get('camera_controls',{});roi=controls.get('recording_roi');scale=controls['capture_resolution'][0]/960 if roi else prev.shape[1]/960;origin=np.array(roi[:2] if roi else [0,0]);assert scale>0
  def region(mask,x0,y0,x1,y1):
   a=np.rint(np.array([x0,y0])*scale-origin).astype(int);b=np.rint(np.array([x1,y1])*scale-origin).astype(int);a=np.maximum(a,0);b=np.minimum(b,[prev.shape[1],prev.shape[0]])
   if np.all(b>a):mask[a[1]:b[1],a[0]:b[0]]=255
- mask=np.zeros_like(prev);region(mask,254,260,340,316)
+ if any(rectangle[3]>controls.get('capture_resolution',[960,prev.shape[0]/scale])[1]/scale for rectangle in [tool_region,*background_regions]):
+  raise ValueError('A region extends below the captured frame')
+ mask=np.zeros_like(prev);region(mask,*tool_region)
  block=int(5*scale)|1;window=int(21*scale)|1
  fg=cv2.goodFeaturesToTrack(prev,80,.03,5*scale,mask=mask,blockSize=block);assert fg is not None;fbase=fg.copy()
- mask[:]=0;region(mask,480,350,610,480);region(mask,180,460,300,530);region(mask,800,20,940,180)
+ mask[:]=0
+ for rectangle in background_regions:region(mask,*rectangle)
  bg=cv2.goodFeaturesToTrack(prev,160,.03,6*scale,mask=mask,blockSize=block);assert bg is not None;bbase=bg.copy();assert len(bg)>20
  vis=im.copy()
  for x,y in fg[:,0]:cv2.circle(vis,(int(x),int(y)),3,(0,255,0),1)
@@ -38,4 +51,6 @@ for folder in sys.argv[1:]:
  cap.release();assert len(pos)==len(ts);t=ts-r['accepted_unix'];grid=np.arange(t[0],t[-1],1/60);x=np.array([np.interp(grid,t,np.array(pos)[:,j]) for j in range(2)]).T;v=savgol_filter(x,5,2,deriv=1,delta=1/60,axis=0)
  np.savez_compressed(p/'camera-stabilized.npz',t=grid,position_px=x,speed_px_s=np.linalg.norm(v,axis=1),transform=np.array(transforms),frame_t=t,pixel_scale=scale,recording_origin=origin)
  tr=np.array(transforms);before=t<0;affine_scale=np.sqrt(tr[:,0,0]**2+tr[:,0,1]**2)
- print(p.name,json.dumps(dict(foreground_features=len(fg),background_features=len(bg),minimum_background_inliers=min(quality),pixel_scale=scale,position_units='pixels normalized to a full 960-wide frame',actual_fps=(len(ts)-1)/(ts[-1]-ts[0]),background_translation_ptp_px=(np.ptp(tr[:,:,2],axis=0)/scale).tolist(),scale_ptp=float(np.ptp(affine_scale)),premotion_translation_ptp_px=(np.ptp(tr[before,:,2],axis=0)/scale).tolist())))
+ summary=dict(tool_region=tool_region,background_regions=background_regions,foreground_features=len(fg),background_features=len(bg),minimum_background_inliers=min(quality),pixel_scale=scale,position_units='pixels normalized to a full 960-wide frame',actual_fps=(len(ts)-1)/(ts[-1]-ts[0]),background_translation_ptp_px=(np.ptp(tr[:,:,2],axis=0)/scale).tolist(),scale_ptp=float(np.ptp(affine_scale)),premotion_translation_ptp_px=(np.ptp(tr[before,:,2],axis=0)/scale).tolist())
+ (p/'camera-stabilization.json').write_text(json.dumps(summary,indent=2)+'\n')
+ print(p.name,json.dumps(summary))
