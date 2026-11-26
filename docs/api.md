@@ -39,6 +39,13 @@ TCP 固定变换由启动参数确定。默认是上游驱动原始 `link6` 坐�
 
 任务状态为 `running`、`succeeded`、`cancelled` 或 `aborted`。`progress=1` 表示指令轨迹已走完，可能仍等待机械臂稳定。默认要求所有关节的终点误差不超过 0.01 rad、速度不超过 0.02 rad/s，并连续保持 0.15 s；位置或速度再次超限会重新计时。缺失或无效的速度反馈不能判定成功。轨迹结束后额外等待最多 5 s；这些参数分别由 `--goal-tolerance`、`--goal-velocity-tolerance`、`--goal-settle-time`、`--goal-timeout` 配置，并在 `/api/info` 中报告。
 
+`--goal-velocity-window` 默认为 0，沿用瞬时速度判据；设为 `0..5 s` 内的正值时，
+以完整窗口内逐轴、按采样时间加权的速度 RMS 判定停稳。推荐启动脚本使用 1 s 窗口。
+不完整窗口、无效速度或超过反馈超时的采样间断不能视作静止；新任务重新建立窗口。
+窗口长度与持续到位时间之和必须不超过 `goal_timeout`。运动状态中的 `settling_speed`
+为实际使用的最大轴速度或 RMS，窗口尚未有效时为 `null`。`state.velocities` 始终保留
+原始后端速度，独立验收也继续使用原始 CAN 速度和停车位移，不通过这个窗口平滑验收数据。
+
 可用 `--tcp-position-tolerance 0.001` 为 `movel`/`movec` 额外要求 TCP 位置误差不超过 1 mm。
 该检查使用控制反馈和当前 TCP 模型，与关节误差、速度及持续稳定时间同时满足才成功；
 终态另含 `finished_timestamp`（Unix 秒）和 `finished_monotonic_time`（服务端单调时钟秒），

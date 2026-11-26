@@ -30,7 +30,7 @@ def reconstructed_stop_metrics(report, model, reference_q, succeeded):
     """Use the service's marked estimates at rest, retaining raw CAN separately."""
     rows = report['samples']
     stamps = np.array([s['timestamp'] for s in rows])
-    if len(rows) < 10 or np.max(np.diff(stamps)) > .1 or np.any(np.diff(stamps) <= 0):
+    if len(rows) < 10 or np.any(np.diff(stamps) <= 0):
         raise ValueError('Insufficient API samples for reconstructed stop measurements')
     q = np.array([s['positions'] for s in rows])
     transforms = np.array([model.forward(v) for v in q])
@@ -39,6 +39,9 @@ def reconstructed_stop_metrics(report, model, reference_q, succeeded):
     post = stamps > terminal_timestamp(report)
     if sum(tail) < 10 or sum(post) < 10:
         raise ValueError('Insufficient reconstructed final hold coverage')
+    post_start = max(0, int(np.searchsorted(stamps, terminal_timestamp(report)))-1)
+    if np.max(np.diff(stamps[post_start:])) > .1:
+        raise ValueError('Insufficient API samples for reconstructed stop measurements')
     center, final_q = np.mean(xyz[tail], axis=0), np.mean(q[tail], axis=0)
     target = pose_matrix(report['target_pose'])
     plan_end = report['accepted_unix']+report['motion']['duration']
@@ -46,6 +49,10 @@ def reconstructed_stop_metrics(report, model, reference_q, succeeded):
     outside_mm = after_plan[np.linalg.norm(xyz[after_plan]-target[:3, 3], axis=1) > .001]
     first_stable = outside_mm[-1]+1 if len(outside_mm) else (after_plan[0] if len(after_plan) else len(stamps))
     settle_1mm = (max(0., float(stamps[first_stable]-plan_end)) if first_stable < len(stamps) else None)
+    plan_start = max(0, int(np.searchsorted(stamps, plan_end))-1)
+    settle_complete = len(after_plan) > 1 and np.max(np.diff(stamps[plan_start:])) <= .1
+    if not settle_complete:
+        settle_1mm = None  # A pre-terminal gap cannot establish when position settled.
     rotation = Rotation.from_matrix(transforms[tail, :3, :3]).mean()
     unanchored, inferred = set(), set()
     for s in (r for r, keep in zip(rows, tail) if keep):
@@ -66,6 +73,7 @@ def reconstructed_stop_metrics(report, model, reference_q, succeeded):
         final_position_mm=(center*1000).tolist(),
         final_position_error_mm=float(np.linalg.norm(center-target[:3, 3])*1000),
         after_plan_1mm_position_settle_s=settle_1mm,
+        position_settle_data_complete=bool(settle_complete),
         position_settle_observation='First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion.',
         final_orientation_error_deg=float(np.degrees((Rotation.from_matrix(target[:3, :3]).inv()*rotation).magnitude())),
         final_joint_positions_rad=final_q.tolist(),

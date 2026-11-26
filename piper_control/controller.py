@@ -13,7 +13,7 @@ class RobotController:
     def __init__(self, backend, model, rate_hz=200., max_velocity=.3,
                  stream_timeout=.2, feedback_timeout=.2, goal_tolerance=.01,
                  goal_timeout=5., goal_velocity_tolerance=.02, goal_settle_time=.15,
-                 tcp_position_tolerance=None, joint_goal_tolerances=None):
+                 tcp_position_tolerance=None, joint_goal_tolerances=None, goal_velocity_window=0.):
         for name, value in dict(rate_hz=rate_hz, stream_timeout=stream_timeout,
                                 feedback_timeout=feedback_timeout, goal_tolerance=goal_tolerance,
                                 goal_timeout=goal_timeout, goal_velocity_tolerance=goal_velocity_tolerance,
@@ -22,6 +22,9 @@ class RobotController:
                 raise ValueError(f"{name} must be positive and finite")
         if goal_settle_time > goal_timeout:
             raise ValueError("goal_settle_time cannot exceed goal_timeout")
+        if (not math.isfinite(goal_velocity_window) or not 0 <= goal_velocity_window <= 5
+                or goal_velocity_window+goal_settle_time > goal_timeout):
+            raise ValueError('goal_velocity_window must be within 0..5 s and fit the settling timeout')
         if tcp_position_tolerance is not None and (not math.isfinite(tcp_position_tolerance) or tcp_position_tolerance <= 0):
             raise ValueError("tcp_position_tolerance must be positive and finite")
         self.backend, self.model = backend, model
@@ -33,6 +36,8 @@ class RobotController:
         if np.any(self.joint_goal_tolerances <= 0):
             raise ValueError('joint_goal_tolerances must be positive')
         self.goal_velocity_tolerance, self.goal_settle_time = goal_velocity_tolerance, goal_settle_time
+        self.goal_velocity_window = goal_velocity_window
+        self._goal_velocity_samples = deque()
         self.tcp_position_tolerance = tcp_position_tolerance
         self._tcp_goal = None
         self.planner = Planner(model, max_velocity)
@@ -91,6 +96,7 @@ class RobotController:
         self._tcp_goal = None
         self._settled_since = self._settled_last = None
         self._goal_position_reached = False
+        self._goal_velocity_samples.clear()
         self._stream_time = None
         self._stream_goal = self._twist = None
         self._epoch += 1
@@ -134,12 +140,35 @@ class RobotController:
                     feedback_timeout=self.feedback_timeout, goal_tolerance=self.goal_tolerance,
                     joint_goal_tolerances=self.joint_goal_tolerances.tolist(),
                     goal_velocity_tolerance=self.goal_velocity_tolerance,
+                    goal_velocity_window=self.goal_velocity_window,
                     goal_settle_time=self.goal_settle_time, goal_timeout=self.goal_timeout,
                     tcp_position_tolerance=self.tcp_position_tolerance,
                     units={"position":"m", "joint":"rad", "orientation":"quaternion_xyzw",
                            "time":"s", "effort":"Nm"},
                     capabilities=["servo_joints", "servo_pose", "servo_twist", "trajectory", "movej", "movel", "movec"])
         return data
+
+    def _settling_speed(self, velocity, now):
+        """Optional time-weighted per-axis RMS; raw backend feedback is untouched."""
+        values = np.asarray(velocity, dtype=float)
+        history = self._goal_velocity_samples
+        if values.shape != (len(self.model.names),) or not np.all(np.isfinite(values)):
+            history.clear()
+            return math.inf
+        if not self.goal_velocity_window:
+            return float(np.max(np.abs(values)))
+        if history and (now <= history[-1][0] or now-history[-1][0] > self.feedback_timeout):
+            history.clear()
+        history.append((now, values.copy()))
+        begin = now-self.goal_velocity_window
+        while len(history) > 2 and history[1][0] <= begin:
+            history.popleft()
+        if history[0][0] > begin+1e-9:
+            return math.inf  # Never treat an incomplete window as zero speed.
+        stamps = np.asarray([row[0] for row in history])
+        weights = np.diff(np.maximum(stamps, begin))
+        squared = np.asarray([row[1] for row in history])[:-1]**2
+        return float(np.max(np.sqrt(np.sum(weights[:, None]*squared, axis=0)/self.goal_velocity_window)))
 
     def enable(self):
         with self._lock:
@@ -332,10 +361,8 @@ class RobotController:
                     self._goal_position_reached = joints_within and tcp_within
                     if tcp_error is not None:
                         self._motion['tcp_position_error'] = tcp_error
-                    velocity = np.asarray(data.get("velocities", []), dtype=float)
-                    speed = (float(np.max(np.abs(velocity)))
-                             if velocity.shape == measured.shape and np.all(np.isfinite(velocity))
-                             else math.inf)
+                    speed = self._settling_speed(data.get("velocities", []), now)
+                    self._motion['settling_speed'] = speed if math.isfinite(speed) else None
                     within = self._goal_position_reached and speed <= self.goal_velocity_tolerance
                     if within:
                         if (self._settled_since is None or
@@ -356,10 +383,12 @@ class RobotController:
                         elif not tcp_within:
                             reason = f"TCP position error {tcp_error:.6f} m exceeds tolerance"
                         elif not math.isfinite(speed):
-                            reason = "goal velocity feedback unavailable or invalid"
+                            reason = "goal velocity feedback unavailable, invalid or incomplete"
                         else:
                             reason = (f"goal did not settle below {self.goal_velocity_tolerance:.4f} rad/s "
                                       f"for {self.goal_settle_time:.3f} s; last speed {speed:.4f} rad/s")
+                            if self.goal_velocity_window:
+                                reason += f" ({self.goal_velocity_window:.3f} s RMS)"
                         self._record("aborted", reason)
                         self._plan = None
                         dq.fill(0.)

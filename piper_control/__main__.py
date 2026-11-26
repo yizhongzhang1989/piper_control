@@ -29,6 +29,7 @@ def main():
                         help="optional per-joint terminal tolerances in model order, rad; overrides --goal-tolerance")
     parser.add_argument("--goal-timeout", type=float, default=5., help="settling time allowed after trajectory end, s")
     parser.add_argument("--goal-velocity-tolerance", type=float, default=.02, help="maximum terminal joint speed, rad/s")
+    parser.add_argument("--goal-velocity-window", type=float, default=0., help="terminal per-joint velocity RMS window, 0..5 s; 0 uses instantaneous feedback")
     parser.add_argument("--goal-settle-time", type=float, default=.15, help="continuous position and speed dwell before success, s")
     parser.add_argument("--tcp-position-tolerance", type=float, help="additional measured TCP position tolerance for movel/movec, m")
     parser.add_argument("--control-profile", default=str(Path(__file__).parent/"assets/position_control.yaml"),
@@ -50,6 +51,9 @@ def main():
         parser.error("rate must be 1..200 Hz; velocity, timeout and tolerance must be positive and finite")
     if args.goal_settle_time > args.goal_timeout:
         parser.error("goal-settle-time cannot exceed goal-timeout")
+    if (not math.isfinite(args.goal_velocity_window) or not 0 <= args.goal_velocity_window <= 5
+            or args.goal_velocity_window+args.goal_settle_time > args.goal_timeout):
+        parser.error("goal-velocity-window must be within 0..5 s and fit the settling timeout")
     if args.joint_goal_tolerances is not None and not all(math.isfinite(x) and x > 0 for x in args.joint_goal_tolerances):
         parser.error("joint-goal-tolerances must be positive and finite")
     if args.tcp_position_tolerance is not None and (not math.isfinite(args.tcp_position_tolerance) or args.tcp_position_tolerance <= 0):
@@ -96,6 +100,7 @@ def main():
                                  stream_timeout=args.stream_timeout, goal_tolerance=args.goal_tolerance,
                                  goal_timeout=args.goal_timeout,
                                  goal_velocity_tolerance=args.goal_velocity_tolerance,
+                                 goal_velocity_window=args.goal_velocity_window,
                                  goal_settle_time=args.goal_settle_time,
                                  tcp_position_tolerance=args.tcp_position_tolerance,
                                  joint_goal_tolerances=args.joint_goal_tolerances)

@@ -63,3 +63,17 @@ def test_position_settle_time_includes_a_late_excursion_and_never_assumes_succes
     assert result['after_plan_1mm_position_settle_s'] == pytest.approx(1.125)
     report['samples'][-1]['positions'] = report['samples'][52]['positions']
     assert reconstructed_stop_metrics(report, model, q, False)['after_plan_1mm_position_settle_s'] is None
+
+
+def test_gap_before_terminal_does_not_invalidate_a_complete_final_hold():
+    model, q, report = record(4, True)
+    del report['samples'][1:15]
+    result = reconstructed_stop_metrics(report, model, q, True)
+    assert result['final_position_error_mm'] < 1e-8
+    assert not result['position_settle_data_complete']
+    assert result['after_plan_1mm_position_settle_s'] is None
+    # Missing observations after completion still invalidate drift measurements.
+    model, q, report = record(4, True)
+    del report['samples'][21:35]
+    with pytest.raises(ValueError, match='Insufficient'):
+        reconstructed_stop_metrics(report, model, q, True)

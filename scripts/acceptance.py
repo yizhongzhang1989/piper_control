@@ -25,7 +25,7 @@ def run(url, output):
         Path(output).write_text(json.dumps(report, indent=2)+'\n')
     def execute(name, motion, expected=None):
         samples = []
-        deadline = time.monotonic()+motion['duration']+10
+        deadline = time.monotonic()+motion['duration']+info.get('goal_timeout', 8.)+2
         while time.monotonic() < deadline:
             state = robot.state()
             if not state['connected'] or state['errors']:
@@ -49,8 +49,10 @@ def run(url, output):
                       samples=samples)
         report['tests'].append(record)
         save()
-        if error is not None and error > info['goal_tolerance']:
-            raise AssertionError(f"{name} tracking error {error:.4f} rad")
+        if expected is not None:
+            limits = np.asarray(info.get('joint_goal_tolerances', [info['goal_tolerance']]*len(expected)))
+            if np.any(np.abs(np.asarray(final['positions'])-expected) > limits):
+                raise AssertionError(f"{name} tracking error {error:.4f} rad exceeds per-joint tolerances")
         return final
     try:
         robot.enable()
