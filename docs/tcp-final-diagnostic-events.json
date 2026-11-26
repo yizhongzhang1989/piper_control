@@ -1,0 +1,556 @@
+{
+  "events": [
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/02-line-out",
+      "joint": 2,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 1.0,
+        "duration_s": 0.5399260733662546,
+        "reference_peak_speed_m_s": 0.999999962425406,
+        "measured_peak_speed_m_s": 1.042372078941496,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.027879907006669407,
+        "motor_feedback_tcp_peak_speed_m_s": 1.0485647304990675,
+        "motor_feedback_velocity_nrmse": 0.027294166964971823,
+        "motor_feedback_fitted_delay_s": 0.019999999999999962,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.9099318626057614,
+        "path_error_rms_mm": 2.456324309654107,
+        "path_error_max_mm": 3.855873829529831,
+        "final_position_mm": [
+          269.5591287959527,
+          -262.514506779364,
+          219.53511338261927
+        ],
+        "target_position_mm": [
+          269.6328443670492,
+          -262.3997483031177,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.14102769488785705,
+        "final_orientation_error_deg": 0.04381180952485686,
+        "final_joint_positions_rad": [
+          -0.7761479183618786,
+          1.3002877460282958,
+          -1.2865869114001396,
+          1.08020172735181,
+          -0.007696902001294995,
+          -0.0010918235359334838
+        ],
+        "final_joint_error_rad": [
+          -0.000436332322112154,
+          0.00028774483118931826,
+          -0.0002443448416524774,
+          0.000201726078353337,
+          -0.00015707964937218197,
+          -0.0010918235249120292
+        ],
+        "final_position_excursion_mm": 2.7755575615628914e-14,
+        "post_plan_max_distance_from_final_mm": 2.648689575598631,
+        "post_success_max_distance_from_final_mm": 2.7755575615628914e-14,
+        "post_terminal_max_distance_from_final_mm": 2.7755575615628914e-14,
+        "completion_delay_s": 6.494953372663408,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          3.0180000000000002,
+          0.735,
+          0.558,
+          0.23700000000000002,
+          0.197,
+          0.26
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0022803508501982764,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.0056850593664446464,
+          0.04062643843607264,
+          0.002424541193710681,
+          0.0029735458631068756,
+          0.00420593628101996,
+          0.005988413813356588
+        ],
+        "encoder_max_gap_s": 0.0053789615631103516,
+        "raw_output_final_position_mm": [
+          269.5591287959519,
+          -262.5145067793644,
+          219.53511338261936
+        ],
+        "raw_output_final_position_error_mm": 0.1410276948885583,
+        "raw_output_final_orientation_error_deg": 0.025742089280252945,
+        "raw_output_final_joint_positions_rad": [
+          -0.7761479183618775,
+          1.3002877460282922,
+          -1.2865869114001385,
+          1.0802017273518094,
+          -0.007696902001294997,
+          0.0
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.0004363323221110438,
+          0.00028774483118576555,
+          -0.00024434484165136716,
+          0.00020172607835267087,
+          -0.00015707964937218457,
+          1.1021454503528882e-11
+        ],
+        "raw_output_final_position_excursion_mm": 8.196123257993793e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 8.196123257993793e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 8.196123257993793e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          6
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 0.96697998046875,
+        "position_settle_data_complete": true,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "camera_stabilization": {
+        "tool_region": [
+          821.0,
+          246.0,
+          866.0,
+          284.0
+        ],
+        "background_regions": [
+          [
+            505.0,
+            420.0,
+            567.0,
+            500.0
+          ],
+          [
+            690.0,
+            445.0,
+            790.0,
+            515.0
+          ]
+        ],
+        "foreground_features": 8,
+        "background_features": 45,
+        "minimum_background_inliers": 23,
+        "pixel_scale": 1.0,
+        "position_units": "pixels normalized to a full 960-wide frame",
+        "actual_fps": 59.92875239170015,
+        "background_translation_ptp_px": [
+          4.490946824192125,
+          1.1889883502359748
+        ],
+        "scale_ptp": 0.004294674374639484,
+        "premotion_translation_ptp_px": [
+          0.9455147007885321,
+          0.3112572884765138
+        ]
+      },
+      "post_success_image_max_distance_from_final_px": 0.9193192565183901,
+      "post_success_image_peak_to_peak_px": [
+        0.6181434564459778,
+        0.8483829099043732
+      ],
+      "post_success_unique_mit_payload_count": 1
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/03-arc-xz-500-out",
+      "joint": 5,
+      "performance": {
+        "measurement": "Motion curves: raw CAN output feedback + FK; zero-report transitions can inflate derivatives. Stop metrics: marked API motor-based reconstruction; raw_output_* retains raw CAN results.",
+        "completed_successfully": true,
+        "failure": null,
+        "motion_status": "succeeded",
+        "speed_estimator": "55 ms, cubic Savitzky-Golay derivative of FK positions from 200 Hz interpolated output angles",
+        "requested_speed_m_s": 0.5,
+        "duration_s": 0.7068583470572631,
+        "reference_peak_speed_m_s": 0.4999930247125533,
+        "measured_peak_speed_m_s": 0.5231484243032423,
+        "fitted_delay_s": 0.014999999999999972,
+        "velocity_vector_nrmse": 0.053199608311351426,
+        "motor_feedback_tcp_peak_speed_m_s": 0.5275179741959344,
+        "motor_feedback_velocity_nrmse": 0.06664514650885216,
+        "motor_feedback_fitted_delay_s": 0.014999999999999972,
+        "middle_low_speed_fraction": 0.0,
+        "middle_min_forward_speed_ratio": 0.8689709083866339,
+        "path_error_rms_mm": 2.6709363136290416,
+        "path_error_max_mm": 6.694204111201116,
+        "final_position_mm": [
+          256.28720998635674,
+          4.434914347408115,
+          219.61547533599375
+        ],
+        "target_position_mm": [
+          256.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "final_position_error_mm": 0.6861945365408579,
+        "final_orientation_error_deg": 0.2616231449741041,
+        "final_joint_positions_rad": [
+          0.017016960206944712,
+          0.8844979583256867,
+          -1.0193770029198082,
+          1.228449994016209,
+          -0.0003756140961425347,
+          0.00940732466824944
+        ],
+        "final_joint_error_rad": [
+          -0.0003184126614441986,
+          0.00024606938329685413,
+          -0.0002515444207487061,
+          -4.54987363924797e-05,
+          0.003073762898870981,
+          0.00294407105029368
+        ],
+        "final_position_excursion_mm": 6.206335383118183e-14,
+        "post_plan_max_distance_from_final_mm": 1.596301612079457,
+        "post_success_max_distance_from_final_mm": 0.5849997806250251,
+        "post_terminal_max_distance_from_final_mm": 0.5849997806250251,
+        "completion_delay_s": 7.158535053134997,
+        "completion_time_source": "controller",
+        "raw_joint_velocity_peak_rad_s": [
+          0.092,
+          1.7550000000000001,
+          1.952,
+          1.349,
+          0.168,
+          0.134
+        ],
+        "final_2s_velocity_rms_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "final_2s_current_ac_rms_a": [
+          0.002923349961944345,
+          0.0026874523251585298,
+          0.002759692011801316,
+          0.007126261291869676,
+          0.002407799825566901,
+          0.0023408064849534233
+        ],
+        "encoder_max_gap_s": 0.005708456039428711,
+        "raw_output_final_position_mm": [
+          256.28846368658134,
+          4.361680330334696,
+          219.61546371319653
+        ],
+        "raw_output_final_position_error_mm": 0.7589359138063152,
+        "raw_output_final_orientation_error_deg": 0.27732705200676944,
+        "raw_output_final_joint_positions_rad": [
+          0.01701696020694475,
+          0.8844979583256857,
+          -1.0193770029198097,
+          1.2284499940162057,
+          0.0,
+          0.009407324668249449
+        ],
+        "raw_output_final_joint_error_rad": [
+          -0.0003184126614441604,
+          0.0002460693832958549,
+          -0.0002515444207502604,
+          -4.549873639581037e-05,
+          0.0034493769950135157,
+          0.002944071050293689
+        ],
+        "raw_output_final_position_excursion_mm": 6.894538372252437e-13,
+        "raw_output_post_success_max_distance_from_final_mm": 6.894538372252437e-13,
+        "raw_output_post_terminal_max_distance_from_final_mm": 6.894538372252437e-13,
+        "endpoint_measurement": "API output feedback with marked motor-based estimates inside firmware zero band; 1 mrad motor resolution, not external 3D metrology",
+        "endpoint_inferred_joints": [
+          5
+        ],
+        "endpoint_unanchored_joints": [],
+        "endpoint_position_estimate_anchored": true,
+        "after_plan_1mm_position_settle_s": 0.02128458023071289,
+        "position_settle_data_complete": true,
+        "position_settle_observation": "First sample after the last >1 mm target-position error; must remain within 1 mm until recording ends. Not a velocity or external metrology criterion."
+      },
+      "camera_stabilization": {
+        "tool_region": [
+          821.0,
+          246.0,
+          866.0,
+          284.0
+        ],
+        "background_regions": [
+          [
+            505.0,
+            420.0,
+            567.0,
+            500.0
+          ],
+          [
+            690.0,
+            445.0,
+            790.0,
+            515.0
+          ]
+        ],
+        "foreground_features": 9,
+        "background_features": 35,
+        "minimum_background_inliers": 16,
+        "pixel_scale": 1.0,
+        "position_units": "pixels normalized to a full 960-wide frame",
+        "actual_fps": 59.94063587960449,
+        "background_translation_ptp_px": [
+          3.0462945801680643,
+          2.6326639878021347
+        ],
+        "scale_ptp": 0.0025163373518450882,
+        "premotion_translation_ptp_px": [
+          0.6316461562194984,
+          0.8508616540130612
+        ]
+      },
+      "post_success_image_max_distance_from_final_px": 0.4028902250484493,
+      "post_success_image_peak_to_peak_px": [
+        0.5624136452663322,
+        0.5825781429585999
+      ],
+      "post_success_unique_mit_payload_count": 1
+    }
+  ],
+  "j2_additional_hold": {
+    "timestamp": "2026-11-26T23:24:21.394299+08:00",
+    "can_interface": "can1",
+    "requested_seconds": 10.0,
+    "capture": {
+      "duration_seconds": 10.000095806986792,
+      "capture_start_realtime_ns": 1795706651389268000,
+      "audio_process_start_realtime_ns": null,
+      "timestamp_source": "SO_TIMESTAMPNS kernel software receive timestamp (CLOCK_REALTIME), not motor sampling time",
+      "transmitted_can_frames": 0
+    },
+    "quality_requirements": {
+      "feedback_expected_hz": 100.0,
+      "mit_expected_hz": 200.0,
+      "minimum_count_fraction": 0.9,
+      "minimum_window_coverage": 0.9,
+      "minimum_samples_per_channel": 20,
+      "maximum_gap_seconds": 0.1
+    },
+    "limits": {
+      "max_speed_rms_rad_s": 0.01,
+      "max_current_ac_rms_a": 0.02
+    },
+    "position_note": "0x251..0x256 signed high-speed motor position is scaled by 0.001 rad; it is not the 0x2A5..0x2A7 joint-angle encoding.",
+    "pass_scope": "capture quality and explicitly requested numerical limits only",
+    "joints": {
+      "joint1": {
+        "count": 1000,
+        "expected_rate_hz": 100.0,
+        "sample_rate_hz": 99.9991691960916,
+        "count_per_window_hz": 100.0,
+        "coverage_seconds": 9.990082998,
+        "max_gap_seconds": 0.010055498,
+        "first_timestamp_ns": 1795706651398705035,
+        "last_timestamp_ns": 1795706661388788033,
+        "quality_errors": [],
+        "feedback_can_id": "0x251",
+        "speed_rms_rad_s": 0.0029824486584013477,
+        "current_mean_a": 0.03138900000000001,
+        "current_ac_rms_a": 0.005716789221232491,
+        "current_peak_to_peak_a": 0.038000000000000006,
+        "high_speed_position_peak_to_peak_rad": 0.0,
+        "mit": {
+          "count": 2001,
+          "expected_rate_hz": 200.0,
+          "sample_rate_hz": 199.99994722001392,
+          "count_per_window_hz": 200.1,
+          "coverage_seconds": 10.000002639,
+          "max_gap_seconds": 0.006765727,
+          "first_timestamp_ns": 1795706651389321469,
+          "last_timestamp_ns": 1795706661389324108,
+          "quality_errors": [],
+          "can_id": "0x15A",
+          "unique_payload_count": 1,
+          "payload_counts": {
+            "78117ff0338727ff": 2001
+          }
+        }
+      },
+      "joint2": {
+        "count": 1000,
+        "expected_rate_hz": 100.0,
+        "sample_rate_hz": 99.9991875141089,
+        "count_per_window_hz": 100.0,
+        "coverage_seconds": 9.990081168,
+        "max_gap_seconds": 0.010445618,
+        "first_timestamp_ns": 1795706651398849491,
+        "last_timestamp_ns": 1795706661388930659,
+        "quality_errors": [],
+        "feedback_can_id": "0x252",
+        "speed_rms_rad_s": 0.0,
+        "current_mean_a": -1.0565100000000003,
+        "current_ac_rms_a": 0.0038709042871143216,
+        "current_peak_to_peak_a": 0.026000000000000023,
+        "high_speed_position_peak_to_peak_rad": 0.0,
+        "mit": {
+          "count": 2000,
+          "expected_rate_hz": 200.0,
+          "sample_rate_hz": 200.000829298086,
+          "count_per_window_hz": 200.0,
+          "coverage_seconds": 9.994958556,
+          "max_gap_seconds": 0.006707439,
+          "first_timestamp_ns": 1795706651389452275,
+          "last_timestamp_ns": 1795706661384410831,
+          "quality_errors": [],
+          "can_id": "0x15B",
+          "unique_payload_count": 1,
+          "payload_counts": {
+            "8d0c7ff0778e47ff": 2000
+          }
+        }
+      },
+      "joint3": {
+        "count": 1000,
+        "expected_rate_hz": 100.0,
+        "sample_rate_hz": 100.00089086879727,
+        "count_per_window_hz": 100.0,
+        "coverage_seconds": 9.989911003,
+        "max_gap_seconds": 0.010334351,
+        "first_timestamp_ns": 1795706651399146433,
+        "last_timestamp_ns": 1795706661389057436,
+        "quality_errors": [],
+        "feedback_can_id": "0x253",
+        "speed_rms_rad_s": 0.0,
+        "current_mean_a": -1.321558,
+        "current_ac_rms_a": 0.0024422604283736815,
+        "current_peak_to_peak_a": 0.018000000000000016,
+        "high_speed_position_peak_to_peak_rad": 0.0,
+        "mit": {
+          "count": 2000,
+          "expected_rate_hz": 200.0,
+          "sample_rate_hz": 200.00235204366825,
+          "count_per_window_hz": 200.0,
+          "coverage_seconds": 9.994882458,
+          "max_gap_seconds": 0.006691159,
+          "first_timestamp_ns": 1795706651389580002,
+          "last_timestamp_ns": 1795706661384462460,
+          "quality_errors": [],
+          "can_id": "0x15C",
+          "unique_payload_count": 1,
+          "payload_counts": {
+            "72927ff0688f97ff": 2000
+          }
+        }
+      },
+      "joint4": {
+        "count": 1000,
+        "expected_rate_hz": 100.0,
+        "sample_rate_hz": 100.00068276742444,
+        "count_per_window_hz": 100.0,
+        "coverage_seconds": 9.989931792,
+        "max_gap_seconds": 0.010329751,
+        "first_timestamp_ns": 1795706651399223671,
+        "last_timestamp_ns": 1795706661389155463,
+        "quality_errors": [],
+        "feedback_can_id": "0x254",
+        "speed_rms_rad_s": 0.0,
+        "current_mean_a": -0.913489,
+        "current_ac_rms_a": 0.0027411455634460593,
+        "current_peak_to_peak_a": 0.028000000000000025,
+        "high_speed_position_peak_to_peak_rad": 0.0,
+        "mit": {
+          "count": 2000,
+          "expected_rate_hz": 200.0,
+          "sample_rate_hz": 200.0028439023693,
+          "count_per_window_hz": 200.0,
+          "coverage_seconds": 9.994857878,
+          "max_gap_seconds": 0.00666888,
+          "first_timestamp_ns": 1795706651389656460,
+          "last_timestamp_ns": 1795706661384514338,
+          "quality_errors": [],
+          "can_id": "0x15D",
+          "unique_payload_count": 1,
+          "payload_counts": {
+            "8af37ff1198b27ff": 2000
+          }
+        }
+      },
+      "joint5": {
+        "count": 1000,
+        "expected_rate_hz": 100.0,
+        "sample_rate_hz": 100.00121899383826,
+        "count_per_window_hz": 100.0,
+        "coverage_seconds": 9.989878224,
+        "max_gap_seconds": 0.010788889,
+        "first_timestamp_ns": 1795706651389517673,
+        "last_timestamp_ns": 1795706661379395897,
+        "quality_errors": [],
+        "feedback_can_id": "0x255",
+        "speed_rms_rad_s": 0.0,
+        "current_mean_a": -0.066793,
+        "current_ac_rms_a": 0.005027539258921804,
+        "current_peak_to_peak_a": 0.032,
+        "high_speed_position_peak_to_peak_rad": 0.0,
+        "mit": {
+          "count": 2000,
+          "expected_rate_hz": 200.0,
+          "sample_rate_hz": 200.00265718387695,
+          "count_per_window_hz": 200.0,
+          "coverage_seconds": 9.994867209,
+          "max_gap_seconds": 0.006683369,
+          "first_timestamp_ns": 1795706651389703528,
+          "last_timestamp_ns": 1795706661384570737,
+          "quality_errors": [],
+          "can_id": "0x15E",
+          "unique_payload_count": 1,
+          "payload_counts": {
+            "7fde7ff03689b7ff": 2000
+          }
+        }
+      },
+      "joint6": {
+        "count": 1000,
+        "expected_rate_hz": 100.0,
+        "sample_rate_hz": 99.99870966629946,
+        "count_per_window_hz": 100.0,
+        "coverage_seconds": 9.990128906,
+        "max_gap_seconds": 0.010791859,
+        "first_timestamp_ns": 1795706651390126807,
+        "last_timestamp_ns": 1795706661380255713,
+        "quality_errors": [],
+        "feedback_can_id": "0x256",
+        "speed_rms_rad_s": 0.0,
+        "current_mean_a": 0.03233200000000001,
+        "current_ac_rms_a": 0.006250582052897154,
+        "current_peak_to_peak_a": 0.045,
+        "high_speed_position_peak_to_peak_rad": 0.0,
+        "mit": {
+          "count": 2000,
+          "expected_rate_hz": 200.0,
+          "sample_rate_hz": 200.00211051751882,
+          "count_per_window_hz": 200.0,
+          "coverage_seconds": 9.994894528,
+          "max_gap_seconds": 0.00667713,
+          "first_timestamp_ns": 1795706651389770746,
+          "last_timestamp_ns": 1795706661384665274,
+          "quality_errors": [],
+          "can_id": "0x15F",
+          "unique_payload_count": 1,
+          "payload_counts": {
+            "80087ff03d8067ff": 2000
+          }
+        }
+      }
+    },
+    "audio": null,
+    "passed": true,
+    "errors": []
+  },
+  "note": "Both original diagnostic failures are retained. Pixel motion is uncalibrated and not a 3D length measurement."
+}

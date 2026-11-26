@@ -1,0 +1,54 @@
+{
+  "sources": [
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-line-out",
+      "host_frame_timestamps": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-line-out/camera-times.npy",
+      "start_unix": 1795706523.2857404,
+      "end_unix": 1795706524.2956662,
+      "display_fps": 30,
+      "camera_timing": {
+        "fps": 59.88833871275357,
+        "p99_gap_seconds": 0.02079730033874512,
+        "max_gap_seconds": 0.04150390625
+      }
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-line-return",
+      "host_frame_timestamps": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-line-return/camera-times.npy",
+      "start_unix": 1795706536.658415,
+      "end_unix": 1795706537.668341,
+      "display_fps": 30,
+      "camera_timing": {
+        "fps": 60.02370377421534,
+        "p99_gap_seconds": 0.020538444519042968,
+        "max_gap_seconds": 0.03209662437438965
+      }
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-arc-out",
+      "host_frame_timestamps": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-arc-out/camera-times.npy",
+      "start_unix": 1795706551.1977286,
+      "end_unix": 1795706552.2217855,
+      "display_fps": 30,
+      "camera_timing": {
+        "fps": 60.00532067400493,
+        "p99_gap_seconds": 0.02072064161300659,
+        "max_gap_seconds": 0.03121161460876465
+      }
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-arc-return",
+      "host_frame_timestamps": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-arc-return/camera-times.npy",
+      "start_unix": 1795706564.8884053,
+      "end_unix": 1795706565.9124622,
+      "display_fps": 30,
+      "camera_timing": {
+        "fps": 60.00214775906072,
+        "p99_gap_seconds": 0.02061629295349121,
+        "max_gap_seconds": 0.03189253807067871
+      }
+    }
+  ],
+  "frames": 124,
+  "timing": "Host camera timestamps, approximately real-time 30 fps. Most endpoint settling waits omitted. No calibrated exposure/CAN synchronization."
+}

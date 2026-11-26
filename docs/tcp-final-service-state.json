@@ -1,0 +1,59 @@
+{
+  "hardware": {
+    "url": "http://localhost:8090",
+    "mode": "idle",
+    "enabled": true,
+    "connected": true,
+    "command_ready": true,
+    "errors": [],
+    "control_rate_hz": 199.99993784520794,
+    "joint_velocity_limits_rad_s": [
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3.0
+    ],
+    "goal_velocity_window": 1.0,
+    "target_positions": [
+      0.009686577344981795,
+      1.3000000014877575,
+      -1.286342566990033,
+      1.0800000017500697,
+      -0.007539822373293013,
+      -2.038189926137282e-11
+    ]
+  },
+  "simulation": {
+    "url": "http://localhost:8088",
+    "mode": "idle",
+    "enabled": true,
+    "connected": true,
+    "command_ready": null,
+    "errors": [],
+    "control_rate_hz": 199.98721324848117,
+    "joint_velocity_limits_rad_s": [
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3.0
+    ],
+    "goal_velocity_window": 1.0,
+    "target_positions": [
+      8.849866056843819e-11,
+      0.5000000000088881,
+      -0.5000000000014483,
+      -9.009911520966417e-12,
+      0.20000000013764518,
+      -7.860847241515659e-12
+    ]
+  },
+  "native_pid": 216086,
+  "hardware_api_pid": 497423,
+  "simulation_api_pid": 490425,
+  "background_motion_pipeline_running": false,
+  "final_hold_passed": true
+}

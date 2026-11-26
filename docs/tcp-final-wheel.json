@@ -1,0 +1,8 @@
+{
+  "wheel": ".runtime/final-wheel/piper_control-0.1.0-py3-none-any.whl",
+  "sha256": "eb5ff72f4223c9e96d76c9a3f0be6d58376e17e6c74fe2660920df33aa510a8f",
+  "package_files_matched_source": 56,
+  "isolated_simulation_exit": 0,
+  "output": "{\"module\": \"/home/robot/Documents/piper_control/.runtime/final-wheel/unpacked/piper_control/__init__.py\", \"connected\": true, \"integration_steps\": 100}\n",
+  "stderr": "pybullet build time: Jan 29 2025 23:16:28\n"
+}

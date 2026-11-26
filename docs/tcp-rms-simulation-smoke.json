@@ -1,0 +1,691 @@
+{
+  "passed": true,
+  "tests": [
+    {
+      "name": "movej",
+      "result": {
+        "id": "7473d62036b740e5bb4182c376621363",
+        "kind": "movej",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.5,
+        "error": null,
+        "settling_speed": 5.378097769991001e-14,
+        "finished_timestamp": 1795705448.4918075,
+        "finished_monotonic_time": 219775.011581642
+      },
+      "state": {
+        "positions": [
+          0.020126206189391944,
+          0.5000375167745724,
+          -0.5005629462045903,
+          -0.00025227988417087654,
+          0.20002218346078765,
+          2.187911243018194e-06
+        ],
+        "velocities": [
+          -1.3549003349522506e-15,
+          -5.3831516661296405e-14,
+          2.5204050210740653e-14,
+          -8.997261379284984e-18,
+          -1.3029303315514769e-14,
+          -2.1366840605635585e-18
+        ],
+        "efforts": [
+          3.0201492798335434e-15,
+          -0.12278217131484488,
+          -8.374809422418203,
+          -2.0361082165039246,
+          -0.0018150104279092403,
+          -0.00021874667114019593
+        ],
+        "enabled": true,
+        "connected": true,
+        "feedback_age": 0.001377663022140041,
+        "errors": [],
+        "simulation": {
+          "engine": "PyBullet DIRECT",
+          "dynamics": "URDF inertia and gravity with torque-controlled joints",
+          "disabled_behavior": "paused with zero velocity",
+          "motor_model": "MIT kp/kd with optional upstream fitted compensation; no CAN latency or quantization",
+          "arm_config": "/home/robot/Documents/piper_control/vendor/Piper_workspace/config/arms/arm_2.yaml",
+          "gravity_model": "upstream calibrated joint-load estimate",
+          "friction_model": "upstream fitted moving-friction load and compensation",
+          "friction_scale": 0.0,
+          "reference_friction_scale": 0.88,
+          "hold_kd": [
+            4.0,
+            8.0,
+            10.0,
+            0.53,
+            0.3,
+            0.01
+          ],
+          "moving_kd": [
+            8.0,
+            12.12,
+            14.0,
+            1.6,
+            0.3,
+            0.2
+          ],
+          "command_kd": [
+            4.0,
+            8.0,
+            10.0,
+            0.53,
+            0.3,
+            0.01
+          ],
+          "position_integral_bias": [
+            0.0001262061893919011,
+            0.0,
+            -0.0031219715874385434,
+            -0.0033631227046921476,
+            0.0,
+            -1.0203732670376971e-06
+          ],
+          "position_integral_active": false,
+          "position_integral_max_velocity": 0.02,
+          "position_integral_motor_lead_limit": 0.003,
+          "position_integral_motor_lead_time": 0.5,
+          "position_integral_motor_lead": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "position_integral_velocity_gated": false,
+          "effective_kp": [
+            153.0,
+            359.9999999752476,
+            359.99214491575407,
+            71.9971778509535,
+            8.99999999987207,
+            7.4999999999996785
+          ],
+          "effective_kd": [
+            6.928203230275509,
+            13.856406460074657,
+            17.320319110699483,
+            0.9179689368912227,
+            0.5196152422669702,
+            0.017320508075688402
+          ],
+          "gravity_compensation": [
+            0.0,
+            -0.10927613247044768,
+            -7.453580385952368,
+            -1.8121363126884926,
+            -0.0016153592808300957,
+            -0.00019468453731477772
+          ],
+          "friction_compensation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "friction_load": [
+            2.8363022158689046e-15,
+            2.622357489131741e-13,
+            1.8854514997897133e-13,
+            -1.113809749967377e-17,
+            -1.0263610238027185e-14,
+            -6.210998599954159e-20
+          ],
+          "dynamic_compensation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "joint_names": [
+          "joint1",
+          "joint2",
+          "joint3",
+          "joint4",
+          "joint5",
+          "joint6"
+        ],
+        "timestamp": 1795705448.498074,
+        "monotonic_time": 219775.017848332,
+        "mode": "idle",
+        "backend": "simulation",
+        "tcp_pose": {
+          "position": [
+            0.3059104644040401,
+            -0.03259494634588473,
+            0.36140919205785155
+          ],
+          "orientation": [
+            0.428387724956235,
+            -0.5229535871674822,
+            0.5617827394427879,
+            -0.476868594520168
+          ]
+        },
+        "motion": {
+          "id": "7473d62036b740e5bb4182c376621363",
+          "kind": "movej",
+          "status": "succeeded",
+          "progress": 1.0,
+          "duration": 1.5,
+          "error": null,
+          "settling_speed": 5.378097769991001e-14,
+          "finished_timestamp": 1795705448.4918075,
+          "finished_monotonic_time": 219775.011581642
+        },
+        "target_positions": [
+          0.02,
+          0.5,
+          -0.5,
+          0.0,
+          0.2,
+          0.0
+        ],
+        "control_rate_hz": 200.00409191352082
+      }
+    },
+    {
+      "name": "movel",
+      "result": {
+        "id": "54f2fe20f0554c1699757b86957c77d7",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.5,
+        "error": null,
+        "tcp_position_error": 0.00015999124083557594,
+        "settling_speed": 5.17884087512251e-14,
+        "finished_timestamp": 1795705454.0218363,
+        "finished_monotonic_time": 219780.541610548
+      },
+      "state": {
+        "positions": [
+          0.030123603744556988,
+          0.5000376425815839,
+          -0.500209503583791,
+          -0.0002109799197554118,
+          0.20002150266690732,
+          2.18637596267353e-06
+        ],
+        "velocities": [
+          -1.7173777640189309e-15,
+          -5.179811412524728e-14,
+          5.0860123784578685e-14,
+          3.6744559667428395e-17,
+          -1.3262356107385406e-14,
+          5.0572293808021864e-18
+        ],
+        "efforts": [
+          3.9348721014780796e-15,
+          -0.12319392654336332,
+          -8.375215271019426,
+          -2.0362366569567825,
+          -0.0017593179352880521,
+          -0.00021864157003245128
+        ],
+        "enabled": true,
+        "connected": true,
+        "feedback_age": 0.004598936007823795,
+        "errors": [],
+        "simulation": {
+          "engine": "PyBullet DIRECT",
+          "dynamics": "URDF inertia and gravity with torque-controlled joints",
+          "disabled_behavior": "paused with zero velocity",
+          "motor_model": "MIT kp/kd with optional upstream fitted compensation; no CAN latency or quantization",
+          "arm_config": "/home/robot/Documents/piper_control/vendor/Piper_workspace/config/arms/arm_2.yaml",
+          "gravity_model": "upstream calibrated joint-load estimate",
+          "friction_model": "upstream fitted moving-friction load and compensation",
+          "friction_scale": 0.0,
+          "reference_friction_scale": 0.88,
+          "hold_kd": [
+            4.0,
+            8.0,
+            10.0,
+            0.53,
+            0.3,
+            0.01
+          ],
+          "moving_kd": [
+            8.0,
+            12.12,
+            14.0,
+            1.6,
+            0.3,
+            0.2
+          ],
+          "command_kd": [
+            4.0,
+            8.0,
+            10.0,
+            0.53,
+            0.3,
+            0.01
+          ],
+          "position_integral_bias": [
+            0.00012360381389608984,
+            0.0,
+            -0.002768652987685911,
+            -0.0033220190071451172,
+            0.0,
+            -1.0203732670376971e-06
+          ],
+          "position_integral_active": false,
+          "position_integral_max_velocity": 0.02,
+          "position_integral_motor_lead_limit": 0.003,
+          "position_integral_motor_lead_time": 0.5,
+          "position_integral_motor_lead": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "position_integral_velocity_gated": false,
+          "effective_kp": [
+            153.0,
+            359.9999999749977,
+            359.9921437736742,
+            71.99717731681349,
+            8.999999999883489,
+            7.4999999999996785
+          ],
+          "effective_kd": [
+            6.928203230275509,
+            13.856406460069849,
+            17.320319083225012,
+            0.917968933486062,
+            0.5196152422672997,
+            0.017320508075688402
+          ],
+          "gravity_compensation": [
+            0.0,
+            -0.10964259462382003,
+            -7.453941591207625,
+            -1.812250624691536,
+            -0.0015657929623971321,
+            -0.000194590997328885
+          ],
+          "friction_compensation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "friction_load": [
+            4.080160900032608e-15,
+            2.5233880764866455e-13,
+            3.767881906214447e-13,
+            -1.3669658060666925e-18,
+            -1.0444526236087635e-14,
+            -1.3847464242809154e-20
+          ],
+          "dynamic_compensation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "joint_names": [
+          "joint1",
+          "joint2",
+          "joint3",
+          "joint4",
+          "joint5",
+          "joint6"
+        ],
+        "timestamp": 1795705454.0363262,
+        "monotonic_time": 219780.556100376,
+        "mode": "idle",
+        "backend": "simulation",
+        "tcp_pose": {
+          "position": [
+            0.3062464421476449,
+            -0.02953416416360411,
+            0.36120929415202624
+          ],
+          "orientation": [
+            0.43110987724481536,
+            -0.5208968416751721,
+            0.5593098931687278,
+            -0.47956563417156695
+          ]
+        },
+        "motion": {
+          "id": "54f2fe20f0554c1699757b86957c77d7",
+          "kind": "movel",
+          "status": "succeeded",
+          "progress": 1.0,
+          "duration": 1.5,
+          "error": null,
+          "tcp_position_error": 0.00015999124083557594,
+          "settling_speed": 5.17884087512251e-14,
+          "finished_timestamp": 1795705454.0218363,
+          "finished_monotonic_time": 219780.541610548
+        },
+        "target_positions": [
+          0.029999999930660846,
+          0.4999999999929139,
+          -0.4999999999990713,
+          7.626514672252212e-12,
+          0.19999999989214062,
+          6.202568916601536e-12
+        ],
+        "control_rate_hz": 199.9999104744985
+      }
+    },
+    {
+      "name": "movec",
+      "result": {
+        "id": "342dcf2af4964b269a0712f54213c446",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.0,
+        "error": null,
+        "tcp_position_error": 0.0001498341737208841,
+        "settling_speed": 5.1863182758303666e-14,
+        "finished_timestamp": 1795705460.0618222,
+        "finished_monotonic_time": 219786.581596322
+      },
+      "state": {
+        "positions": [
+          2.9835351092939375e-06,
+          0.5000376464472767,
+          -0.5002005546745719,
+          -0.00020321326911137795,
+          0.20002147409103352,
+          2.1862966191208448e-06
+        ],
+        "velocities": [
+          5.306068779680407e-19,
+          -5.1877508731264577e-14,
+          5.117577660074797e-14,
+          2.2528491221178258e-17,
+          -1.2703960622758937e-14,
+          2.4110674129358304e-18
+        ],
+        "efforts": [
+          -2.7689191612029016e-16,
+          -0.12320652562221689,
+          -8.375227689263127,
+          -2.0362420883112313,
+          -0.0017569598225185825,
+          -0.00021863711911404167
+        ],
+        "enabled": true,
+        "connected": true,
+        "feedback_age": 0.0009988029778469354,
+        "errors": [],
+        "simulation": {
+          "engine": "PyBullet DIRECT",
+          "dynamics": "URDF inertia and gravity with torque-controlled joints",
+          "disabled_behavior": "paused with zero velocity",
+          "motor_model": "MIT kp/kd with optional upstream fitted compensation; no CAN latency or quantization",
+          "arm_config": "/home/robot/Documents/piper_control/vendor/Piper_workspace/config/arms/arm_2.yaml",
+          "gravity_model": "upstream calibrated joint-load estimate",
+          "friction_model": "upstream fitted moving-friction load and compensation",
+          "friction_scale": 0.0,
+          "reference_friction_scale": 0.88,
+          "hold_kd": [
+            4.0,
+            8.0,
+            10.0,
+            0.53,
+            0.3,
+            0.01
+          ],
+          "moving_kd": [
+            8.0,
+            12.12,
+            14.0,
+            1.6,
+            0.3,
+            0.2
+          ],
+          "command_kd": [
+            4.0,
+            8.0,
+            10.0,
+            0.53,
+            0.3,
+            0.01
+          ],
+          "position_integral_bias": [
+            2.9834466106315685e-06,
+            0.0,
+            -0.002759707870884433,
+            -0.0033142606390686876,
+            0.0,
+            -1.0203732670376971e-06
+          ],
+          "position_integral_active": false,
+          "position_integral_max_velocity": 0.02,
+          "position_integral_motor_lead_limit": 0.003,
+          "position_integral_motor_lead_time": 0.5,
+          "position_integral_motor_lead": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "position_integral_velocity_gated": false,
+          "effective_kp": [
+            153.0,
+            359.99999997499003,
+            359.99214373872684,
+            71.99717729422485,
+            8.999999999883958,
+            7.4999999999996785
+          ],
+          "effective_kd": [
+            6.928203230275509,
+            13.856406460069701,
+            17.320319082384298,
+            0.9179689333420586,
+            0.5196152422673134,
+            0.017320508075688402
+          ],
+          "gravity_compensation": [
+            0.0,
+            -0.10965380780399932,
+            -7.453952643444516,
+            -1.8122554585969948,
+            -0.001563694242032665,
+            -0.00019458703601149936
+          ],
+          "friction_compensation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "friction_load": [
+            -1.5531200197502425e-19,
+            2.5274216198164233e-13,
+            3.790284706920476e-13,
+            -1.0246314880209206e-18,
+            -1.00061530885001e-14,
+            -3.0456761849334854e-20
+          ],
+          "dynamic_compensation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "joint_names": [
+          "joint1",
+          "joint2",
+          "joint3",
+          "joint4",
+          "joint5",
+          "joint6"
+        ],
+        "timestamp": 1795705460.0827045,
+        "monotonic_time": 219786.602478838,
+        "mode": "idle",
+        "backend": "simulation",
+        "tcp_pose": {
+          "position": [
+            0.3052188778100393,
+            -0.0387437002908418,
+            0.3612024531741594
+          ],
+          "orientation": [
+            0.42322115972700036,
+            -0.5273341041086017,
+            0.5664650551510896,
+            -0.47108378649236515
+          ]
+        },
+        "motion": {
+          "id": "342dcf2af4964b269a0712f54213c446",
+          "kind": "movec",
+          "status": "succeeded",
+          "progress": 1.0,
+          "duration": 2.0,
+          "error": null,
+          "tcp_position_error": 0.0001498341737208841,
+          "settling_speed": 5.1863182758303666e-14,
+          "finished_timestamp": 1795705460.0618222,
+          "finished_monotonic_time": 219786.581596322
+        },
+        "target_positions": [
+          8.849866056843819e-11,
+          0.5000000000088881,
+          -0.5000000000014483,
+          -9.009911520966417e-12,
+          0.20000000013764518,
+          -7.860847241515659e-12
+        ],
+        "control_rate_hz": 200.00015308527335
+      }
+    }
+  ],
+  "info": {
+    "name": "AgileX PiPER X",
+    "dof": 6,
+    "joint_names": [
+      "joint1",
+      "joint2",
+      "joint3",
+      "joint4",
+      "joint5",
+      "joint6"
+    ],
+    "joint_limits": [
+      {
+        "lower": -2.6179938,
+        "upper": 2.6179938,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": 0.0,
+        "upper": 3.1415926,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": -2.9670597,
+        "upper": 0.0,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": -1.553343,
+        "upper": 1.553343,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": -1.553343,
+        "upper": 1.553343,
+        "velocity": 3.141592653589793
+      },
+      {
+        "lower": -2.9670597,
+        "upper": 2.9670597,
+        "velocity": 3.0
+      }
+    ],
+    "base_frame": "base_link",
+    "tcp_frame": "tcp",
+    "tcp_offset": [
+      0.0,
+      0.0,
+      0.16
+    ],
+    "tcp_orientation": [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "angle_offsets": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "end_effector": "gripper_with_wrench",
+    "model_url": "/robot/model.urdf",
+    "kinematics": "upstream_piper_x_driver",
+    "api_version": "1.0",
+    "backend": "simulation",
+    "control_rate_hz": 200.0,
+    "stream_timeout": 0.2,
+    "feedback_timeout": 0.2,
+    "goal_tolerance": 0.005,
+    "joint_goal_tolerances": [
+      0.0012,
+      0.0012,
+      0.0012,
+      0.005,
+      0.005,
+      0.01
+    ],
+    "goal_velocity_tolerance": 0.01,
+    "goal_velocity_window": 1.0,
+    "goal_settle_time": 3.0,
+    "goal_timeout": 30.0,
+    "tcp_position_tolerance": 0.00045,
+    "units": {
+      "position": "m",
+      "joint": "rad",
+      "orientation": "quaternion_xyzw",
+      "time": "s",
+      "effort": "Nm"
+    },
+    "capabilities": [
+      "servo_joints",
+      "servo_pose",
+      "servo_twist",
+      "trajectory",
+      "movej",
+      "movel",
+      "movec"
+    ]
+  }
+}

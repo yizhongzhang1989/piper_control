@@ -1,0 +1,346 @@
+{
+  "measurement": "Rigid tool image displacement after fixed background registration",
+  "units": "pixels normalized to full frame width 960; no millimetre calibration",
+  "tool_region": [
+    821.0,
+    246.0,
+    866.0,
+    284.0
+  ],
+  "background_regions": [
+    [
+      505.0,
+      420.0,
+      567.0,
+      500.0
+    ],
+    [
+      690.0,
+      445.0,
+      790.0,
+      515.0
+    ]
+  ],
+  "maximum_pairwise_displacement_px": 1.331567080107729,
+  "records": [
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-line-return",
+      "displacement_px": [
+        0.0,
+        0.0
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/01-arc-return",
+      "displacement_px": [
+        -0.082366943359375,
+        -0.0339202880859375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/02-line-return",
+      "displacement_px": [
+        0.2845458984375,
+        -0.16799163818359375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/02-arc-return",
+      "displacement_px": [
+        0.29486083984375,
+        -0.3589630126953125
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/03-line-return",
+      "displacement_px": [
+        -0.171295166015625,
+        -0.1589508056640625
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/03-arc-return",
+      "displacement_px": [
+        -0.1060791015625,
+        0.7610321044921875
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/04-line-return",
+      "displacement_px": [
+        0.02020263671875,
+        0.0566558837890625
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/04-arc-return",
+      "displacement_px": [
+        0.355133056640625,
+        0.0648193359375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/05-line-return",
+      "displacement_px": [
+        0.315399169921875,
+        -0.196746826171875
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/05-arc-return",
+      "displacement_px": [
+        0.00146484375,
+        -0.147918701171875
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/06-line-return",
+      "displacement_px": [
+        0.09161376953125,
+        0.0954437255859375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/06-arc-return",
+      "displacement_px": [
+        0.17901611328125,
+        0.1845550537109375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/07-line-return",
+      "displacement_px": [
+        0.028961181640625,
+        0.2106170654296875
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/07-arc-return",
+      "displacement_px": [
+        0.210357666015625,
+        -0.1818084716796875
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/08-line-return",
+      "displacement_px": [
+        0.009735107421875,
+        0.0694732666015625
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/08-arc-return",
+      "displacement_px": [
+        -0.04901123046875,
+        -0.1087799072265625
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/09-line-return",
+      "displacement_px": [
+        0.152801513671875,
+        0.03556060791015625
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/09-arc-return",
+      "displacement_px": [
+        0.136871337890625,
+        -0.193572998046875
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/10-line-return",
+      "displacement_px": [
+        0.12298583984375,
+        -0.207916259765625
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/highspeed/10-arc-return",
+      "displacement_px": [
+        -0.03143310546875,
+        0.9320068359375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/01-arc-xy-500-return",
+      "displacement_px": [
+        -0.0316162109375,
+        0.80206298828125
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/01-arc-xz-500-return",
+      "displacement_px": [
+        -0.052337646484375,
+        0.34703826904296875
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/01-arc-yz-500-return",
+      "displacement_px": [
+        0.014984130859375,
+        -0.06048583984375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/02-arc-xy-500-return",
+      "displacement_px": [
+        -0.070220947265625,
+        0.173828125
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/02-arc-xz-500-return",
+      "displacement_px": [
+        0.11871337890625,
+        0.052276611328125
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/02-arc-yz-500-return",
+      "displacement_px": [
+        0.07232666015625,
+        -0.011871337890625
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/03-arc-xy-500-return",
+      "displacement_px": [
+        -0.24737548828125,
+        -0.0770111083984375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/03-arc-xz-500-return",
+      "displacement_px": [
+        -0.07879638671875,
+        0.392913818359375
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    },
+    {
+      "folder": ".runtime/tcp-smooth/rms-zero-final-validation/orthogonal/03-arc-yz-500-return",
+      "displacement_px": [
+        -0.306365966796875,
+        0.21347808837890625
+      ],
+      "tool_features": 12,
+      "background_inliers": 36,
+      "motion_status": "succeeded",
+      "failure": null
+    }
+  ]
+}
