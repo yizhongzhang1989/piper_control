@@ -213,10 +213,8 @@ class SimulationBackend:
                 common = dict(gravity_torques=raw_gravity, static_frictions=self._static_frictions,
                               error_epsilon=self._error_epsilon, velocity_epsilon=self._velocity_epsilon,
                               active_impedances=active)
-                # The fitted moving-friction curve is an estimated plant load.
                 # Breakaway terms driven by error/target velocity belong only
-                # to compensation. Both sampled estimates update once per tick.
-                self._plant_friction = np.asarray(self._friction_model.torques(arm_q, arm_dq, **common))
+                # to the controller compensation, sampled once per outer tick.
                 compensation = self._friction_model.torques(
                     arm_q, arm_dq, position_errors=error, target_velocities=self._target_velocity, **common
                 )
@@ -231,6 +229,10 @@ class SimulationBackend:
                     ))
                 torque = gravity.copy()
                 arm_q, arm_dq = q[self._arm_slots], dq[self._arm_slots]
+                if self._friction_model is not None:
+                    # Physical friction responds to current motion at every
+                    # physics step; holding it for 5 ms can inject numerical energy.
+                    self._plant_friction = np.asarray(self._friction_model.torques(arm_q, arm_dq, **common))
                 error = self._target - arm_q
                 arm_torque = (self._effective_kp * error
                               + self._effective_kd * (self._target_velocity - arm_dq)

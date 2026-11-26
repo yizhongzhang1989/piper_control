@@ -120,3 +120,35 @@ def test_arm_configuration_reuses_calibrated_loads_and_compensation():
         sim.close()
     with pytest.raises(ValueError, match="kd must be positive"):
         SimulationBackend(kd=[5.99, 6.06, 3.16, 1.06, 0.30, 0])
+
+
+@pytest.mark.parametrize("kp4,kd4", [(64, 2.12), (32, 0.53)])
+def test_calibrated_friction_dissipates_small_motion_at_200hz(kp4, kd4):
+    # Holding a physical friction load for the entire 5 ms controller tick
+    # previously sustained a numerical limit cycle after this small motion.
+    config = Path(__file__).parents[1] / "vendor/Piper_workspace/config/arms/arm_2.yaml"
+    initial = np.array([-.0776497, .9208008, -.8501848, .7730412, .0713491, 1.1541339])
+    sim = SimulationBackend(
+        initial_positions=initial, arm_config=config, friction_scale=0,
+        kp=[51, 64, 60, kp4, 3, 3], kd=[10.375, 12.12, 6.32, kd4, .3, .08],
+    )
+    try:
+        sim.enable(True)
+        target = initial.copy()
+        target[3] += .001
+        sim.command(target)
+        settled = []
+        peak_friction_load = 0.
+        for index in range(1200):
+            sim.step(.005)
+            state = sim.read()
+            peak_friction_load = max(peak_friction_load, abs(state["simulation"]["friction_load"][3]))
+            if index >= 800:
+                settled.append([state["positions"][3], state["velocities"][3]])
+        settled = np.asarray(settled)
+        assert peak_friction_load > .01  # Retain physical friction with compensation disabled.
+        assert np.sqrt(np.mean(settled[:, 1] ** 2)) < .002
+        assert np.ptp(settled[:, 0]) < 1e-4
+        assert abs(target[3] - settled[-1, 0]) < 5e-4
+    finally:
+        sim.close()

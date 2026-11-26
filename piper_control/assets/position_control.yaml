@@ -1,7 +1,8 @@
 # Position-control profile commissioned on arm_2 with the unchanged fitted models.
-# Damping follows sqrt(kp ratio) from source gains. "source" selects original tuning.
+# J4 gains are validated on this arm/tool; the previous higher PD gains excited
+# a motor-local oscillation. "source" selects the original tuning.
 # Disable velocity-based friction feedforward for this position profile; the
 # fitted model and its calibration remain available through the source profile.
-kp: [51.0, 64.0, 60.0, 64.0, 3.0, 3.0]
-kd: [10.375, 12.12, 6.32, 2.12, 0.30, 0.08]
+kp: [51.0, 64.0, 60.0, 32.0, 3.0, 3.0]
+kd: [10.375, 12.12, 6.32, 0.53, 0.30, 0.08]
 friction_scale: 0.0

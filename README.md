@@ -9,9 +9,11 @@ AgileX Piper X 的通用机械臂服务：启动后等待上层命令，通过�
 附可选的超时位置保持补丁，以及就绪状态失效修复；本机原工作空间不改动。
 无需启动原工作空间的摄像头、插孔、示教等应用。
 
-真机完整 10 项验收、标准 ROS 轨迹和保持/重连接管已通过。最大终点误差
-`0.00864 rad`；实测速度峰值 `0.262 rad/s`，与指令限速分开记录，见
-[验证记录](docs/validation.md)。
+默认位置控制参数已针对本机实测 J4 保持振荡修正，并增加被动 CAN 静止验收。
+当前参数下完整 10 项真机运动验收、15 秒静止检查和 API 重启接管通过，运动验收
+最大终点误差 `0.00955 rad`。
+旧运动验收检查了轨迹终点，漏掉了静止振荡，不能用旧通过记录证明当前稳定性。
+本轮调参与复验数据见 [验证记录](docs/validation.md) 和 [J4 诊断说明](docs/j4-vibration.md)。
 
 ![Dashboard](docs/dashboard-desktop.png)
 
@@ -65,7 +67,7 @@ python -m piper_control --backend hardware --launch-driver --ros --max-velocity 
 ```
 
 `scripts/env.sh` 优先选择已构建的仓库内修订驱动，否则复用已安装的原工作空间；
-显式设置的 `PIPER_WORKSPACE` 始终优先。本次最终真机验收使用仓库内修订驱动。
+显式设置的 `PIPER_WORKSPACE` 始终优先。本轮真机验收使用仓库内修订驱动。
 CAN 应为已启用的 1 Mbps SocketCAN 接口；更换设备时修改所选工作空间的臂配置，
 并使用该设备自己的标定。仓库内的标定是当前这台 `arm_2` 的快照。
 
@@ -131,8 +133,9 @@ python examples/trajectory.py --url http://127.0.0.1:8090
   `--goal-timeout` 调整。失败会报告 `aborted`，不会把未到达伪报成成功。
 - 默认 [位置控制 profile](piper_control/assets/position_control.yaml) 调整 J1–J4 的
   kp/kd，并以 `friction_scale=0` 关闭摩擦前馈，改善原柔顺参数的稳态误差与低速
-  黏滑。重力补偿和自适应刚度仍使用原设置；所有覆盖仅在运行时应用，不改臂配置、
-  模型或标定文件。`--control-profile source` 恢复原增益和所选臂的摩擦补偿比例
+  黏滑。J4 基础 `kp=32`、`kd=0.53`，替换会在本机保持时振荡的旧值 `64/2.12`。
+  默认 profile 随服务启动加载；重力补偿和自适应刚度仍使用原设置，所有覆盖仅在
+  运行时应用，不改臂配置、模型或标定文件。`--control-profile source` 恢复原增益和所选臂的摩擦补偿比例
   （当前 `arm_2` 为 `0.88`）。自定义 YAML 同样适用于真机与仿真，关闭摩擦前馈
   不会移除仿真中的物理摩擦负载。具体参数及遥测字段见 [真机文档](docs/hardware.md)。
 - 正常退出 API 持续使用 MIT 固定目标保持，不切换固件运动模式。新驱动可自行
@@ -151,9 +154,14 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q
 
 # 会通过公开接口实际运动：约 0.02 rad 关节目标、微小 TCP 路径和实时流。
 python scripts/acceptance.py --url http://127.0.0.1:8090 \
-  --output docs/hardware-acceptance.json
+  --output .runtime/hardware-acceptance.json
 
-# 仅接收 CAN，不发送任何帧
+# 静止验收：仅接收 CAN，不发送帧；应在机器人已经保持目标时运行
+python scripts/diagnose_hold.py --can can1 --seconds 15 \
+  --output .runtime/hold.json --max-speed-rms 0.01 --max-current-ac-rms 0.02
+# 如需同时采音，在上一命令加 --audio .runtime/hold.wav
+
+# 短时原始总线检查
 python scripts/probe_can.py --interface can1 --duration 2
 ```
 
@@ -161,6 +169,11 @@ python scripts/probe_can.py --interface can1 --duration 2
 动力学、直线/圆弧几何、命名关节轨迹、超限/不可达预检查、看门狗、停止、并发
 规划失效、HTTP/WebSocket 和真实 ROS action 传输。浏览器测试加载本地 STL 模型，
 通过真实仿真 API 操作关节、直线和圆弧。
+
+静止诊断检查每个关节的采样完整性、速度 RMS、电流交流 RMS 及位置变化；缺帧会
+失败，不会把没有数据当成零振动。上述阈值是本台机器、本次姿态的实测验收门槛，
+不代表通用安全保证。可选音频报告 80–84 Hz 数字功率 dBFS，未经声压或时延标定。
+仿真没有复现固件高频动态，仿真通过不能证明真机保持稳定。
 
 ```text
 piper_control/

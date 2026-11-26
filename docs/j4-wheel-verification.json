@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "wheel": ".runtime/j4-fix/dist/piper_control-0.1.0-py3-none-any.whl",
+  "sha256": "d70aba8d455da276b7ebbd7de4ea14f52edbaa721f55fd38f198876f9f41bff6",
+  "matched_files": 51,
+  "smoke": {
+    "package": "/home/robot/Documents/piper_control/.runtime/j4-fix/wheel-check/piper_control",
+    "settings": {
+      "kp": [
+        51.0,
+        64.0,
+        60.0,
+        32.0,
+        3.0,
+        3.0
+      ],
+      "kd": [
+        10.375,
+        12.12,
+        6.32,
+        0.53,
+        0.3,
+        0.08
+      ],
+      "friction_scale": 0.0
+    },
+    "positions": [
+      -5.422691302248571e-20,
+      0.5,
+      -0.5,
+      -1.534809019541765e-17,
+      0.2,
+      -1.42478175632844e-18
+    ]
+  }
+}

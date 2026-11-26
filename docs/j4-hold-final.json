@@ -1,0 +1,244 @@
+{
+  "timestamp": "2026-11-26T10:19:17.658236+08:00",
+  "can_interface": "can1",
+  "requested_seconds": 15.0,
+  "capture": {
+    "duration_seconds": 15.000129622989334,
+    "capture_start_realtime_ns": 1795659542536618379,
+    "audio_process_start_realtime_ns": 1795659542536280928,
+    "timestamp_source": "SO_TIMESTAMPNS kernel software receive timestamp (CLOCK_REALTIME), not motor sampling time",
+    "transmitted_can_frames": 0
+  },
+  "quality_requirements": {
+    "feedback_expected_hz": 100.0,
+    "mit_expected_hz": 200.0,
+    "minimum_count_fraction": 0.9,
+    "minimum_window_coverage": 0.9,
+    "minimum_samples_per_channel": 20,
+    "maximum_gap_seconds": 0.1
+  },
+  "limits": {
+    "max_speed_rms_rad_s": 0.01,
+    "max_current_ac_rms_a": 0.02
+  },
+  "position_note": "0x251..0x256 signed high-speed motor position is scaled by 0.001 rad; it is not the 0x2A5..0x2A7 joint-angle encoding.",
+  "pass_scope": "capture quality and explicitly requested numerical limits only",
+  "joints": {
+    "joint1": {
+      "count": 1500,
+      "expected_rate_hz": 100.0,
+      "sample_rate_hz": 99.99844044460269,
+      "count_per_window_hz": 100.0,
+      "coverage_seconds": 14.990233781,
+      "max_gap_seconds": 0.010863454,
+      "first_timestamp_ns": 1795659542536864142,
+      "last_timestamp_ns": 1795659557527097923,
+      "quality_errors": [],
+      "feedback_can_id": "0x251",
+      "speed_rms_rad_s": 0.0,
+      "current_mean_a": -0.05846533333333334,
+      "current_ac_rms_a": 0.005225526916546843,
+      "current_peak_to_peak_a": 0.034999999999999996,
+      "high_speed_position_peak_to_peak_rad": 0.0,
+      "mit": {
+        "count": 3000,
+        "expected_rate_hz": 200.0,
+        "sample_rate_hz": 200.00039001076388,
+        "count_per_window_hz": 200.0,
+        "coverage_seconds": 14.994970759,
+        "max_gap_seconds": 0.007602296,
+        "first_timestamp_ns": 1795659542539339332,
+        "last_timestamp_ns": 1795659557534310091,
+        "quality_errors": [],
+        "can_id": "0x15A",
+        "unique_payload_count": 1,
+        "payload_counts": {
+          "7f327ff0339287ff": 3000
+        }
+      }
+    },
+    "joint2": {
+      "count": 1500,
+      "expected_rate_hz": 100.0,
+      "sample_rate_hz": 99.99897743540646,
+      "count_per_window_hz": 100.0,
+      "coverage_seconds": 14.990153284,
+      "max_gap_seconds": 0.010991781,
+      "first_timestamp_ns": 1795659542536947409,
+      "last_timestamp_ns": 1795659557527100693,
+      "quality_errors": [],
+      "feedback_can_id": "0x252",
+      "speed_rms_rad_s": 0.0,
+      "current_mean_a": -0.4939693333333333,
+      "current_ac_rms_a": 0.0031585428426552813,
+      "current_peak_to_peak_a": 0.02100000000000002,
+      "high_speed_position_peak_to_peak_rad": 0.0,
+      "mit": {
+        "count": 3000,
+        "expected_rate_hz": 200.0,
+        "sample_rate_hz": 199.99995562521826,
+        "count_per_window_hz": 200.0,
+        "coverage_seconds": 14.995003327,
+        "max_gap_seconds": 0.007658625,
+        "first_timestamp_ns": 1795659542539384181,
+        "last_timestamp_ns": 1795659557534387508,
+        "quality_errors": [],
+        "can_id": "0x15B",
+        "unique_payload_count": 1,
+        "payload_counts": {
+          "89437ff04095a7ff": 3000
+        }
+      }
+    },
+    "joint3": {
+      "count": 1500,
+      "expected_rate_hz": 100.0,
+      "sample_rate_hz": 99.99981249534824,
+      "count_per_window_hz": 100.0,
+      "coverage_seconds": 14.990028107,
+      "max_gap_seconds": 0.010878654,
+      "first_timestamp_ns": 1795659542537178813,
+      "last_timestamp_ns": 1795659557527206920,
+      "quality_errors": [],
+      "feedback_can_id": "0x253",
+      "speed_rms_rad_s": 0.0,
+      "current_mean_a": -1.3899866666666667,
+      "current_ac_rms_a": 0.003135998866212951,
+      "current_peak_to_peak_a": 0.02299999999999991,
+      "high_speed_position_peak_to_peak_rad": 0.0,
+      "mit": {
+        "count": 3000,
+        "expected_rate_hz": 200.0,
+        "sample_rate_hz": 200.0000068289432,
+        "count_per_window_hz": 200.0,
+        "coverage_seconds": 14.994999488,
+        "max_gap_seconds": 0.007720433,
+        "first_timestamp_ns": 1795659542539438949,
+        "last_timestamp_ns": 1795659557534438437,
+        "quality_errors": [],
+        "can_id": "0x15C",
+        "unique_payload_count": 1,
+        "payload_counts": {
+          "76d57ff03489d7ff": 3000
+        }
+      }
+    },
+    "joint4": {
+      "count": 1500,
+      "expected_rate_hz": 100.0,
+      "sample_rate_hz": 99.99911665223273,
+      "count_per_window_hz": 100.0,
+      "coverage_seconds": 14.990132415,
+      "max_gap_seconds": 0.010800077,
+      "first_timestamp_ns": 1795659542537302439,
+      "last_timestamp_ns": 1795659557527434854,
+      "quality_errors": [],
+      "feedback_can_id": "0x254",
+      "speed_rms_rad_s": 0.0,
+      "current_mean_a": -1.0481966666666667,
+      "current_ac_rms_a": 0.004251351419124149,
+      "current_peak_to_peak_a": 0.04899999999999993,
+      "high_speed_position_peak_to_peak_rad": 0.0,
+      "mit": {
+        "count": 3000,
+        "expected_rate_hz": 200.0,
+        "sample_rate_hz": 199.9997558255732,
+        "count_per_window_hz": 200.0,
+        "coverage_seconds": 14.995018307,
+        "max_gap_seconds": 0.007781871,
+        "first_timestamp_ns": 1795659542539487628,
+        "last_timestamp_ns": 1795659557534505935,
+        "quality_errors": [],
+        "can_id": "0x15D",
+        "unique_payload_count": 1,
+        "payload_counts": {
+          "87cf7ff1768b27ff": 3000
+        }
+      }
+    },
+    "joint5": {
+      "count": 1500,
+      "expected_rate_hz": 100.0,
+      "sample_rate_hz": 99.9990979801178,
+      "count_per_window_hz": 100.0,
+      "coverage_seconds": 14.990135214,
+      "max_gap_seconds": 0.010738448,
+      "first_timestamp_ns": 1795659542537433196,
+      "last_timestamp_ns": 1795659557527568410,
+      "quality_errors": [],
+      "feedback_can_id": "0x255",
+      "speed_rms_rad_s": 0.005307604607227886,
+      "current_mean_a": 0.05595533333333335,
+      "current_ac_rms_a": 0.005331541824108878,
+      "current_peak_to_peak_a": 0.063,
+      "high_speed_position_peak_to_peak_rad": 0.0010000000000000009,
+      "mit": {
+        "count": 3000,
+        "expected_rate_hz": 200.0,
+        "sample_rate_hz": 200.00041842034852,
+        "count_per_window_hz": 200.0,
+        "coverage_seconds": 14.994968629,
+        "max_gap_seconds": 0.007730242,
+        "first_timestamp_ns": 1795659542539586725,
+        "last_timestamp_ns": 1795659557534555354,
+        "quality_errors": [],
+        "can_id": "0x15E",
+        "unique_payload_count": 1,
+        "payload_counts": {
+          "80c97ff03689b7ff": 3000
+        }
+      }
+    },
+    "joint6": {
+      "count": 1500,
+      "expected_rate_hz": 100.0,
+      "sample_rate_hz": 99.99901718777804,
+      "count_per_window_hz": 100.0,
+      "coverage_seconds": 14.990147325,
+      "max_gap_seconds": 0.010704369,
+      "first_timestamp_ns": 1795659542537548072,
+      "last_timestamp_ns": 1795659557527695397,
+      "quality_errors": [],
+      "feedback_can_id": "0x256",
+      "speed_rms_rad_s": 0.0,
+      "current_mean_a": 0.009013333333333335,
+      "current_ac_rms_a": 0.00293822319702836,
+      "current_peak_to_peak_a": 0.019,
+      "high_speed_position_peak_to_peak_rad": 0.0,
+      "mit": {
+        "count": 3000,
+        "expected_rate_hz": 200.0,
+        "sample_rate_hz": 200.00065595413537,
+        "count_per_window_hz": 200.0,
+        "coverage_seconds": 14.99495082,
+        "max_gap_seconds": 0.007711293,
+        "first_timestamp_ns": 1795659542539717831,
+        "last_timestamp_ns": 1795659557534668651,
+        "quality_errors": [],
+        "can_id": "0x15F",
+        "unique_payload_count": 1,
+        "payload_counts": {
+          "8bd07ff04a8387ff": 3000
+        }
+      }
+    }
+  },
+  "audio": {
+    "path": "/home/robot/Documents/piper_control/.runtime/j4-fix/hold-final.wav",
+    "sample_rate_hz": 48000,
+    "sample_count": 720000,
+    "duration_seconds": 15.0,
+    "band_hz": [
+      80,
+      84
+    ],
+    "band_power_fs_squared": 7.436364467974076e-09,
+    "band_power_dbfs": -81.28639332919641,
+    "zero_power_dbfs_note": "null for zero power denotes -infinity dBFS, not a calibrated noise floor",
+    "all_zero_samples": false,
+    "timing_and_level_note": "Uncalibrated microphone gain and audio/CAN timing; dBFS is not dB SPL. The recording start is not sample-synchronized to CAN.",
+    "quality_errors": []
+  },
+  "passed": true,
+  "errors": []
+}

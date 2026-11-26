@@ -84,21 +84,15 @@ class HardwareBackend:
                 if self._positions is None and publisher_count == 0:
                     self._launch_driver()
             deadline = time.monotonic() + timeout
+            startup_issue = "waiting for feedback"
             while time.monotonic() < deadline:
-                state = self.read()
-                if state["connected"] and self._control:
+                snapshot, startup_issue = self._initialization_snapshot()
+                if snapshot is not None:
+                    state, target = snapshot
+                    # Establish the original target before any guardian command
+                    # or configuration-service keepalive can publish a frame.
+                    self.initial_target = target
                     self._take_over_guardian()
-                    with self._lock:
-                        target = self._last_target
-                        held = self._control.get("mit_target")
-                        if (target is None and state["enabled"]
-                                and self._control.get("mode") == "mit"
-                                and self._control.get("position_hold_on_timeout")
-                                and time.monotonic() - self._control_received < .2
-                                and isinstance(held, list) and len(held) == 6
-                                and all(isinstance(v, (int, float)) and math.isfinite(v) for v in held)):
-                            target = held
-                        self.initial_target = list(target if target is not None else state["positions"])
                     if launch_driver and state["enabled"]:
                         self.command(self.initial_target)
                         if self._control.get("mode") != "mit":
@@ -110,11 +104,49 @@ class HardwareBackend:
                 time.sleep(0.01)
             else:
                 raise TimeoutError(
-                    f"No fresh feedback at {self.namespace}; start the driver or use --launch-driver"
+                    f"Cannot establish initial target at {self.namespace}: {startup_issue}"
                 )
         except Exception:
             self.close()
             raise
+
+    def _initialization_snapshot(self):
+        """Choose a target only from one coherent, fresh feedback snapshot."""
+        with self._lock:
+            state = self.read()
+            if not state["connected"]:
+                return None, "waiting for fresh joint and firmware feedback"
+            status = self._status
+            if (len(status.motor_enable_valid) != 6 or not all(status.motor_enable_valid)
+                    or len(status.motor_enabled) != 6):
+                return None, "waiting for valid motor-enable feedback"
+            if any(status.motor_enabled) and not all(status.motor_enabled):
+                return None, "motor-enable feedback is only partially enabled"
+            control = self._control
+            if (not isinstance(control, dict) or not control
+                    or time.monotonic() - self._control_received >= .2):
+                return None, "waiting for fresh driver control state"
+            mode = control.get("mode")
+            if not isinstance(mode, str) or not mode:
+                return None, "waiting for driver control mode"
+            if not state["enabled"]:
+                # All six motors are explicitly disabled, rather than merely
+                # missing enable-valid feedback. A previous MIT target is stale.
+                return (state, list(state["positions"])), None
+            firmware_mit = (status.ctrl_mode == 1 and status.mode_feedback == 6
+                            and status.teach_status != 1)
+            if mode == "mit":
+                if not firmware_mit or not state["command_ready"] or not control.get("mit_ready"):
+                    return None, "waiting for consistent ready MIT feedback"
+                held = control.get("mit_target")
+                if (isinstance(held, list) and len(held) == 6
+                        and all(isinstance(v, (int, float)) and math.isfinite(v) for v in held)):
+                    return (state, list(held)), None
+                if control.get("position_hold_on_timeout"):
+                    return None, "enabled persistent MIT hold has no valid target"
+            elif firmware_mit:
+                return None, "driver and firmware control modes disagree"
+            return (state, list(state["positions"])), None
 
     def _connect_ros(self):
         try:
@@ -400,6 +432,11 @@ class HardwareBackend:
         if spec["namespace"].rstrip("/") != self.namespace:
             raise RuntimeError("Guardian namespace differs from selected robot")
         target = spec["positions"]
+        if (not isinstance(target, list) or len(target) != 6
+                or self.initial_target is None
+                or not all(isinstance(v, (int, float)) and math.isfinite(v) for v in target)
+                or any(abs(a-b) > 1e-8 for a, b in zip(target, self.initial_target))):
+            raise RuntimeError("Guardian target differs from confirmed driver target")
         # Both publishers send the identical desired position during handoff.
         for _ in range(10):
             self.command(target)

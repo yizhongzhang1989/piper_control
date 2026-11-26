@@ -1,0 +1,2003 @@
+{
+  "timestamp": "2026-11-26T10:22:59.292842+08:00",
+  "device": "Piper X arm_2 / can1 / gripper_with_wrench",
+  "cause": "Previously increased J4 PD gains induced or amplified a motor-local closed-loop oscillation at a fixed nominal target. Controlled gain changes strongly reduced it; the exact internal firmware/filter/compliance mechanism is unconfirmed.",
+  "profile_before": {
+    "kp": [
+      51,
+      64,
+      60,
+      64,
+      3,
+      3
+    ],
+    "kd": [
+      10.375,
+      12.12,
+      6.32,
+      2.12,
+      0.3,
+      0.08
+    ],
+    "friction_scale": 0
+  },
+  "profile_after": {
+    "kp": [
+      51,
+      64,
+      60,
+      32,
+      3,
+      3
+    ],
+    "kd": [
+      10.375,
+      12.12,
+      6.32,
+      0.53,
+      0.3,
+      0.08
+    ],
+    "friction_scale": 0
+  },
+  "unchanged": {
+    "nominal_target": [
+      -0.07801621756414652,
+      0.9206786337195287,
+      -0.8507956504696759,
+      0.7798480163761063,
+      0.0736878010192006,
+      1.153889528371011
+    ],
+    "gravity_scale": 1,
+    "adaptive_stiffness_scale": 2,
+    "vendor_driver_pid": 216086
+  },
+  "independent_gain_trials": {
+    "trials": {
+      "kd-1p0-established": {
+        "input_sha256": {
+          "trial.json": "2edf506586b87c008f61945b610a086464be8ab8af4b040259a9f293a1b80737",
+          "can.npz": "b951dad7e3873e30a42393e4ed0bd538a7a4b981e1447f0b408d84a1714715c7",
+          "audio.wav": "454a6193299fc4917acdcb4fc37482e7b48250c4cc97b3a19e7ddf63f0f89987"
+        },
+        "nominal_j4_kd": [
+          2.12,
+          1.0
+        ],
+        "phases": {
+          "audio_process_start_unix": 1795658506.587085,
+          "baseline_start_unix": 1795658506.5870864,
+          "baseline_end_unix": 1795658509.5871427,
+          "ramp_start_unix": 1795658509.587144,
+          "ramp_end_unix": 1795658513.58734,
+          "candidate_start_unix": 1795658513.5873415,
+          "candidate_end_unix": 1795658522.5874004
+        },
+        "windows": {
+          "baseline": {
+            "unix": [
+              1795658506.5870864,
+              1795658509.5871427
+            ],
+            "audio_indices": [
+              0,
+              144003
+            ],
+            "audio_seconds_relative_process_start": [
+              0.0,
+              3.0000625
+            ],
+            "audio_duration_s": 3.0000625,
+            "motor_count": 300,
+            "motor_sampling_hz": 99.99799828086901,
+            "speed_rad_s": {
+              "mean": -0.0015166666666666668,
+              "ac_rms": 0.15748996705257837,
+              "rms": 0.1574972698176067,
+              "peak_to_peak": 0.78
+            },
+            "current_A": {
+              "mean": -1.06365,
+              "ac_rms": 0.1485553796849287,
+              "rms": 1.0739739397831465,
+              "peak_to_peak": 0.6000000000000001
+            },
+            "motor_position_rad": {
+              "mean": 0.7774766666666668,
+              "ac_rms": 0.0004994552588125947,
+              "rms": 0.7774768270930438,
+              "peak_to_peak": 0.0010000000000000009
+            },
+            "joint_position_peak_to_peak_rad": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "audio_rms_dbfs": -50.40321735611879,
+            "audio_peak_dbfs": -31.204867948355528,
+            "audio_clipped_fraction": 0.0,
+            "audio_band_dbfs": {
+              "20-20000": -51.27634095514428,
+              "20-1000": -52.50776079008948,
+              "50-120": -65.40804000886223,
+              "70-100": -68.58007401637254,
+              "80-84": -71.03850916884053,
+              "150-190": -62.8989021969268,
+              "230-270": -63.223195706990595,
+              "310-350": -63.96504426893439,
+              "380-450": -62.83415127810053,
+              "125-131": -66.4615216281105,
+              "480-490": -66.94976239213628,
+              "1000-4000": -59.546778250299994,
+              "4000-10000": -61.42641026499054
+            },
+            "audio_peak_70_100_hz": 82.5,
+            "audio_peaks_20_1000_hz": [
+              {
+                "hz": 486.0,
+                "psd_dbfs_per_hz": -68.05992876361641
+              },
+              {
+                "hz": 165.0,
+                "psd_dbfs_per_hz": -68.4686590821763
+              },
+              {
+                "hz": 128.5,
+                "psd_dbfs_per_hz": -68.85668179346683
+              },
+              {
+                "hz": 184.5,
+                "psd_dbfs_per_hz": -73.1782073999305
+              },
+              {
+                "hz": 297.5,
+                "psd_dbfs_per_hz": -73.25407184362352
+              },
+              {
+                "hz": 82.5,
+                "psd_dbfs_per_hz": -73.30601678452405
+              },
+              {
+                "hz": 358.0,
+                "psd_dbfs_per_hz": -73.9916891125564
+              },
+              {
+                "hz": 232.0,
+                "psd_dbfs_per_hz": -74.16327145579092
+              },
+              {
+                "hz": 266.0,
+                "psd_dbfs_per_hz": -74.55134568321802
+              },
+              {
+                "hz": 114.5,
+                "psd_dbfs_per_hz": -74.95521166304025
+              },
+              {
+                "hz": 329.5,
+                "psd_dbfs_per_hz": -74.9616659167434
+              },
+              {
+                "hz": 248.0,
+                "psd_dbfs_per_hz": -75.02476520196817
+              }
+            ],
+            "audio_peaks_1000_10000_hz": [
+              {
+                "hz": 1048.0,
+                "psd_dbfs_per_hz": -78.67865773873523
+              },
+              {
+                "hz": 1032.0,
+                "psd_dbfs_per_hz": -79.99428716426883
+              },
+              {
+                "hz": 1043.5,
+                "psd_dbfs_per_hz": -80.09583627752309
+              },
+              {
+                "hz": 1021.5,
+                "psd_dbfs_per_hz": -80.36312379764362
+              },
+              {
+                "hz": 1051.0,
+                "psd_dbfs_per_hz": -81.25042729981291
+              },
+              {
+                "hz": 1665.0,
+                "psd_dbfs_per_hz": -81.32727154307861
+              },
+              {
+                "hz": 1026.0,
+                "psd_dbfs_per_hz": -81.41391403900573
+              },
+              {
+                "hz": 1222.0,
+                "psd_dbfs_per_hz": -81.51206673025729
+              }
+            ],
+            "J4_mit_raw_fields": {
+              "p": {
+                "unique": 1,
+                "min": 34789,
+                "max": 34789
+              },
+              "v": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              },
+              "kp": {
+                "unique": 1,
+                "min": 748,
+                "max": 748
+              },
+              "kd": {
+                "unique": 1,
+                "min": 2763,
+                "max": 2763
+              },
+              "tau": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              }
+            },
+            "motor_speed_peak_5_45_hz": 17.499649699152073,
+            "peak_centered_harmonics": [
+              {
+                "harmonic": 1,
+                "frequency_hz": 82.5,
+                "band_dbfs": -70.7739279756599
+              },
+              {
+                "harmonic": 2,
+                "frequency_hz": 165.0,
+                "band_dbfs": -66.10310677906159
+              },
+              {
+                "harmonic": 3,
+                "frequency_hz": 247.5,
+                "band_dbfs": -70.74710760912942
+              },
+              {
+                "harmonic": 4,
+                "frequency_hz": 330.0,
+                "band_dbfs": -68.9242189257101
+              },
+              {
+                "harmonic": 5,
+                "frequency_hz": 412.5,
+                "band_dbfs": -72.52893169328931
+              },
+              {
+                "harmonic": 6,
+                "frequency_hz": 495.0,
+                "band_dbfs": -77.59573720530305
+              }
+            ],
+            "J4_realized_gains": {
+              "kp": 191.7948717948718,
+              "kd": 3.6692307692307695,
+              "wire_position_rad": 0.7711528191042962
+            },
+            "J4_target_reconstruction": {
+              "gravity_Nm": -1.6022662030109092,
+              "wire_position_minus_gravity_offset_rad": 0.7795068808579627,
+              "recorded_desired_rad": 0.7798480163761063,
+              "error_rad": -0.0003411355181436315,
+              "position_quantization_LSB_rad": 0.00038147554741741054,
+              "within_one_position_LSB": true,
+              "assumption": "friction_scale=0, extra torque=0, positive kp with unclipped gravity offset; apply unchanged source gravity model and CAN quantization."
+            }
+          },
+          "candidate": {
+            "unix": [
+              1795658515.5873415,
+              1795658522.5874004
+            ],
+            "audio_indices": [
+              432012,
+              768015
+            ],
+            "audio_seconds_relative_process_start": [
+              9.00025,
+              16.0003125
+            ],
+            "audio_duration_s": 7.0000625,
+            "motor_count": 700,
+            "motor_sampling_hz": 99.9983626812476,
+            "speed_rad_s": {
+              "mean": -0.001195714285714286,
+              "ac_rms": 0.05529528767241844,
+              "rms": 0.055308214321460165,
+              "peak_to_peak": 0.336
+            },
+            "current_A": {
+              "mean": -1.0651757142857143,
+              "ac_rms": 0.03522822300256384,
+              "rms": 1.0657581010717208,
+              "peak_to_peak": 0.17400000000000015
+            },
+            "motor_position_rad": {
+              "mean": 0.7776114285714287,
+              "ac_rms": 0.0004874255568488261,
+              "rms": 0.7776115813364481,
+              "peak_to_peak": 0.0010000000000000009
+            },
+            "joint_position_peak_to_peak_rad": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "audio_rms_dbfs": -49.323842570968694,
+            "audio_peak_dbfs": -32.37847434940325,
+            "audio_clipped_fraction": 0.0,
+            "audio_band_dbfs": {
+              "20-20000": -49.474330068141484,
+              "20-1000": -51.17503564345225,
+              "50-120": -67.12638537135295,
+              "70-100": -73.0817166000799,
+              "80-84": -82.90517149618819,
+              "150-190": -62.7462479301742,
+              "230-270": -63.734550005958724,
+              "310-350": -64.04500567698737,
+              "380-450": -59.66106590708793,
+              "125-131": -63.93768526597885,
+              "480-490": -66.82406051611665,
+              "1000-4000": -54.855881265905765,
+              "4000-10000": -64.16334153630982
+            },
+            "audio_peak_70_100_hz": 100.0,
+            "audio_peaks_20_1000_hz": [
+              {
+                "hz": 128.5,
+                "psd_dbfs_per_hz": -67.00703273219796
+              },
+              {
+                "hz": 486.0,
+                "psd_dbfs_per_hz": -68.49915331144845
+              },
+              {
+                "hz": 431.0,
+                "psd_dbfs_per_hz": -71.1557411025431
+              },
+              {
+                "hz": 280.5,
+                "psd_dbfs_per_hz": -73.69762577859042
+              },
+              {
+                "hz": 284.0,
+                "psd_dbfs_per_hz": -73.89372333780608
+              },
+              {
+                "hz": 157.5,
+                "psd_dbfs_per_hz": -74.03058941189461
+              },
+              {
+                "hz": 144.0,
+                "psd_dbfs_per_hz": -74.36394915991188
+              },
+              {
+                "hz": 449.0,
+                "psd_dbfs_per_hz": -74.81805014974933
+              },
+              {
+                "hz": 352.0,
+                "psd_dbfs_per_hz": -74.83178775011238
+              },
+              {
+                "hz": 358.0,
+                "psd_dbfs_per_hz": -74.94848637555285
+              },
+              {
+                "hz": 504.5,
+                "psd_dbfs_per_hz": -75.1779292502901
+              },
+              {
+                "hz": 222.5,
+                "psd_dbfs_per_hz": -75.32938827410344
+              }
+            ],
+            "audio_peaks_1000_10000_hz": [
+              {
+                "hz": 1666.0,
+                "psd_dbfs_per_hz": -77.4113526978494
+              },
+              {
+                "hz": 1556.0,
+                "psd_dbfs_per_hz": -77.48869437983019
+              },
+              {
+                "hz": 1570.0,
+                "psd_dbfs_per_hz": -77.49212924488542
+              },
+              {
+                "hz": 1642.5,
+                "psd_dbfs_per_hz": -79.08520535708693
+              },
+              {
+                "hz": 1692.5,
+                "psd_dbfs_per_hz": -79.25824657070953
+              },
+              {
+                "hz": 1581.5,
+                "psd_dbfs_per_hz": -79.38490746277455
+              },
+              {
+                "hz": 1490.5,
+                "psd_dbfs_per_hz": -79.60827681501164
+              },
+              {
+                "hz": 1516.0,
+                "psd_dbfs_per_hz": -79.89334388679545
+              }
+            ],
+            "J4_mit_raw_fields": {
+              "p": {
+                "unique": 1,
+                "min": 34789,
+                "max": 34789
+              },
+              "v": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              },
+              "kp": {
+                "unique": 1,
+                "min": 748,
+                "max": 748
+              },
+              "kd": {
+                "unique": 1,
+                "min": 2385,
+                "max": 2385
+              },
+              "tau": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              }
+            },
+            "motor_speed_peak_5_45_hz": 24.999590670311903,
+            "peak_centered_harmonics": [
+              {
+                "harmonic": 1,
+                "frequency_hz": 100.0,
+                "band_dbfs": -76.62663388027924
+              },
+              {
+                "harmonic": 2,
+                "frequency_hz": 200.0,
+                "band_dbfs": -69.94916689533872
+              },
+              {
+                "harmonic": 3,
+                "frequency_hz": 300.0,
+                "band_dbfs": -71.78812008689127
+              },
+              {
+                "harmonic": 4,
+                "frequency_hz": 400.0,
+                "band_dbfs": -73.76939859130954
+              },
+              {
+                "harmonic": 5,
+                "frequency_hz": 500.0,
+                "band_dbfs": -70.2490432874598
+              },
+              {
+                "harmonic": 6,
+                "frequency_hz": 600.0,
+                "band_dbfs": -74.3573307138105
+              }
+            ],
+            "J4_realized_gains": {
+              "kp": 191.7948717948718,
+              "kd": 1.7307692307692304,
+              "wire_position_rad": 0.7711528191042962
+            },
+            "J4_target_reconstruction": {
+              "gravity_Nm": -1.6022662030109556,
+              "wire_position_minus_gravity_offset_rad": 0.7795068808579629,
+              "recorded_desired_rad": 0.7798480163761063,
+              "error_rad": -0.0003411355181434095,
+              "position_quantization_LSB_rad": 0.00038147554741741054,
+              "within_one_position_LSB": true,
+              "assumption": "friction_scale=0, extra torque=0, positive kp with unclipped gravity offset; apply unchanged source gravity model and CAN quantization."
+            }
+          }
+        },
+        "band_deltas_db": {
+          "20-20000": 1.802010887002794,
+          "20-1000": 1.3327251466372303,
+          "50-120": -1.718345362490723,
+          "70-100": -4.5016425837073655,
+          "80-84": -11.866662327347655,
+          "150-190": 0.15265426675259874,
+          "230-270": -0.5113542989681292,
+          "310-350": -0.07996140805298069,
+          "380-450": 3.173085371012597,
+          "125-131": 2.5238363621316537,
+          "480-490": 0.12570187601963312,
+          "1000-4000": 4.690896984394229,
+          "4000-10000": -2.7369312713192784
+        },
+        "nominal_j4_kp": [
+          64.0,
+          64.0
+        ],
+        "desired_joint_target_rad": [
+          -0.07801621756414652,
+          0.9206786337195287,
+          -0.8507956504696759,
+          0.7798480163761063,
+          0.0736878010192006,
+          1.153889528371011
+        ],
+        "single_changed_gain": "kd",
+        "speed_ac_rms_ratio": 0.3511035573076092,
+        "current_ac_rms_ratio": 0.2371386554783773,
+        "constant_mit_non_kd_fields_equal": true,
+        "J4_changed_raw_fields": [
+          "kd"
+        ],
+        "only_expected_gain_related_fields_changed": true,
+        "whole_trial_J4_mit_raw_fields": {
+          "p": {
+            "unique": 1,
+            "min": 34789,
+            "max": 34789
+          },
+          "v": {
+            "unique": 1,
+            "min": 2047,
+            "max": 2047
+          },
+          "kp": {
+            "unique": 1,
+            "min": 748,
+            "max": 748
+          },
+          "kd": {
+            "unique": 379,
+            "min": 2385,
+            "max": 2763
+          },
+          "tau": {
+            "unique": 1,
+            "min": 2047,
+            "max": 2047
+          }
+        },
+        "whole_trial_only_expected_fields_vary": true,
+        "whole_trial_target_reconstruction": {
+          "min_rad": 0.7795068808579632,
+          "max_rad": 0.7795068808579632,
+          "recorded_desired_rad": 0.7798480163761063,
+          "maximum_abs_error_rad": 0.00034113551814318743,
+          "all_within_one_position_LSB": true,
+          "assumption": "All ordinary joint readings remain constant; same gravity/zero-friction assumptions as phase reconstruction."
+        },
+        "other_joint_payloads_constant": {
+          "J1": true,
+          "J2": true,
+          "J3": true,
+          "J5": true,
+          "J6": true
+        },
+        "whole_trial_joint_position_peak_to_peak_rad": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "audio_timing_sensitivity": {
+          "-0.25": {
+            "50-120": -1.6955383079078246,
+            "70-100": -3.7779632324389496,
+            "80-84": -10.398054654769922,
+            "20-20000": 2.4745002006855685
+          },
+          "0": {
+            "50-120": -1.7038453346594622,
+            "70-100": -3.683287104083419,
+            "80-84": -11.92378377176162,
+            "20-20000": 1.8872429294191662
+          },
+          "0.25": {
+            "50-120": -1.8206835424403067,
+            "70-100": -4.3130593949461655,
+            "80-84": -13.325646797478257,
+            "20-20000": 1.519756024400813
+          }
+        },
+        "method": {
+          "audio_PSD": "Welch Hann 2 s windows, 50% overlap, 0.5 Hz bins; channel 1; PSD-integrated band power in dBFS. No weighting/normalization to peaks.",
+          "CAN_PSD": "Native timestamp-selected samples, measured average rate around100Hz, Welch2s, DC removed.",
+          "candidate_trim_s": 2.0,
+          "latency": "Audio clock origin uses process start timestamp. Device latency is uncalibrated; no exact cross-sensor phase claim. Extra inner-window +/-0.25 s origin sensitivity is reported.",
+          "limits": "Ambient uncalibrated microphone: not dB SPL. Baseline3s vs candidate7s; no noise-source isolation, no inference that all environmental noise belongs to J4. Harmonic labels are frequency neighborhoods, not proof of common origin."
+        },
+        "figure": "/home/robot/Documents/piper_control/.runtime/j4-fix/independent-kd-1p0-established.png"
+      },
+      "kd-0p53-verified": {
+        "input_sha256": {
+          "trial.json": "dc9247b823f689efcec6563d63388b16fd6fbd7b5072ed0df9622144907ccc4a",
+          "can.npz": "304e847ac718e7549b5a26ed030dbbc48a841bfa0aa0658e243bf672226794b9",
+          "audio.wav": "852660efa56a6cd731718129e07bdb4aeadebebad8a2adf74222a70e33a6c698"
+        },
+        "nominal_j4_kd": [
+          1.0,
+          0.53
+        ],
+        "phases": {
+          "audio_process_start_unix": 1795658747.8062663,
+          "baseline_start_unix": 1795658747.806268,
+          "baseline_end_unix": 1795658750.806323,
+          "ramp_start_unix": 1795658750.8063245,
+          "ramp_end_unix": 1795658754.8065062,
+          "candidate_start_unix": 1795658754.8065078,
+          "candidate_end_unix": 1795658763.8065646
+        },
+        "windows": {
+          "baseline": {
+            "unix": [
+              1795658747.806268,
+              1795658750.806323
+            ],
+            "audio_indices": [
+              0,
+              144003
+            ],
+            "audio_seconds_relative_process_start": [
+              0.0,
+              3.0000625
+            ],
+            "audio_duration_s": 3.0000625,
+            "motor_count": 300,
+            "motor_sampling_hz": 99.99870793152547,
+            "speed_rad_s": {
+              "mean": -0.002443333333333334,
+              "ac_rms": 0.045806987700810695,
+              "rms": 0.04587210481327405,
+              "peak_to_peak": 0.318
+            },
+            "current_A": {
+              "mean": -1.0733933333333334,
+              "ac_rms": 0.03243976914563701,
+              "rms": 1.073883413907984,
+              "peak_to_peak": 0.15700000000000014
+            },
+            "motor_position_rad": {
+              "mean": 0.7777033333333334,
+              "ac_rms": 0.00045678830496801906,
+              "rms": 0.777703467481876,
+              "peak_to_peak": 0.0010000000000000009
+            },
+            "joint_position_peak_to_peak_rad": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "audio_rms_dbfs": -45.28981541070066,
+            "audio_peak_dbfs": -26.581174385284495,
+            "audio_clipped_fraction": 0.0,
+            "audio_band_dbfs": {
+              "20-20000": -44.30754198787169,
+              "20-1000": -44.81198063377921,
+              "50-120": -66.56732182837283,
+              "70-100": -71.57180834572256,
+              "80-84": -84.32679945399,
+              "150-190": -65.66306905785508,
+              "230-270": -58.811606921558024,
+              "310-350": -63.80211006379816,
+              "380-450": -51.979695161261965,
+              "125-131": -63.18657328909534,
+              "480-490": -56.42831079879891,
+              "1000-4000": -54.04073929295268,
+              "4000-10000": -69.2773354302558
+            },
+            "audio_peak_70_100_hz": 95.5,
+            "audio_peaks_20_1000_hz": [
+              {
+                "hz": 422.0,
+                "psd_dbfs_per_hz": -60.85853634733242
+              },
+              {
+                "hz": 461.5,
+                "psd_dbfs_per_hz": -60.91695356415285
+              },
+              {
+                "hz": 483.0,
+                "psd_dbfs_per_hz": -61.37048874594788
+              },
+              {
+                "hz": 508.5,
+                "psd_dbfs_per_hz": -62.43503245664062
+              },
+              {
+                "hz": 431.0,
+                "psd_dbfs_per_hz": -63.056465121022924
+              },
+              {
+                "hz": 541.0,
+                "psd_dbfs_per_hz": -63.23767478235274
+              },
+              {
+                "hz": 495.5,
+                "psd_dbfs_per_hz": -63.67579869686509
+              },
+              {
+                "hz": 470.0,
+                "psd_dbfs_per_hz": -63.710763532065194
+              },
+              {
+                "hz": 448.0,
+                "psd_dbfs_per_hz": -64.05168707513786
+              },
+              {
+                "hz": 525.0,
+                "psd_dbfs_per_hz": -64.48685275047835
+              },
+              {
+                "hz": 486.0,
+                "psd_dbfs_per_hz": -64.5330526107914
+              },
+              {
+                "hz": 457.0,
+                "psd_dbfs_per_hz": -64.60111524436482
+              }
+            ],
+            "audio_peaks_1000_10000_hz": [
+              {
+                "hz": 1470.5,
+                "psd_dbfs_per_hz": -74.3996883613987
+              },
+              {
+                "hz": 1014.5,
+                "psd_dbfs_per_hz": -75.57066664174525
+              },
+              {
+                "hz": 1418.0,
+                "psd_dbfs_per_hz": -76.0028471374787
+              },
+              {
+                "hz": 1037.0,
+                "psd_dbfs_per_hz": -76.10397506204657
+              },
+              {
+                "hz": 1536.0,
+                "psd_dbfs_per_hz": -76.53141403512363
+              },
+              {
+                "hz": 1421.5,
+                "psd_dbfs_per_hz": -76.64076575734626
+              },
+              {
+                "hz": 1427.5,
+                "psd_dbfs_per_hz": -76.96955796643334
+              },
+              {
+                "hz": 1563.5,
+                "psd_dbfs_per_hz": -77.56179824349965
+              }
+            ],
+            "J4_mit_raw_fields": {
+              "p": {
+                "unique": 1,
+                "min": 34789,
+                "max": 34789
+              },
+              "v": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              },
+              "kp": {
+                "unique": 1,
+                "min": 748,
+                "max": 748
+              },
+              "kd": {
+                "unique": 1,
+                "min": 2385,
+                "max": 2385
+              },
+              "tau": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              }
+            },
+            "motor_speed_peak_5_45_hz": 33.49956715706104,
+            "peak_centered_harmonics": [
+              {
+                "harmonic": 1,
+                "frequency_hz": 95.5,
+                "band_dbfs": -76.98846375835005
+              },
+              {
+                "harmonic": 2,
+                "frequency_hz": 191.0,
+                "band_dbfs": -72.45074988501932
+              },
+              {
+                "harmonic": 3,
+                "frequency_hz": 286.5,
+                "band_dbfs": -64.33286001326037
+              },
+              {
+                "harmonic": 4,
+                "frequency_hz": 382.0,
+                "band_dbfs": -67.85293093492696
+              },
+              {
+                "harmonic": 5,
+                "frequency_hz": 477.5,
+                "band_dbfs": -58.99631282412308
+              },
+              {
+                "harmonic": 6,
+                "frequency_hz": 573.0,
+                "band_dbfs": -63.7262758477528
+              }
+            ],
+            "J4_realized_gains": {
+              "kp": 191.7948717948718,
+              "kd": 1.7307692307692304,
+              "wire_position_rad": 0.7711528191042962
+            },
+            "J4_target_reconstruction": {
+              "gravity_Nm": -1.6022432437998582,
+              "wire_position_minus_gravity_offset_rad": 0.7795067611508463,
+              "recorded_desired_rad": 0.7798480163761063,
+              "error_rad": -0.0003412552252600731,
+              "position_quantization_LSB_rad": 0.00038147554741741054,
+              "within_one_position_LSB": true,
+              "assumption": "friction_scale=0, extra torque=0, positive kp with unclipped gravity offset; apply unchanged source gravity model and CAN quantization."
+            }
+          },
+          "candidate": {
+            "unix": [
+              1795658756.8065078,
+              1795658763.8065646
+            ],
+            "audio_indices": [
+              432012,
+              768014
+            ],
+            "audio_seconds_relative_process_start": [
+              9.00025,
+              16.000291666666666
+            ],
+            "audio_duration_s": 7.000041666666666,
+            "motor_count": 700,
+            "motor_sampling_hz": 99.99884700876643,
+            "speed_rad_s": {
+              "mean": 0.0014842857142857142,
+              "ac_rms": 0.04633300007465918,
+              "rms": 0.04635676865356342,
+              "peak_to_peak": 0.333
+            },
+            "current_A": {
+              "mean": -1.0753457142857141,
+              "ac_rms": 0.028225832573899337,
+              "rms": 1.0757160884067611,
+              "peak_to_peak": 0.17900000000000016
+            },
+            "motor_position_rad": {
+              "mean": 0.7777400000000002,
+              "ac_rms": 0.0004386342439892266,
+              "rms": 0.7777401236917124,
+              "peak_to_peak": 0.0010000000000000009
+            },
+            "joint_position_peak_to_peak_rad": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "audio_rms_dbfs": -52.039726103263305,
+            "audio_peak_dbfs": -33.332904678158286,
+            "audio_clipped_fraction": 0.0,
+            "audio_band_dbfs": {
+              "20-20000": -52.55801025972293,
+              "20-1000": -53.36927885206778,
+              "50-120": -67.30820418608702,
+              "70-100": -72.60186333061169,
+              "80-84": -83.0616680562934,
+              "150-190": -66.09731357494984,
+              "230-270": -64.45163168124425,
+              "310-350": -64.78560036939919,
+              "380-450": -63.84713622905599,
+              "125-131": -65.70074042134371,
+              "480-490": -66.757661214054,
+              "1000-4000": -60.5346079715996,
+              "4000-10000": -72.3261411173076
+            },
+            "audio_peak_70_100_hz": 100.0,
+            "audio_peaks_20_1000_hz": [
+              {
+                "hz": 486.0,
+                "psd_dbfs_per_hz": -66.92189238365367
+              },
+              {
+                "hz": 128.5,
+                "psd_dbfs_per_hz": -69.0924385649281
+              },
+              {
+                "hz": 443.5,
+                "psd_dbfs_per_hz": -72.99989048700321
+              },
+              {
+                "hz": 278.5,
+                "psd_dbfs_per_hz": -74.3877517565662
+              },
+              {
+                "hz": 357.0,
+                "psd_dbfs_per_hz": -75.18694453200763
+              },
+              {
+                "hz": 370.5,
+                "psd_dbfs_per_hz": -76.01969952214576
+              },
+              {
+                "hz": 131.5,
+                "psd_dbfs_per_hz": -76.1435155563293
+              },
+              {
+                "hz": 327.5,
+                "psd_dbfs_per_hz": -76.27328246802826
+              },
+              {
+                "hz": 222.0,
+                "psd_dbfs_per_hz": -76.46353708164239
+              },
+              {
+                "hz": 218.0,
+                "psd_dbfs_per_hz": -76.46749962143437
+              },
+              {
+                "hz": 298.0,
+                "psd_dbfs_per_hz": -76.49219414090241
+              },
+              {
+                "hz": 187.0,
+                "psd_dbfs_per_hz": -76.71115406205614
+              }
+            ],
+            "audio_peaks_1000_10000_hz": [
+              {
+                "hz": 1044.5,
+                "psd_dbfs_per_hz": -81.18232268309086
+              },
+              {
+                "hz": 1032.0,
+                "psd_dbfs_per_hz": -82.20480523983191
+              },
+              {
+                "hz": 1665.5,
+                "psd_dbfs_per_hz": -82.33566208067741
+              },
+              {
+                "hz": 1025.0,
+                "psd_dbfs_per_hz": -82.66003291154534
+              },
+              {
+                "hz": 1057.5,
+                "psd_dbfs_per_hz": -83.49406454102144
+              },
+              {
+                "hz": 1014.5,
+                "psd_dbfs_per_hz": -84.22068264744324
+              },
+              {
+                "hz": 1113.0,
+                "psd_dbfs_per_hz": -84.67310380387636
+              },
+              {
+                "hz": 1022.0,
+                "psd_dbfs_per_hz": -84.85114673449195
+              }
+            ],
+            "J4_mit_raw_fields": {
+              "p": {
+                "unique": 1,
+                "min": 34789,
+                "max": 34789
+              },
+              "v": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              },
+              "kp": {
+                "unique": 1,
+                "min": 748,
+                "max": 748
+              },
+              "kd": {
+                "unique": 1,
+                "min": 2226,
+                "max": 2226
+              },
+              "tau": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              }
+            },
+            "motor_speed_peak_5_45_hz": 29.99965410262993,
+            "peak_centered_harmonics": [
+              {
+                "harmonic": 1,
+                "frequency_hz": 100.0,
+                "band_dbfs": -77.13159933051027
+              },
+              {
+                "harmonic": 2,
+                "frequency_hz": 200.0,
+                "band_dbfs": -72.02642631342344
+              },
+              {
+                "harmonic": 3,
+                "frequency_hz": 300.0,
+                "band_dbfs": -72.11387133065587
+              },
+              {
+                "harmonic": 4,
+                "frequency_hz": 400.0,
+                "band_dbfs": -75.1058222072185
+              },
+              {
+                "harmonic": 5,
+                "frequency_hz": 500.0,
+                "band_dbfs": -77.37322503699244
+              },
+              {
+                "harmonic": 6,
+                "frequency_hz": 600.0,
+                "band_dbfs": -80.1725596698325
+              }
+            ],
+            "J4_realized_gains": {
+              "kp": 191.7948717948718,
+              "kd": 0.9153846153846159,
+              "wire_position_rad": 0.7711528191042962
+            },
+            "J4_target_reconstruction": {
+              "gravity_Nm": -1.6022432437998746,
+              "wire_position_minus_gravity_offset_rad": 0.7795067611508464,
+              "recorded_desired_rad": 0.7798480163761063,
+              "error_rad": -0.0003412552252599621,
+              "position_quantization_LSB_rad": 0.00038147554741741054,
+              "within_one_position_LSB": true,
+              "assumption": "friction_scale=0, extra torque=0, positive kp with unclipped gravity offset; apply unchanged source gravity model and CAN quantization."
+            }
+          }
+        },
+        "band_deltas_db": {
+          "20-20000": -8.25046827185124,
+          "20-1000": -8.557298218288572,
+          "50-120": -0.7408823577141987,
+          "70-100": -1.0300549848891336,
+          "80-84": 1.2651313976966065,
+          "150-190": -0.4342445170947542,
+          "230-270": -5.640024759686227,
+          "310-350": -0.9834903056010305,
+          "380-450": -11.867441067794026,
+          "125-131": -2.5141671322483674,
+          "480-490": -10.329350415255085,
+          "1000-4000": -6.493868678646919,
+          "4000-10000": -3.0488056870517966
+        },
+        "nominal_j4_kp": [
+          64.0,
+          64.0
+        ],
+        "desired_joint_target_rad": [
+          -0.07801621756414652,
+          0.9206786337195287,
+          -0.8507956504696759,
+          0.7798480163761063,
+          0.0736878010192006,
+          1.153889528371011
+        ],
+        "single_changed_gain": "kd",
+        "speed_ac_rms_ratio": 1.0114832343328084,
+        "current_ac_rms_ratio": 0.8700996744822882,
+        "constant_mit_non_kd_fields_equal": true,
+        "J4_changed_raw_fields": [
+          "kd"
+        ],
+        "only_expected_gain_related_fields_changed": true,
+        "whole_trial_J4_mit_raw_fields": {
+          "p": {
+            "unique": 1,
+            "min": 34789,
+            "max": 34789
+          },
+          "v": {
+            "unique": 1,
+            "min": 2047,
+            "max": 2047
+          },
+          "kp": {
+            "unique": 1,
+            "min": 748,
+            "max": 748
+          },
+          "kd": {
+            "unique": 160,
+            "min": 2226,
+            "max": 2385
+          },
+          "tau": {
+            "unique": 1,
+            "min": 2047,
+            "max": 2047
+          }
+        },
+        "whole_trial_only_expected_fields_vary": true,
+        "whole_trial_target_reconstruction": {
+          "min_rad": 0.7795067611508469,
+          "max_rad": 0.7795067611508469,
+          "recorded_desired_rad": 0.7798480163761063,
+          "maximum_abs_error_rad": 0.000341255225259407,
+          "all_within_one_position_LSB": true,
+          "assumption": "All ordinary joint readings remain constant; same gravity/zero-friction assumptions as phase reconstruction."
+        },
+        "other_joint_payloads_constant": {
+          "J1": true,
+          "J2": true,
+          "J3": true,
+          "J5": true,
+          "J6": true
+        },
+        "whole_trial_joint_position_peak_to_peak_rad": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "audio_timing_sensitivity": {
+          "-0.25": {
+            "50-120": 0.21718305829126905,
+            "70-100": -0.49636179505591826,
+            "80-84": 1.6682831667144455,
+            "20-20000": -9.15849505320164
+          },
+          "0": {
+            "50-120": -0.46252461132370115,
+            "70-100": -1.128900062891077,
+            "80-84": 2.4040365184166745,
+            "20-20000": -5.587552054580804
+          },
+          "0.25": {
+            "50-120": -1.2242045414029974,
+            "70-100": -1.5716435239710052,
+            "80-84": 2.5480340192150095,
+            "20-20000": -1.8521121246145498
+          }
+        },
+        "method": {
+          "audio_PSD": "Welch Hann 2 s windows, 50% overlap, 0.5 Hz bins; channel 1; PSD-integrated band power in dBFS. No weighting/normalization to peaks.",
+          "CAN_PSD": "Native timestamp-selected samples, measured average rate around100Hz, Welch2s, DC removed.",
+          "candidate_trim_s": 2.0,
+          "latency": "Audio clock origin uses process start timestamp. Device latency is uncalibrated; no exact cross-sensor phase claim. Extra inner-window +/-0.25 s origin sensitivity is reported.",
+          "limits": "Ambient uncalibrated microphone: not dB SPL. Baseline3s vs candidate7s; no noise-source isolation, no inference that all environmental noise belongs to J4. Harmonic labels are frequency neighborhoods, not proof of common origin."
+        },
+        "figure": "/home/robot/Documents/piper_control/.runtime/j4-fix/independent-kd-0p53-verified.png"
+      },
+      "kp32-kd0p53-fixed-handoff": {
+        "input_sha256": {
+          "trial.json": "66a4da5fc71844e5aeb9594f0a2bef04b09af01a9a2ba70cd3e8f485df363ea1",
+          "can.npz": "f050fbd8570d16801893016d7875f07b5927a73ebd8dfc83d8731d413f6c6337",
+          "audio.wav": "b04158ce169e1417c9d484b4b42832dead5cd35f4db25b91f689aa0cbc5842a3"
+        },
+        "nominal_j4_kd": [
+          0.53,
+          0.53
+        ],
+        "phases": {
+          "audio_process_start_unix": 1795659228.6800141,
+          "baseline_start_unix": 1795659228.6800158,
+          "baseline_end_unix": 1795659231.6800702,
+          "ramp_start_unix": 1795659231.6800716,
+          "ramp_end_unix": 1795659235.6802716,
+          "candidate_start_unix": 1795659235.6802728,
+          "candidate_end_unix": 1795659244.6803305
+        },
+        "windows": {
+          "baseline": {
+            "unix": [
+              1795659228.6800158,
+              1795659231.6800702
+            ],
+            "audio_indices": [
+              0,
+              144003
+            ],
+            "audio_seconds_relative_process_start": [
+              0.0,
+              3.0000625
+            ],
+            "audio_duration_s": 3.0000625,
+            "motor_count": 300,
+            "motor_sampling_hz": 99.99839695977329,
+            "speed_rad_s": {
+              "mean": 0.0003666666666666665,
+              "ac_rms": 0.039719334782389745,
+              "rms": 0.0397210271770507,
+              "peak_to_peak": 0.322
+            },
+            "current_A": {
+              "mean": -1.0804866666666668,
+              "ac_rms": 0.02650942893051873,
+              "rms": 1.0808118183415034,
+              "peak_to_peak": 0.137
+            },
+            "motor_position_rad": {
+              "mean": 0.77778,
+              "ac_rms": 0.0004142463035441599,
+              "rms": 0.7777801103139628,
+              "peak_to_peak": 0.0010000000000000009
+            },
+            "joint_position_peak_to_peak_rad": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "audio_rms_dbfs": -50.59746057376082,
+            "audio_peak_dbfs": -31.05214507516951,
+            "audio_clipped_fraction": 0.0,
+            "audio_band_dbfs": {
+              "20-20000": -50.57643744406994,
+              "20-1000": -51.19132997631595,
+              "50-120": -66.2860646893943,
+              "70-100": -72.93925851683522,
+              "80-84": -83.60971360349184,
+              "150-190": -65.52249015899136,
+              "230-270": -64.54969208020859,
+              "310-350": -63.686574653167355,
+              "380-450": -62.16470899997444,
+              "125-131": -63.8581429350849,
+              "480-490": -66.41341841187574,
+              "1000-4000": -59.53332869560125,
+              "4000-10000": -73.8960270084002
+            },
+            "audio_peak_70_100_hz": 98.5,
+            "audio_peaks_20_1000_hz": [
+              {
+                "hz": 128.0,
+                "psd_dbfs_per_hz": -66.09126836307888
+              },
+              {
+                "hz": 355.0,
+                "psd_dbfs_per_hz": -67.08308950784883
+              },
+              {
+                "hz": 486.0,
+                "psd_dbfs_per_hz": -67.5076528055094
+              },
+              {
+                "hz": 366.0,
+                "psd_dbfs_per_hz": -70.07922272493539
+              },
+              {
+                "hz": 279.5,
+                "psd_dbfs_per_hz": -71.87041284111201
+              },
+              {
+                "hz": 146.5,
+                "psd_dbfs_per_hz": -73.24146920628864
+              },
+              {
+                "hz": 285.0,
+                "psd_dbfs_per_hz": -73.45284476460944
+              },
+              {
+                "hz": 336.5,
+                "psd_dbfs_per_hz": -73.51094157979131
+              },
+              {
+                "hz": 371.0,
+                "psd_dbfs_per_hz": -74.15462078816972
+              },
+              {
+                "hz": 972.0,
+                "psd_dbfs_per_hz": -74.40664172756337
+              },
+              {
+                "hz": 345.0,
+                "psd_dbfs_per_hz": -74.4390568375055
+              },
+              {
+                "hz": 382.0,
+                "psd_dbfs_per_hz": -74.49569677213947
+              }
+            ],
+            "audio_peaks_1000_10000_hz": [
+              {
+                "hz": 1015.5,
+                "psd_dbfs_per_hz": -78.95432382921145
+              },
+              {
+                "hz": 1026.5,
+                "psd_dbfs_per_hz": -79.22243403008065
+              },
+              {
+                "hz": 1048.5,
+                "psd_dbfs_per_hz": -79.6281947029808
+              },
+              {
+                "hz": 1110.0,
+                "psd_dbfs_per_hz": -81.22822952185126
+              },
+              {
+                "hz": 1090.5,
+                "psd_dbfs_per_hz": -81.23239525244101
+              },
+              {
+                "hz": 1638.0,
+                "psd_dbfs_per_hz": -81.23398733299618
+              },
+              {
+                "hz": 1044.5,
+                "psd_dbfs_per_hz": -81.41898047609062
+              },
+              {
+                "hz": 1054.0,
+                "psd_dbfs_per_hz": -81.51787991071001
+              }
+            ],
+            "J4_mit_raw_fields": {
+              "p": {
+                "unique": 1,
+                "min": 34789,
+                "max": 34789
+              },
+              "v": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              },
+              "kp": {
+                "unique": 1,
+                "min": 748,
+                "max": 748
+              },
+              "kd": {
+                "unique": 1,
+                "min": 2226,
+                "max": 2226
+              },
+              "tau": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              }
+            },
+            "motor_speed_peak_5_45_hz": 29.99951908793199,
+            "peak_centered_harmonics": [
+              {
+                "harmonic": 1,
+                "frequency_hz": 98.5,
+                "band_dbfs": -75.85585357426456
+              },
+              {
+                "harmonic": 2,
+                "frequency_hz": 197.0,
+                "band_dbfs": -74.24244776029533
+              },
+              {
+                "harmonic": 3,
+                "frequency_hz": 295.5,
+                "band_dbfs": -72.23614212862464
+              },
+              {
+                "harmonic": 4,
+                "frequency_hz": 394.0,
+                "band_dbfs": -73.45413045946023
+              },
+              {
+                "harmonic": 5,
+                "frequency_hz": 492.5,
+                "band_dbfs": -77.17523675700001
+              },
+              {
+                "harmonic": 6,
+                "frequency_hz": 591.0,
+                "band_dbfs": -76.90983541369933
+              }
+            ],
+            "J4_realized_gains": {
+              "kp": 191.7948717948718,
+              "kd": 0.9153846153846159,
+              "wire_position_rad": 0.7711528191042962
+            },
+            "J4_target_reconstruction": {
+              "gravity_Nm": -1.6026564349171895,
+              "wire_position_minus_gravity_offset_rad": 0.7795089154895597,
+              "recorded_desired_rad": 0.7798480163761063,
+              "error_rad": -0.0003391008865466505,
+              "position_quantization_LSB_rad": 0.00038147554741741054,
+              "within_one_position_LSB": true,
+              "assumption": "friction_scale=0, extra torque=0, positive kp with unclipped gravity offset; apply unchanged source gravity model and CAN quantization."
+            }
+          },
+          "candidate": {
+            "unix": [
+              1795659237.6802728,
+              1795659244.6803305
+            ],
+            "audio_indices": [
+              432012,
+              768015
+            ],
+            "audio_seconds_relative_process_start": [
+              9.00025,
+              16.0003125
+            ],
+            "audio_duration_s": 7.0000625,
+            "motor_count": 700,
+            "motor_sampling_hz": 99.9917531027585,
+            "speed_rad_s": {
+              "mean": 0.00015428571428571428,
+              "ac_rms": 0.004194100813363105,
+              "rms": 0.004196937659089746,
+              "peak_to_peak": 0.114
+            },
+            "current_A": {
+              "mean": -1.074517142857143,
+              "ac_rms": 0.005255309462916569,
+              "rms": 1.0745299942632727,
+              "peak_to_peak": 0.05400000000000005
+            },
+            "motor_position_rad": {
+              "mean": 0.7759999999999999,
+              "ac_rms": 1.1102230246251565e-16,
+              "rms": 0.776,
+              "peak_to_peak": 0.0
+            },
+            "joint_position_peak_to_peak_rad": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "audio_rms_dbfs": -50.62925039969464,
+            "audio_peak_dbfs": -33.066371112933616,
+            "audio_clipped_fraction": 0.0,
+            "audio_band_dbfs": {
+              "20-20000": -50.474465419063804,
+              "20-1000": -51.59968753876442,
+              "50-120": -67.2802594313736,
+              "70-100": -72.00298873091928,
+              "80-84": -82.98152093483827,
+              "150-190": -63.83866509081425,
+              "230-270": -63.81519743525768,
+              "310-350": -63.65995759232103,
+              "380-450": -60.63480631936279,
+              "125-131": -64.30613426999639,
+              "480-490": -66.84967716657634,
+              "1000-4000": -57.39290666364855,
+              "4000-10000": -66.57713065760471
+            },
+            "audio_peak_70_100_hz": 100.0,
+            "audio_peaks_20_1000_hz": [
+              {
+                "hz": 128.5,
+                "psd_dbfs_per_hz": -66.82856433450895
+              },
+              {
+                "hz": 486.0,
+                "psd_dbfs_per_hz": -67.68278694930846
+              },
+              {
+                "hz": 368.5,
+                "psd_dbfs_per_hz": -70.18211385907146
+              },
+              {
+                "hz": 355.0,
+                "psd_dbfs_per_hz": -70.44670417203469
+              },
+              {
+                "hz": 382.0,
+                "psd_dbfs_per_hz": -72.1291894042585
+              },
+              {
+                "hz": 387.0,
+                "psd_dbfs_per_hz": -72.46319495207449
+              },
+              {
+                "hz": 155.0,
+                "psd_dbfs_per_hz": -73.20904902892795
+              },
+              {
+                "hz": 351.5,
+                "psd_dbfs_per_hz": -73.77210509733949
+              },
+              {
+                "hz": 279.0,
+                "psd_dbfs_per_hz": -74.4676321006575
+              },
+              {
+                "hz": 343.0,
+                "psd_dbfs_per_hz": -75.21238142466596
+              },
+              {
+                "hz": 440.0,
+                "psd_dbfs_per_hz": -75.48515685476029
+              },
+              {
+                "hz": 833.0,
+                "psd_dbfs_per_hz": -75.49552656636757
+              }
+            ],
+            "audio_peaks_1000_10000_hz": [
+              {
+                "hz": 1665.5,
+                "psd_dbfs_per_hz": -78.76010597939025
+              },
+              {
+                "hz": 1627.5,
+                "psd_dbfs_per_hz": -79.22911021884373
+              },
+              {
+                "hz": 1044.5,
+                "psd_dbfs_per_hz": -79.34370834988874
+              },
+              {
+                "hz": 1024.5,
+                "psd_dbfs_per_hz": -80.54334634956136
+              },
+              {
+                "hz": 1419.5,
+                "psd_dbfs_per_hz": -80.71140226556511
+              },
+              {
+                "hz": 1429.0,
+                "psd_dbfs_per_hz": -80.75126452451956
+              },
+              {
+                "hz": 1031.0,
+                "psd_dbfs_per_hz": -80.96847774806557
+              },
+              {
+                "hz": 1457.5,
+                "psd_dbfs_per_hz": -81.03697721240827
+              }
+            ],
+            "J4_mit_raw_fields": {
+              "p": {
+                "unique": 1,
+                "min": 34767,
+                "max": 34767
+              },
+              "v": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              },
+              "kp": {
+                "unique": 1,
+                "min": 374,
+                "max": 374
+              },
+              "kd": {
+                "unique": 1,
+                "min": 2226,
+                "max": 2226
+              },
+              "tau": {
+                "unique": 1,
+                "min": 2047,
+                "max": 2047
+              }
+            },
+            "motor_speed_peak_5_45_hz": 5.4995464206517175,
+            "peak_centered_harmonics": [
+              {
+                "harmonic": 1,
+                "frequency_hz": 100.0,
+                "band_dbfs": -76.81435233339246
+              },
+              {
+                "harmonic": 2,
+                "frequency_hz": 200.0,
+                "band_dbfs": -71.29341863173497
+              },
+              {
+                "harmonic": 3,
+                "frequency_hz": 300.0,
+                "band_dbfs": -73.04113260789791
+              },
+              {
+                "harmonic": 4,
+                "frequency_hz": 400.0,
+                "band_dbfs": -72.31730244713718
+              },
+              {
+                "harmonic": 5,
+                "frequency_hz": 500.0,
+                "band_dbfs": -77.79973614796474
+              },
+              {
+                "harmonic": 6,
+                "frequency_hz": 600.0,
+                "band_dbfs": -76.46221249900555
+              }
+            ],
+            "J4_realized_gains": {
+              "kp": 95.8974358974359,
+              "kd": 0.9153846153846159,
+              "wire_position_rad": 0.7627603570611132
+            },
+            "J4_target_reconstruction": {
+              "gravity_Nm": -1.6026564349171926,
+              "wire_position_minus_gravity_offset_rad": 0.77947254983164,
+              "recorded_desired_rad": 0.7798480163761063,
+              "error_rad": -0.00037546654446629635,
+              "position_quantization_LSB_rad": 0.00038147554741741054,
+              "within_one_position_LSB": true,
+              "assumption": "friction_scale=0, extra torque=0, positive kp with unclipped gravity offset; apply unchanged source gravity model and CAN quantization."
+            }
+          }
+        },
+        "band_deltas_db": {
+          "20-20000": 0.101972025006134,
+          "20-1000": -0.4083575624484723,
+          "50-120": -0.9941947419792996,
+          "70-100": 0.9362697859159397,
+          "80-84": 0.6281926686535684,
+          "150-190": 1.6838250681771072,
+          "230-270": 0.7344946449509067,
+          "310-350": 0.02661706084632698,
+          "380-450": 1.5299026806116487,
+          "125-131": -0.44799133491149234,
+          "480-490": -0.43625875470060294,
+          "1000-4000": 2.1404220319526956,
+          "4000-10000": 7.318896350795484
+        },
+        "nominal_j4_kp": [
+          64.0,
+          32.0
+        ],
+        "desired_joint_target_rad": [
+          -0.07801621756414652,
+          0.9206786337195287,
+          -0.8507956504696759,
+          0.7798480163761063,
+          0.0736878010192006,
+          1.153889528371011
+        ],
+        "single_changed_gain": "kp",
+        "speed_ac_rms_ratio": 0.10559343041219896,
+        "current_ac_rms_ratio": 0.19824302804450245,
+        "constant_mit_non_kd_fields_equal": false,
+        "J4_changed_raw_fields": [
+          "p",
+          "kp"
+        ],
+        "only_expected_gain_related_fields_changed": true,
+        "whole_trial_J4_mit_raw_fields": {
+          "p": {
+            "unique": 23,
+            "min": 34767,
+            "max": 34789
+          },
+          "v": {
+            "unique": 1,
+            "min": 2047,
+            "max": 2047
+          },
+          "kp": {
+            "unique": 375,
+            "min": 374,
+            "max": 748
+          },
+          "kd": {
+            "unique": 1,
+            "min": 2226,
+            "max": 2226
+          },
+          "tau": {
+            "unique": 1,
+            "min": 2047,
+            "max": 2047
+          }
+        },
+        "whole_trial_only_expected_fields_vary": true,
+        "whole_trial_target_reconstruction": {
+          "min_rad": 0.7794673059071323,
+          "max_rad": 0.779846781356333,
+          "recorded_desired_rad": 0.7798480163761063,
+          "maximum_abs_error_rad": 0.0003807104689740326,
+          "all_within_one_position_LSB": true,
+          "assumption": "All ordinary joint readings remain constant; same gravity/zero-friction assumptions as phase reconstruction."
+        },
+        "other_joint_payloads_constant": {
+          "J1": true,
+          "J2": true,
+          "J3": true,
+          "J5": true,
+          "J6": true
+        },
+        "whole_trial_joint_position_peak_to_peak_rad": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "audio_timing_sensitivity": {
+          "-0.25": {
+            "50-120": -0.7025145211512296,
+            "70-100": 1.1907328400503872,
+            "80-84": 0.41766440953381334,
+            "20-20000": 0.6946324601475311
+          },
+          "0": {
+            "50-120": -1.2804401120499591,
+            "70-100": 1.0082210060711958,
+            "80-84": 1.416489168296394,
+            "20-20000": -0.4458794003837738
+          },
+          "0.25": {
+            "50-120": -1.5456965642768523,
+            "70-100": 0.5586114447406203,
+            "80-84": 1.6218233292113382,
+            "20-20000": -1.1729074876354773
+          }
+        },
+        "method": {
+          "audio_PSD": "Welch Hann 2 s windows, 50% overlap, 0.5 Hz bins; channel 1; PSD-integrated band power in dBFS. No weighting/normalization to peaks.",
+          "CAN_PSD": "Native timestamp-selected samples, measured average rate around100Hz, Welch2s, DC removed.",
+          "candidate_trim_s": 2.0,
+          "latency": "Audio clock origin uses process start timestamp. Device latency is uncalibrated; no exact cross-sensor phase claim. Extra inner-window +/-0.25 s origin sensitivity is reported.",
+          "limits": "Ambient uncalibrated microphone: not dB SPL. Baseline3s vs candidate7s; no noise-source isolation, no inference that all environmental noise belongs to J4. Harmonic labels are frequency neighborhoods, not proof of common origin."
+        },
+        "figure": "/home/robot/Documents/piper_control/.runtime/j4-fix/independent-kp32-kd0p53-fixed-handoff.png"
+      }
+    },
+    "summary_figure": "/home/robot/Documents/piper_control/.runtime/j4-fix/independent-summary.png",
+    "summary": [
+      {
+        "trial": "kd-1p0-established",
+        "nominal_kp": [
+          64.0,
+          64.0
+        ],
+        "nominal_kd": [
+          2.12,
+          1.0
+        ],
+        "speed_ac_rms_ratio": 0.3511035573076092,
+        "current_ac_rms_ratio": 0.2371386554783773,
+        "audio_band_deltas_db": {
+          "80-84": -11.866662327347655,
+          "70-100": -4.5016425837073655,
+          "50-120": -1.718345362490723,
+          "20-20000": 1.802010887002794
+        }
+      },
+      {
+        "trial": "kd-0p53-verified",
+        "nominal_kp": [
+          64.0,
+          64.0
+        ],
+        "nominal_kd": [
+          1.0,
+          0.53
+        ],
+        "speed_ac_rms_ratio": 1.0114832343328084,
+        "current_ac_rms_ratio": 0.8700996744822882,
+        "audio_band_deltas_db": {
+          "80-84": 1.2651313976966065,
+          "70-100": -1.0300549848891336,
+          "50-120": -0.7408823577141987,
+          "20-20000": -8.25046827185124
+        }
+      },
+      {
+        "trial": "kp32-kd0p53-fixed-handoff",
+        "nominal_kp": [
+          64.0,
+          32.0
+        ],
+        "nominal_kd": [
+          0.53,
+          0.53
+        ],
+        "speed_ac_rms_ratio": 0.10559343041219896,
+        "current_ac_rms_ratio": 0.19824302804450245,
+        "audio_band_deltas_db": {
+          "80-84": 0.6281926686535684,
+          "70-100": 0.9362697859159397,
+          "50-120": -0.9941947419792996,
+          "20-20000": 0.101972025006134
+        }
+      }
+    ]
+  },
+  "j4_motion_verification": [
+    {
+      "name": "j4_out",
+      "command_duration_s": 4.0,
+      "goal": [
+        -0.07801621756414652,
+        0.9206786337195287,
+        -0.8507956504696759,
+        0.7998480163761064,
+        0.0736878010192006,
+        1.153889528371011
+      ],
+      "result": {
+        "id": "00513785a80045229cd78a131b63577f",
+        "kind": "movej",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 4.0,
+        "error": null
+      },
+      "final_error_rad": 0.008480826936837493,
+      "actual_j4_change_rad": 0.01862266311877947,
+      "max_sampled_speed_rad_s": 0.105,
+      "post_motion_hold": {
+        "name": "j4_out",
+        "speed_rms_rad_s": 0.0,
+        "current_ac_rms_A": 0.0031078439069554312,
+        "samples": 400,
+        "position_error_rad": 0.008480826936837493,
+        "target_positions_constant": true
+      }
+    },
+    {
+      "name": "j4_return",
+      "command_duration_s": 4.0,
+      "goal": [
+        -0.07801621756414652,
+        0.9206786337195287,
+        -0.8507956504696759,
+        0.7798480163761063,
+        0.0736878010192006,
+        1.153889528371011
+      ],
+      "result": {
+        "id": "955a103749354657b8b0940ee173d094",
+        "kind": "movej",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 4.0,
+        "error": null
+      },
+      "final_error_rad": 0.007068583470577039,
+      "actual_j4_change_rad": 3.4906585039906624e-05,
+      "max_sampled_speed_rad_s": 0.145,
+      "post_motion_hold": {
+        "name": "j4_return",
+        "speed_rms_rad_s": 0.003939378534984327,
+        "current_ac_rms_A": 0.010152914477018873,
+        "samples": 401,
+        "position_error_rad": 0.007068583470577039,
+        "target_positions_constant": true
+      }
+    }
+  ],
+  "full_hardware_verification": {
+    "path": "hardware-acceptance-j4-fix.json",
+    "passed": true,
+    "tests": 10,
+    "max_terminal_error_rad": 0.009546951008408966
+  },
+  "return_to_original_target": {
+    "passed": true,
+    "duration_s": 8.0,
+    "max_measured_speed_rad_s": 0.111,
+    "final_error_rad": 0.009983283321407632,
+    "target": [
+      -0.07801621756414652,
+      0.9206786337195287,
+      -0.8507956504696759,
+      0.7798480163761063,
+      0.0736878010192006,
+      1.153889528371011
+    ]
+  },
+  "final_hold": {
+    "path": "j4-hold-final.json",
+    "passed": true,
+    "duration_s": 15,
+    "j4_speed_rms_rad_s": 0.0,
+    "j4_current_ac_rms_A": 0.004251351419124149,
+    "all_mit_payloads_constant": true
+  },
+  "reconnect_diagnostic_interruptions": [
+    {
+      "trial": "kd-1p0",
+      "failure": "RuntimeError('Fresh firmware readiness lost')",
+      "gains_changed": false,
+      "measured_joint_peak_to_peak_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "resolution": "Original nominal target and prior gains restored; initialization now waits for coherent fresh enable/control/held-target feedback before any command or keepalive."
+    },
+    {
+      "trial": "kd-0p53",
+      "failure": "RuntimeError('Preserved nominal target mismatch')",
+      "gains_changed": false,
+      "measured_joint_peak_to_peak_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.00890117918517108,
+        0.0,
+        0.0
+      ],
+      "resolution": "Original nominal target and prior gains restored; initialization now waits for coherent fresh enable/control/held-target feedback before any command or keepalive."
+    },
+    {
+      "trial": "kp32-kd0p53",
+      "failure": "RuntimeError('Fresh native hold target did not match before trial')",
+      "gains_changed": false,
+      "measured_joint_peak_to_peak_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.00900589894029074,
+        0.0,
+        0.0
+      ],
+      "resolution": "Original nominal target and prior gains restored; initialization now waits for coherent fresh enable/control/held-target feedback before any command or keepalive."
+    }
+  ],
+  "restart_verification": "j4-restart-verification.json",
+  "measurement_limits": [
+    "100 Hz motor feedback cannot uniquely resolve mechanical frequencies above 50 Hz.",
+    "Zero speed feedback means zero at that feedback resolution, not proof of zero mechanical vibration.",
+    "Camera 90 fps did not reliably resolve subpixel mechanical vibration beyond background registration noise.",
+    "Microphone levels and start latency are uncalibrated; ambient broadband sound is not uniquely sourced to the robot.",
+    "Ordinary joint angles and motor position use different resolutions/offsets; lowering kp can change motor position despite unchanged ordinary position packets.",
+    "Trials cover this arm, tool and small low-speed paths; target speed cap is not a hard physical velocity limit."
+  ],
+  "simulation_fix": "Evaluate physical friction at each 1 ms physics substep instead of holding it for the 5 ms control interval. Host compensation stays 200 Hz. This corrects a separate numerical artifact, not the physical-arm root cause.",
+  "software_validation": {
+    "python_tests_passed": 42,
+    "python_command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q",
+    "simulation_acceptance": "simulation-acceptance-j4-fix.json",
+    "simulation_tests_passed": 10,
+    "wheel_verification": "j4-wheel-verification.json"
+  },
+  "final_runtime_state": "j4-final-runtime-state.json"
+}
