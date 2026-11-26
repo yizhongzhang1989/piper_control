@@ -1,0 +1,425 @@
+{
+  "failure": null,
+  "native_mode": "cpv_readonly",
+  "power_commands_sent": 0,
+  "native_hold_max_excursion_rad": 0.0038920842319472015,
+  "restore_max_excursion_rad": 1.1102230246251565e-15,
+  "api_pid": 360570,
+  "camera_errors": [],
+  "camera_frames": 1742,
+  "cpv_responses": [
+    {
+      "joint": 4,
+      "parameter": "po",
+      "raw": 81710,
+      "value": 1.4261085318045668,
+      "timestamp": 1795687692.7523012,
+      "unit": "rad"
+    },
+    {
+      "joint": 4,
+      "parameter": "sp",
+      "raw": 0,
+      "value": 0.0,
+      "timestamp": 1795687692.8325217,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 4,
+      "parameter": "pp",
+      "raw": 500,
+      "value": 5.0,
+      "timestamp": 1795687692.9128354,
+      "unit": "vendor position-loop gain"
+    },
+    {
+      "joint": 4,
+      "parameter": "kp",
+      "raw": 80,
+      "value": 0.8,
+      "timestamp": 1795687692.9929612,
+      "unit": "vendor velocity-loop gain"
+    },
+    {
+      "joint": 4,
+      "parameter": "ki",
+      "raw": 8000,
+      "value": 80.0,
+      "timestamp": 1795687693.0730875,
+      "unit": "vendor velocity-loop integral gain"
+    },
+    {
+      "joint": 4,
+      "parameter": "ac",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687693.1533322,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 4,
+      "parameter": "dc",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687693.2333682,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 4,
+      "parameter": "vv",
+      "raw": 20,
+      "value": 0.02,
+      "timestamp": 1795687693.3135104,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 3,
+      "parameter": "po",
+      "raw": -74198,
+      "value": -1.2949993983947528,
+      "timestamp": 1795687693.393431,
+      "unit": "rad"
+    },
+    {
+      "joint": 3,
+      "parameter": "sp",
+      "raw": 0,
+      "value": 0.0,
+      "timestamp": 1795687693.4735377,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 3,
+      "parameter": "pp",
+      "raw": 500,
+      "value": 5.0,
+      "timestamp": 1795687693.5539126,
+      "unit": "vendor position-loop gain"
+    },
+    {
+      "joint": 3,
+      "parameter": "kp",
+      "raw": 70,
+      "value": 0.7000000000000001,
+      "timestamp": 1795687693.6339333,
+      "unit": "vendor velocity-loop gain"
+    },
+    {
+      "joint": 3,
+      "parameter": "ki",
+      "raw": 4000,
+      "value": 40.0,
+      "timestamp": 1795687693.7141163,
+      "unit": "vendor velocity-loop integral gain"
+    },
+    {
+      "joint": 3,
+      "parameter": "ac",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687693.7941053,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 3,
+      "parameter": "dc",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687693.8741934,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 3,
+      "parameter": "vv",
+      "raw": 20,
+      "value": 0.02,
+      "timestamp": 1795687693.954274,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 2,
+      "parameter": "po",
+      "raw": 88974,
+      "value": 1.5528892486694348,
+      "timestamp": 1795687694.0341191,
+      "unit": "rad"
+    },
+    {
+      "joint": 2,
+      "parameter": "sp",
+      "raw": 0,
+      "value": 0.0,
+      "timestamp": 1795687694.114203,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 2,
+      "parameter": "pp",
+      "raw": 500,
+      "value": 5.0,
+      "timestamp": 1795687694.1945446,
+      "unit": "vendor position-loop gain"
+    },
+    {
+      "joint": 2,
+      "parameter": "kp",
+      "raw": 70,
+      "value": 0.7000000000000001,
+      "timestamp": 1795687694.2747283,
+      "unit": "vendor velocity-loop gain"
+    },
+    {
+      "joint": 2,
+      "parameter": "ki",
+      "raw": 4000,
+      "value": 40.0,
+      "timestamp": 1795687694.3548741,
+      "unit": "vendor velocity-loop integral gain"
+    },
+    {
+      "joint": 2,
+      "parameter": "ac",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687694.434845,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 2,
+      "parameter": "dc",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687694.5150855,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 2,
+      "parameter": "vv",
+      "raw": 20,
+      "value": 0.02,
+      "timestamp": 1795687694.5951502,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 1,
+      "parameter": "po",
+      "raw": 555,
+      "value": 0.00968657734856853,
+      "timestamp": 1795687694.6750777,
+      "unit": "rad"
+    },
+    {
+      "joint": 1,
+      "parameter": "sp",
+      "raw": 0,
+      "value": 0.0,
+      "timestamp": 1795687694.7551198,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 1,
+      "parameter": "pp",
+      "raw": 500,
+      "value": 5.0,
+      "timestamp": 1795687694.837536,
+      "unit": "vendor position-loop gain"
+    },
+    {
+      "joint": 1,
+      "parameter": "kp",
+      "raw": 70,
+      "value": 0.7000000000000001,
+      "timestamp": 1795687694.9175067,
+      "unit": "vendor velocity-loop gain"
+    },
+    {
+      "joint": 1,
+      "parameter": "ki",
+      "raw": 4000,
+      "value": 40.0,
+      "timestamp": 1795687694.9976063,
+      "unit": "vendor velocity-loop integral gain"
+    },
+    {
+      "joint": 1,
+      "parameter": "ac",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687695.077724,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 1,
+      "parameter": "dc",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687695.1576004,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 1,
+      "parameter": "vv",
+      "raw": 20,
+      "value": 0.02,
+      "timestamp": 1795687695.2376177,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 5,
+      "parameter": "po",
+      "raw": -432,
+      "value": -0.007539822368615504,
+      "timestamp": 1795687695.3175907,
+      "unit": "rad"
+    },
+    {
+      "joint": 5,
+      "parameter": "sp",
+      "raw": 0,
+      "value": 0.0,
+      "timestamp": 1795687695.397597,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 5,
+      "parameter": "pp",
+      "raw": 500,
+      "value": 5.0,
+      "timestamp": 1795687695.4777336,
+      "unit": "vendor position-loop gain"
+    },
+    {
+      "joint": 5,
+      "parameter": "kp",
+      "raw": 80,
+      "value": 0.8,
+      "timestamp": 1795687695.5576282,
+      "unit": "vendor velocity-loop gain"
+    },
+    {
+      "joint": 5,
+      "parameter": "ki",
+      "raw": 8000,
+      "value": 80.0,
+      "timestamp": 1795687695.6377356,
+      "unit": "vendor velocity-loop integral gain"
+    },
+    {
+      "joint": 5,
+      "parameter": "ac",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687695.7180266,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 5,
+      "parameter": "dc",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687695.7981517,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 5,
+      "parameter": "vv",
+      "raw": 20,
+      "value": 0.02,
+      "timestamp": 1795687695.8782065,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 6,
+      "parameter": "po",
+      "raw": 0,
+      "value": 0.0,
+      "timestamp": 1795687695.9579182,
+      "unit": "rad"
+    },
+    {
+      "joint": 6,
+      "parameter": "sp",
+      "raw": 0,
+      "value": 0.0,
+      "timestamp": 1795687696.0380135,
+      "unit": "rad/s"
+    },
+    {
+      "joint": 6,
+      "parameter": "pp",
+      "raw": 500,
+      "value": 5.0,
+      "timestamp": 1795687696.1185138,
+      "unit": "vendor position-loop gain"
+    },
+    {
+      "joint": 6,
+      "parameter": "kp",
+      "raw": 80,
+      "value": 0.8,
+      "timestamp": 1795687696.198732,
+      "unit": "vendor velocity-loop gain"
+    },
+    {
+      "joint": 6,
+      "parameter": "ki",
+      "raw": 8000,
+      "value": 80.0,
+      "timestamp": 1795687696.2790349,
+      "unit": "vendor velocity-loop integral gain"
+    },
+    {
+      "joint": 6,
+      "parameter": "ac",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687696.3588536,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 6,
+      "parameter": "dc",
+      "raw": 250,
+      "value": 2.5,
+      "timestamp": 1795687696.4391503,
+      "unit": "rad/s^2"
+    },
+    {
+      "joint": 6,
+      "parameter": "vv",
+      "raw": 20,
+      "value": 0.02,
+      "timestamp": 1795687696.5189943,
+      "unit": "rad/s"
+    }
+  ],
+  "cpv_firmware_after": [
+    1,
+    5,
+    2,
+    0
+  ],
+  "decode_note": "Value scales taken from pinned SDK _CPV_VALUE_SCALE; po=0.001 degree, ac/dc=0.01 rad/s^2. Raw responses unchanged.",
+  "request_count": 48,
+  "parameter_writes": 0,
+  "cpv_motion_writes": 0,
+  "restored_hold_passed": true,
+  "source_record": ".runtime/tcp-smooth/cpv-mode-readonly-probe",
+  "firmware_readback": {
+    "raw_frames": [
+      "482d56312e322d31",
+      "0000000000000000",
+      "3130000000000000",
+      "0000000000000000",
+      "50697065725f585f",
+      "4d43000000000000",
+      "3330414800000000",
+      "00000000532d5631",
+      "2e392d3132363130",
+      "3330000031350000",
+      "daf2000000000000"
+    ],
+    "text": "H-V1.2-1\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u000010\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000Piper_X_MC\u0000\u0000\u0000\u0000\u0000\u000030AH\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000S-V1.9-1261030\u0000\u000015\u0000\u0000\ufffd\ufffd\u0000\u0000\u0000\u0000\u0000\u0000",
+    "read_only_request": "0x4AF 01"
+  }
+}

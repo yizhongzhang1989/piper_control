@@ -1,0 +1,196 @@
+{
+  "note": "Diagnostic only; original production profile restored. Rebase preserves actuator target and changes public nominal coordinates only.",
+  "motions": [
+    {
+      "record": "rebased-original-line10",
+      "result": {
+        "id": "e9052e3de911413e91983facd30f1c92",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.7500000000000004,
+        "error": null
+      },
+      "camera": {
+        "translation_px": 14.163024198083795,
+        "fitted_delay_s": 0.03999999999999995,
+        "velocity_nrmse": 0.17351026722567356,
+        "peak_ratio": 1.1970030627578658,
+        "middle_minimum_ratio": 0.24447450293494247,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.3681729240710376,
+        "post_plan_excursion_px": 0.7892739960646181,
+        "final_window_excursion_px": 0.016726492606356787,
+        "cross_track_rms_px": 0.24226801115109844,
+        "completion_delay_s": 1.6449515819549556
+      },
+      "hold_passed": true,
+      "initial_error": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "planned_j2_excursion": 0.004131520066975369,
+      "motion_window_j2_excursion": 0.0,
+      "j2_first_movement_seconds": 5.151812791824341,
+      "final_error": [
+        1.7453272698614297e-09,
+        0.0017404189917431534,
+        0.0042941678530878935,
+        -0.001898156507763371,
+        -5.44076849545716e-11,
+        1.7443537994642606e-09
+      ]
+    },
+    {
+      "record": "rebased-original-return10",
+      "result": {
+        "id": "30cda9cfef24411f81dfb2d06fd05ea1",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.749999999955432,
+        "error": null
+      },
+      "camera": {
+        "translation_px": 14.55212628289739,
+        "fitted_delay_s": -0.030000000000000013,
+        "velocity_nrmse": 0.1853760021123633,
+        "peak_ratio": 1.579902588162408,
+        "middle_minimum_ratio": 0.31847094451046415,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.35296555261919016,
+        "post_plan_excursion_px": 0.05529136671003602,
+        "final_window_excursion_px": 0.020202921699622095,
+        "cross_track_rms_px": 0.10869308355458841,
+        "completion_delay_s": 0.16495800022767337
+      },
+      "hold_passed": true,
+      "initial_error": [
+        1.7453272698614297e-09,
+        0.0017404189917431534,
+        -0.0019715641615718482,
+        -0.001898156507763371,
+        -5.44076849545716e-11,
+        1.7443537994642606e-09
+      ],
+      "planned_j2_excursion": 0.004131520086634088,
+      "motion_window_j2_excursion": 0.0,
+      "j2_first_movement_seconds": null,
+      "final_error": [
+        -2.3939183968479938e-14,
+        -0.002391101094890935,
+        -0.003543018359150496,
+        -0.00022689282687760048,
+        -4.174698781111985e-14,
+        1.3751258383519085e-13
+      ]
+    },
+    {
+      "record": "fine-tracking-line10",
+      "result": {
+        "id": "121b04694c224a3bb953b22e5e6a71d0",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.749999999999998,
+        "error": null
+      },
+      "camera": {
+        "translation_px": 15.64658733044832,
+        "fitted_delay_s": 0.09499999999999993,
+        "velocity_nrmse": 0.20174311010076657,
+        "peak_ratio": 1.8541661808407979,
+        "middle_minimum_ratio": 0.36337827428784397,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.34861429276034794,
+        "post_plan_excursion_px": 0.058129171900198284,
+        "final_window_excursion_px": 0.04001667216972667,
+        "cross_track_rms_px": 0.3106517210185432,
+        "completion_delay_s": 0.17636275291443093
+      },
+      "hold_passed": true,
+      "initial_error": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -2.168404344971009e-19
+      ],
+      "planned_j2_excursion": 0.0037146654875479523,
+      "motion_window_j2_excursion": 0.00626573201465952,
+      "j2_first_movement_seconds": 2.2858593463897705,
+      "final_error": [
+        1.745714151360489e-09,
+        -0.0019925611664732834,
+        0.002145930748250535,
+        0.0019061189456492933,
+        -4.366860952703666e-11,
+        1.7450410259361806e-09
+      ]
+    },
+    {
+      "record": "fine-tracking-return10",
+      "result": {
+        "id": "001a0dae70c647f2ad4842c90c38cd47",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.749999999955908,
+        "error": null
+      },
+      "camera": {
+        "translation_px": 16.026476316357215,
+        "fitted_delay_s": 0.019999999999999962,
+        "velocity_nrmse": 0.22250426211425328,
+        "peak_ratio": 2.058380768357736,
+        "middle_minimum_ratio": 0.2565372000531619,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.3701394967984279,
+        "post_plan_excursion_px": 0.062379313673184576,
+        "final_window_excursion_px": 0.023653222658078867,
+        "cross_track_rms_px": 0.4330812158923157,
+        "completion_delay_s": 0.16459536556838383
+      },
+      "hold_passed": true,
+      "initial_error": [
+        1.745714151360489e-09,
+        -0.0019925611664732834,
+        0.002145930748250535,
+        0.0019061189456492933,
+        -4.366860952703666e-11,
+        1.7450410259361806e-09
+      ],
+      "planned_j2_excursion": 0.0037146655074165036,
+      "motion_window_j2_excursion": 0.004852015320544023,
+      "j2_first_movement_seconds": 1.8954648971557617,
+      "final_error": [
+        -2.3956531203239706e-14,
+        -0.0011519173261846927,
+        -0.00010471973242109911,
+        0.00013962631573827267,
+        -4.186147956053432e-14,
+        1.3871451333025876e-13
+      ]
+    }
+  ],
+  "candidate": {
+    "deadband": 0.0005,
+    "j2_gain": 2.0,
+    "limit": 0.02,
+    "rate": 0.005
+  },
+  "conclusion": "Smaller deadband made J2 move during the planned interval but produced breakaway speed pulses; not retained. Neither endpoint success nor a zero initial position error certifies smooth path following."
+}

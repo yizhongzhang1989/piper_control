@@ -1,0 +1,19 @@
+{
+  "failure": "AssertionError('cpv_joint3_zero_hold travel limit')",
+  "restore_failure": null,
+  "power_commands_sent": 0,
+  "native_hold_max_excursion_rad": 0.0033510321638290375,
+  "restore_max_excursion_rad": 0.004188790204786352,
+  "api_pid": 362412,
+  "camera_errors": [],
+  "camera_frames": 1749,
+  "source_record": ".runtime/tcp-smooth/cpv-j3-position-probe",
+  "planned_trajectories_executed": 0,
+  "initial_joint_position_rad": -1.294283813401435,
+  "initial_motor_position_rad": -1.302,
+  "command_was_joint_position_rad": -1.294283813401435,
+  "observed_displacement_rad": 0.005044001538263787,
+  "observation_seconds": 0.29007649421691895,
+  "restored_hold_passed": true,
+  "interpretation": "Zero-move test rejected. Direction is consistent with CPV accepting motor coordinates while its readback exposes output joint angles; this needs a corrected zero-move verification."
+}
