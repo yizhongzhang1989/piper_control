@@ -12,16 +12,20 @@ from .planning import Planner, vector
 class RobotController:
     def __init__(self, backend, model, rate_hz=200., max_velocity=.3,
                  stream_timeout=.2, feedback_timeout=.2, goal_tolerance=.01,
-                 goal_timeout=5.):
+                 goal_timeout=5., goal_velocity_tolerance=.02, goal_settle_time=.15):
         for name, value in dict(rate_hz=rate_hz, stream_timeout=stream_timeout,
                                 feedback_timeout=feedback_timeout, goal_tolerance=goal_tolerance,
-                                goal_timeout=goal_timeout).items():
+                                goal_timeout=goal_timeout, goal_velocity_tolerance=goal_velocity_tolerance,
+                                goal_settle_time=goal_settle_time).items():
             if not math.isfinite(value) or value <= 0:
                 raise ValueError(f"{name} must be positive and finite")
+        if goal_settle_time > goal_timeout:
+            raise ValueError("goal_settle_time cannot exceed goal_timeout")
         self.backend, self.model = backend, model
         self.rate_hz = rate_hz
         self.stream_timeout, self.feedback_timeout = stream_timeout, feedback_timeout
         self.goal_tolerance, self.goal_timeout = goal_tolerance, goal_timeout
+        self.goal_velocity_tolerance, self.goal_settle_time = goal_velocity_tolerance, goal_settle_time
         self.planner = Planner(model, max_velocity)
         self._lock = threading.RLock()
         self._closed = threading.Event()
@@ -30,6 +34,8 @@ class RobotController:
         self._q = None if initial_target is None else np.asarray(initial_target, dtype=float)
         self._plan = None
         self._start = 0.
+        self._settled_since = self._settled_last = None
+        self._goal_position_reached = False
         self._stream_time = None
         self._stream_goal = None
         self._twist = None
@@ -42,11 +48,16 @@ class RobotController:
         self._tracking(False)
 
     def _tracking(self, active):
-        # Optional backend correction loops may refine an active goal, but must
-        # not keep changing the actuator target after success, stop or timeout.
+        # Once the endpoint is within position tolerance, freeze corrections
+        # while checking its speed dwell. A still-unreached goal may converge.
         update = getattr(self.backend, 'set_tracking_active', None)
         if update is not None:
             update(active)
+
+    def _tracking_requested(self, now):
+        return ((self._plan is not None and
+                 (now-self._start < self._plan.duration or not self._goal_position_reached)) or
+                (self._stream_time is not None and now-self._stream_time <= self.stream_timeout))
 
     def start(self):
         if self._thread is None:
@@ -66,6 +77,8 @@ class RobotController:
         if self._plan is not None:
             self._record("cancelled")
         self._plan = None
+        self._settled_since = self._settled_last = None
+        self._goal_position_reached = False
         self._stream_time = None
         self._stream_goal = self._twist = None
         self._epoch += 1
@@ -107,6 +120,8 @@ class RobotController:
                     model_url="/robot/model.urdf", base_frame="base_link", tcp_frame="tcp",
                     control_rate_hz=self.rate_hz, stream_timeout=self.stream_timeout,
                     feedback_timeout=self.feedback_timeout, goal_tolerance=self.goal_tolerance,
+                    goal_velocity_tolerance=self.goal_velocity_tolerance,
+                    goal_settle_time=self.goal_settle_time, goal_timeout=self.goal_timeout,
                     units={"position":"m", "joint":"rad", "orientation":"quaternion_xyzw",
                            "time":"s", "effort":"Nm"},
                     capabilities=["servo_joints", "servo_pose", "servo_twist", "trajectory", "movej", "movel", "movec"])
@@ -239,8 +254,7 @@ class RobotController:
     def _tick(self, now, dt):
         with self._lock:
             self._cycle_times.append(now)
-            self._tracking(self._plan is not None or
-                           (self._stream_time is not None and now-self._stream_time <= self.stream_timeout))
+            self._tracking(self._tracking_requested(now))
             self.backend.step(dt)
             data = self.backend.read()
             fresh = data.get("connected") and data.get("feedback_age", 0) <= self.feedback_timeout
@@ -295,12 +309,32 @@ class RobotController:
                 self._motion["progress"] = min(1., elapsed/self._plan.duration)
                 if elapsed >= self._plan.duration:
                     error = float(np.max(np.abs(measured-self._q)))
-                    if error <= self.goal_tolerance:
+                    self._goal_position_reached = error <= self.goal_tolerance
+                    velocity = np.asarray(data.get("velocities", []), dtype=float)
+                    speed = (float(np.max(np.abs(velocity)))
+                             if velocity.shape == measured.shape and np.all(np.isfinite(velocity))
+                             else math.inf)
+                    within = self._goal_position_reached and speed <= self.goal_velocity_tolerance
+                    if within:
+                        if (self._settled_since is None or
+                                now-self._settled_last > self.feedback_timeout):
+                            self._settled_since = now
+                        self._settled_last = now
+                    else:
+                        self._settled_since = self._settled_last = None
+                    if within and now-self._settled_since >= self.goal_settle_time:
                         self._record("succeeded")
                         self._plan = None
                         self._mode = "idle"
                     elif elapsed > self._plan.duration+self.goal_timeout:
-                        self._record("aborted", f"goal tracking error {error:.4f} rad exceeds tolerance")
+                        if error > self.goal_tolerance:
+                            reason = f"goal tracking error {error:.4f} rad exceeds tolerance"
+                        elif not math.isfinite(speed):
+                            reason = "goal velocity feedback unavailable or invalid"
+                        else:
+                            reason = (f"goal did not settle below {self.goal_velocity_tolerance:.4f} rad/s "
+                                      f"for {self.goal_settle_time:.3f} s; last speed {speed:.4f} rad/s")
+                        self._record("aborted", reason)
                         self._plan = None
                         dq.fill(0.)
                         self._mode = "idle"
@@ -323,7 +357,7 @@ class RobotController:
                     scale = max(1., float(np.max(np.abs(delta)/(self.planner.velocity*dt))))
                     dq = delta/(scale*dt)
                     self._q = self._q+dq*dt
-            self._tracking(self._plan is not None or self._stream_time is not None)
+            self._tracking(self._tracking_requested(now))
             self.backend.command(self._q.tolist(), dq.tolist())
 
     def _run(self):

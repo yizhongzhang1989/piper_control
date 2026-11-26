@@ -30,7 +30,7 @@ class Raw:
         self.held = None
 
     def read(self):
-        return dict(positions=list(Q), enabled=self.enabled, command_ready=self.enabled,
+        return dict(positions=list(Q), velocities=[0.]*6, enabled=self.enabled, command_ready=self.enabled,
                     connected=True, feedback_age=.001,
                     extra={'driver': {'applied_kd': self.kd, 'gravity_torque': [0, -7, -6, -.1, 0, 0]}})
 
@@ -124,6 +124,8 @@ def test_terminal_command_freezes_residual_integral_until_next_motion(tmp_path, 
         assert any(abs(x) > 0 for x in b.integral.bias)
         if ending == 'stop':
             controller.stop()
+        if ending in ('succeeded', 'aborted'):
+            controller._tick(begin+.52, .005)
         controller._tick(begin+.71, .005)
         assert controller.state()['mode'] == 'idle'
         if ending in ('succeeded', 'aborted'):
@@ -142,6 +144,45 @@ def test_terminal_command_freezes_residual_integral_until_next_motion(tmp_path, 
         controller._tick(controller._start+.8, .005)
         assert b.integral.bias != saved_bias
         assert controller.state()['extra']['position_integral']['active']
+    finally:
+        controller.close()
+
+
+def test_settling_wait_freezes_corrections_only_inside_position_tolerance(tmp_path, monkeypatch):
+    from piper_control.controller import RobotController
+    from piper_control.model import RobotModel
+
+    b = TrackingBackend(Raw(), {'position_integral': {'gains': [1.]*6, 'deadband': .003}},
+                        receiver=Receiver(), feedforward=Feedforward(), state_path=tmp_path/'hold.json')
+    b._freeze_until = 0
+    read = b.raw.read
+    monkeypatch.setattr(b.raw, 'read', lambda: dict(read(), velocities=[.03]*6))
+    controller = RobotController(b, RobotModel(), goal_tolerance=.005)
+    try:
+        target = [q+(.004 if i == 0 else 0.) for i, q in enumerate(Q)]
+        motion = controller.movej(target, duration=.5)
+        begin = controller._start
+        for i in range(1, 100):
+            controller._tick(begin+i*.005, .005)
+        assert any(abs(x) > 0 for x in b.integral.bias)
+        controller._tick(begin+.5, .005)
+        bias, raw_target = b.integral.bias, b.raw.sent[-1][0]
+        for i in range(1, 301):
+            controller._tick(begin+.5+i*.005, .005)
+        assert controller.motion(motion['id'])['status'] == 'running'
+        assert not controller.state()['extra']['position_integral']['active']
+        assert b.integral.bias == bias
+        assert b.raw.sent[-1][0] == raw_target
+        # A disturbance takes the output outside the goal band. The bounded
+        # integral must be allowed to recover instead of waiting on a frozen
+        # target that can never reach the goal (observed in the YZ arc trial).
+        disturbed = [q-.01 for q in Q]
+        monkeypatch.setattr(b.raw, 'read', lambda: dict(read(), positions=disturbed, velocities=[0.]*6))
+        b.receiver.value = EncoderSample(MOTOR, tuple(disturbed), (0.,)*6, .001)
+        controller._tick(begin+2.01, .005)
+        assert controller.motion(motion['id'])['status'] == 'running'
+        assert controller.state()['extra']['position_integral']['active']
+        assert b.integral.bias != bias
     finally:
         controller.close()
 

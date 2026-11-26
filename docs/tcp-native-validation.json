@@ -1,0 +1,1056 @@
+{
+  "status": "not accepted as a production replacement",
+  "driver_pid_during_all_trials": 216086,
+  "notes": [
+    "User confirmed the earlier pose change followed manual contact; all new trials used the new actual pose.",
+    "Native J and L use existing vendor ROS commands. JS uses an exclusive diagnostic CAN writer only while the vendor driver is in joint mode and not transmitting MIT targets.",
+    "First JS attempt transmitted zero JS frames due to a missing import. Second JS attempt missed its position goal before a late sender catch-up burst exhausted the CAN queue. Its timing score includes this failed trajectory.",
+    "Native L at 5% speed hit the 0.3 rad/s diagnostic envelope and was stopped in native J hold. A separate observed torque-matched recovery restores MIT; no driver restart or power-off.",
+    "Camera uses uncalibrated image projection normalized to 960 pixels width; these metrics are not Cartesian accuracy measurements.",
+    "The native L reference describes the requested path, not the timing chosen by firmware. It must not be scored as following the host quintic time law."
+  ],
+  "handoffs": [
+    {
+      "record": ".runtime/tcp-smooth/native-position-handoff",
+      "failure": null,
+      "restore_failure": null,
+      "can_transmitter": "persistent vendor C++ driver only",
+      "power_commands_sent": 0,
+      "stages": {
+        "persistent_mit_before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_position_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.010522832318344714,
+            0.0005,
+            0.01456193668438371
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_before_restore": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0028740215726399828,
+            0.005716642371182581,
+            0.008980534505250787,
+            0.0,
+            0.003394112549695428
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_gain_continuity": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_final_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "native_hold_max_excursion_rad": 0.0037175513067480015,
+      "restore_max_excursion_rad": 1.7763568394002505e-15
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-j-z10-probe",
+      "failure": null,
+      "restore_failure": null,
+      "can_transmitter": "persistent vendor C++ driver only",
+      "power_commands_sent": 0,
+      "stages": {
+        "persistent_mit_before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_position_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.02032055609475292,
+            0.0,
+            0.003360059523282289
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "line-z10-before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.001886796226411321,
+            0.0062417946137308935,
+            0.03436073340311582,
+            0.0,
+            0.010748023074035521
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "line-z10-return-before": {
+          "velocity_rms_rad_s": [
+            0.002816025568065745,
+            0.0,
+            0.0,
+            0.007323250644351863,
+            0.0,
+            0.020223253941935262
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_before_restore": {
+          "velocity_rms_rad_s": [
+            0.005316013544000805,
+            0.004007492981902776,
+            0.0,
+            0.00565685424949238,
+            0.0,
+            0.011879393923933999
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_gain_continuity": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_final_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "native_hold_max_excursion_rad": 0.003228859116189531,
+      "restore_max_excursion_rad": 1.5543122344752192e-15
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-j-dedup-z10-probe",
+      "failure": null,
+      "restore_failure": null,
+      "can_transmitter": "persistent vendor C++ driver only",
+      "power_commands_sent": 0,
+      "stages": {
+        "persistent_mit_before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_position_hold": {
+          "velocity_rms_rad_s": [
+            0.002700654057503193,
+            0.0,
+            0.0,
+            0.03743644697602931,
+            0.0010972602697183961,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "line-z10-before": {
+          "velocity_rms_rad_s": [
+            0.003440930106817051,
+            0.0041689327171351665,
+            0.007649182962905254,
+            0.013012301871690495,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "line-z10-return-before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.009613532129243653,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_before_restore": {
+          "velocity_rms_rad_s": [
+            0.0074953318805774044,
+            0.0042473521163190605,
+            0.009422313940853383,
+            0.0161214143300146,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_gain_continuity": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.001995018672215266,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_final_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.001995018672215266,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "native_hold_max_excursion_rad": 0.003385938748869055,
+      "restore_max_excursion_rad": 1.9984014443252818e-15,
+      "deduplicate_joint_targets": true
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-js-z10-probe",
+      "failure": "NameError(\"name '_core' is not defined\")",
+      "restore_failure": null,
+      "can_transmitter": "exclusive JS probe while vendor driver is in passive joint mode; vendor MIT before/after",
+      "power_commands_sent": 0,
+      "stages": {
+        "persistent_mit_before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_before_restore": {
+          "velocity_rms_rad_s": [
+            0.004684015371452148,
+            0.021842618890600088,
+            0.023566713814191412,
+            0.038974607117968484,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.003106686068550024,
+            0.0034208453339088507,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_gain_continuity": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0013000000000000002,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_final_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0013000000000000002,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "restore_max_excursion_rad": 0.0017802358370346827,
+      "native_mode": "js"
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-js-z10-probe-v2",
+      "failure": "OSError(105, 'No buffer space available')",
+      "restore_failure": null,
+      "can_transmitter": "exclusive JS probe while vendor driver is in passive joint mode; vendor MIT before/after",
+      "power_commands_sent": 0,
+      "stages": {
+        "persistent_mit_before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_position_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "line-z10-before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.001131370849898476,
+            0.0,
+            0.0007211102550927979,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_before_restore": {
+          "velocity_rms_rad_s": [
+            0.0025455844122715715,
+            0.02403622266496964,
+            0.04082891132518723,
+            0.018407607123143415,
+            0.0015556349186104045,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.00256563400043186,
+            0.0029845130209105175,
+            0.001919862177193643,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_gain_continuity": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_final_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "native_hold_max_excursion_rad": 0.0036128315516281706,
+      "restore_max_excursion_rad": 0.001665625882819377,
+      "native_mode": "js"
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-linear-z-probe",
+      "failure": "AssertionError('native velocity envelope')",
+      "restore_failure": "AssertionError('native_before_restore velocity limit')",
+      "can_transmitter": "persistent vendor C++ driver only",
+      "power_commands_sent": 0,
+      "stages": {
+        "persistent_mit_before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_position_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.000997509336107633,
+            0.0002992528008322899,
+            0.014879282066883154,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "line-z10-before": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0011045361017187263,
+            0.004833218389437829,
+            0.02115041370753773,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_before_restore": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.054,
+            0.343,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "native_hold_max_excursion_rad": 0.0028972465583108065,
+      "native_mode": "linear"
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-linear-mit-restore",
+      "failure": null,
+      "restore_failure": "AssertionError('native hold not settled for torque match')",
+      "can_transmitter": "persistent vendor C++ driver only",
+      "power_commands_sent": 0,
+      "stages": {
+        "native_settled_before_recovery": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_before_restore": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.007169379331573969,
+            0.0,
+            0.020681392603013948
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-linear-mit-restore-v2",
+      "failure": null,
+      "restore_failure": null,
+      "can_transmitter": "persistent vendor C++ driver only",
+      "power_commands_sent": 0,
+      "stages": {
+        "native_settled_before_recovery": {
+          "velocity_rms_rad_s": [
+            0.0016401219466856726,
+            0.0,
+            0.0,
+            0.011800000000000001,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "native_before_restore": {
+          "velocity_rms_rad_s": [
+            0.0012727922061357858,
+            0.0,
+            0.0,
+            0.0032649655434629017,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_gain_continuity": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "mit_final_hold": {
+          "velocity_rms_rad_s": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "joint_position_range_rad": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "restore_max_excursion_rad": 1.3322676295501878e-15
+    }
+  ],
+  "paths": [
+    {
+      "record": ".runtime/tcp-smooth/native-j-z10-probe/line-z10",
+      "failure": null,
+      "result": {
+        "id": "line-z10",
+        "kind": "movel",
+        "status": "succeeded",
+        "duration": 3.7500000000000004,
+        "error": null
+      },
+      "native_diagnostic": true,
+      "duration": 3.7500000000000004,
+      "final_joint_error_rad": [
+        1.7531907158668814e-09,
+        0.0014757965797032035,
+        0.0012478230571173476,
+        0.00013872034472073302,
+        -3.238934294380602e-11,
+        1.7527743601399537e-09
+      ],
+      "camera": {
+        "translation_px": 23.280660334393893,
+        "fitted_delay_s": 0.06999999999999994,
+        "velocity_nrmse": 0.17150023050883434,
+        "peak_ratio": 1.4815784353451162,
+        "middle_minimum_ratio": 0.4052956340394014,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.32987335456245387,
+        "post_plan_excursion_px": 0.13236990056284229,
+        "final_window_excursion_px": 0.0716916519096062,
+        "cross_track_rms_px": 0.12244971217501298,
+        "completion_delay_s": 0.00018334388732865747
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-j-z10-probe/line-z10-return",
+      "failure": null,
+      "result": {
+        "id": "line-z10-return",
+        "kind": "movel",
+        "status": "succeeded",
+        "duration": 3.7499999999532307,
+        "error": null
+      },
+      "native_diagnostic": true,
+      "duration": 3.7499999999532307,
+      "final_joint_error_rad": [
+        -2.1239086878122038e-14,
+        -0.0006108652566574335,
+        -0.00017453290381319597,
+        0.0003316125345902421,
+        -3.830442907304388e-14,
+        1.3579405143086e-13
+      ],
+      "camera": {
+        "translation_px": 22.824812168488553,
+        "fitted_delay_s": 0.03999999999999995,
+        "velocity_nrmse": 0.14568524351594112,
+        "peak_ratio": 1.322767135790275,
+        "middle_minimum_ratio": 0.3176556638073919,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.3369111989239409,
+        "post_plan_excursion_px": 0.08387331827935922,
+        "final_window_excursion_px": 0.017769201304067644,
+        "cross_track_rms_px": 0.1432618045212643,
+        "completion_delay_s": 0.00024271016029464576
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-j-dedup-z10-probe/line-z10",
+      "failure": null,
+      "result": {
+        "id": "line-z10",
+        "kind": "movel",
+        "status": "succeeded",
+        "duration": 3.7500000000000004,
+        "error": null
+      },
+      "native_diagnostic": true,
+      "duration": 3.7500000000000004,
+      "final_joint_error_rad": [
+        1.7542736291398242e-09,
+        0.0013818303835531065,
+        0.0006171967510728571,
+        -0.00025369787434281754,
+        -3.103177523972045e-11,
+        1.753881691214817e-09
+      ],
+      "camera": {
+        "translation_px": 23.220602713582373,
+        "fitted_delay_s": 0.05999999999999994,
+        "velocity_nrmse": 0.21291661625197114,
+        "peak_ratio": 1.7757083955511237,
+        "middle_minimum_ratio": 0.19796139757139455,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.368944782593376,
+        "post_plan_excursion_px": 0.16793712009037837,
+        "final_window_excursion_px": 0.07644556181945383,
+        "cross_track_rms_px": 0.14633654041472244,
+        "completion_delay_s": 0.0005731582641597122
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-j-dedup-z10-probe/line-z10-return",
+      "failure": null,
+      "result": {
+        "id": "line-z10-return",
+        "kind": "movel",
+        "status": "succeeded",
+        "duration": 3.7499999999532565,
+        "error": null
+      },
+      "native_diagnostic": true,
+      "duration": 3.7499999999532565,
+      "final_joint_error_rad": [
+        -2.1266842453737667e-14,
+        -0.0010821041547230958,
+        -0.0013788100876657161,
+        0.0012391837456049437,
+        -3.83399909043014e-14,
+        1.3580577487843054e-13
+      ],
+      "camera": {
+        "translation_px": 22.578378111122458,
+        "fitted_delay_s": 0.04499999999999994,
+        "velocity_nrmse": 0.17798748764254477,
+        "peak_ratio": 1.4162758279261003,
+        "middle_minimum_ratio": 0.2672516739043792,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.3839328267139679,
+        "post_plan_excursion_px": 0.08926890331619913,
+        "final_window_excursion_px": 0.032157362339285143,
+        "cross_track_rms_px": 0.15257075368605996,
+        "completion_delay_s": 0.0005166531076565839
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/native-js-z10-probe-v2/line-z10",
+      "failure": "probe interrupted: OSError(105, 'No buffer space available')",
+      "result": {
+        "status": "aborted",
+        "error": "probe interrupted: OSError(105, 'No buffer space available')"
+      },
+      "native_diagnostic": true,
+      "duration": 3.7500000000000004,
+      "final_joint_error_rad": [
+        1.7507587896786747e-09,
+        0.008211935178993546,
+        0.014604918982791704,
+        -0.008993846477685308,
+        -3.206942090355769e-11,
+        1.75034814711047e-09
+      ],
+      "camera": {
+        "translation_px": 16.997663854354688,
+        "fitted_delay_s": 0.1899999999999999,
+        "velocity_nrmse": 0.7136009254144576,
+        "peak_ratio": 4.045576111892227,
+        "middle_minimum_ratio": -1.1482647201216698,
+        "middle_stopped_fraction": 0.24444444444444444,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 1.0013037600335928,
+        "post_plan_excursion_px": 0.07868724144009205,
+        "final_window_excursion_px": 0.022576222737419032,
+        "cross_track_rms_px": 0.7876083933933856,
+        "completion_delay_s": 5.000661134719849
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/mit-after-native-line-z10",
+      "failure": null,
+      "result": {
+        "id": "b31f429fa9c24297b3bff8ded2cd1f33",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.7500000000000004,
+        "error": null
+      },
+      "native_diagnostic": false,
+      "duration": 3.7500000000000004,
+      "final_joint_error_rad": [
+        1.7538067404593294e-09,
+        0.00046095475411234155,
+        0.003524150243006341,
+        -0.0013147512332849498,
+        -3.160499119359006e-11,
+        1.7534043708440582e-09
+      ],
+      "camera": {
+        "translation_px": 22.654397024027368,
+        "fitted_delay_s": 0.03499999999999996,
+        "velocity_nrmse": 0.2145018951691005,
+        "peak_ratio": 1.8018064914173677,
+        "middle_minimum_ratio": 0.20407951970408852,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.3407094198740962,
+        "post_plan_excursion_px": 0.15778362964008127,
+        "final_window_excursion_px": 0.025541235674020606,
+        "cross_track_rms_px": 0.46039454426745724,
+        "completion_delay_s": 0.01448893547058061
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/mit-after-native-line-z10-return",
+      "failure": null,
+      "result": {
+        "id": "b60d19e8094143dea34dce01b8bff990",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.7499999999532307,
+        "error": null
+      },
+      "native_diagnostic": false,
+      "duration": 3.7499999999532307,
+      "final_joint_error_rad": [
+        -2.1241688963336003e-14,
+        -0.0013264502499896746,
+        -0.0008028514345179705,
+        -0.00012217307094131158,
+        -3.830876588173382e-14,
+        1.3540033977506804e-13
+      ],
+      "camera": {
+        "translation_px": 22.447602670982274,
+        "fitted_delay_s": -0.045000000000000005,
+        "velocity_nrmse": 0.18566822341644942,
+        "peak_ratio": 1.3968320115215145,
+        "middle_minimum_ratio": 0.3749494172600501,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.37822461730050927,
+        "post_plan_excursion_px": 2.0407901675836526,
+        "final_window_excursion_px": 0.025325149990460042,
+        "cross_track_rms_px": 0.7630233349065179,
+        "completion_delay_s": 0.8832852840891277
+      }
+    }
+  ]
+}

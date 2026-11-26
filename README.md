@@ -154,8 +154,11 @@ python examples/trajectory.py --url http://127.0.0.1:8090
   停止、取消和实时流超时会保持最后目标并将目标速度归零。实时流默认超时
   `0.2 s`，使用 `--stream-timeout` 配置。
   反馈中断或硬件报错会中止任务。停止后新输入可重新开始，生产者应停止旧流。
-- 默认终点容差 `0.01 rad`、轨迹结束后最多等 `5 s`，可用 `--goal-tolerance` 和
-  `--goal-timeout` 调整。失败会报告 `aborted`，不会把未到达伪报成成功。
+- 默认要求终点误差不超过 `0.01 rad`，所有关节速度不超过 `0.02 rad/s`，并连续
+  保持 `0.15 s` 才报告成功。轨迹结束后最多等 `5 s`；分别用 `--goal-tolerance`、
+  `--goal-velocity-tolerance`、`--goal-settle-time`、`--goal-timeout` 调整。
+  速度反馈无效或未稳定会报告 `aborted`。到位后等待速度稳定期间冻结位置积分修正；
+  若误差再次超出位置容差，允许有界修正继续收敛。
 - 默认 [位置控制 profile](piper_control/assets/position_control.yaml) 调整 J1–J4 的
   kp/kd，并以 `friction_scale=0` 关闭摩擦前馈，改善原柔顺参数的稳态误差与低速
   黏滑。J4 基础 `kp=32`、`kd=0.53`，替换会在本机保持时振荡的旧值 `64/2.12`。

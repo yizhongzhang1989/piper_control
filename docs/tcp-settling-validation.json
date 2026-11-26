@@ -1,0 +1,299 @@
+{
+  "smoothness_goal_complete": false,
+  "controller_defaults": {
+    "goal_velocity_tolerance_rad_s": 0.02,
+    "goal_settle_time_s": 0.15,
+    "goal_timeout_s": 5
+  },
+  "hardware_goal_tolerance_rad": 0.005,
+  "notes": [
+    "New velocity dwell fixes success reporting, not all observed in-motion speed ripple.",
+    "All six trials used the public API; their CAN recorder transmitted no frames.",
+    "Arc scoring reuses the independent earlier XYZ local camera projection, at a nearby pose. Projection has not been calibrated as metric 3D accuracy.",
+    "The controller cannot guarantee that later external disturbances do not move an already completed goal.",
+    "Native-mode investigation and its failures are separately recorded in tcp-native-validation.json."
+  ],
+  "trials": [
+    {
+      "record": ".runtime/tcp-smooth/settling-line-z10",
+      "controller_version": "freeze at reference end (rejected)",
+      "result": {
+        "id": "e9d063fc932f43f89a15ce577587f484",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.749999999999998,
+        "error": null
+      },
+      "failure": null,
+      "completion_delay_s": 0.1629149913787864,
+      "max_final_joint_error_rad": 0.0013372076950275424,
+      "post_terminal_actuator_target_range_rad": 0.0,
+      "post_terminal_integral_range_rad": 0.0,
+      "camera": {
+        "translation_px": 24.148830466090214,
+        "fitted_delay_s": -0.05,
+        "velocity_nrmse": 0.18456389340576743,
+        "peak_ratio": 1.1962611292188399,
+        "middle_minimum_ratio": 0.2090001658337028,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.35285636161168016,
+        "post_plan_excursion_px": 1.0690707415364622,
+        "final_window_excursion_px": 0.04740822138877333,
+        "cross_track_rms_px": 0.7804466244364889,
+        "completion_delay_s": 0.1629149913787864
+      },
+      "hold": {
+        "record": ".runtime/tcp-smooth/settling-line-z10-hold.json",
+        "passed": true,
+        "errors": []
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/settling-line-z10-return",
+      "controller_version": "freeze at reference end (rejected)",
+      "result": {
+        "id": "31b26e656e66400080c264d7b2802766",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.7499999999548366,
+        "error": null
+      },
+      "failure": null,
+      "completion_delay_s": 0.4207255840753148,
+      "max_final_joint_error_rad": 0.004782202169861138,
+      "post_terminal_actuator_target_range_rad": 0.0,
+      "post_terminal_integral_range_rad": 0.0,
+      "camera": {
+        "translation_px": 20.28186967660471,
+        "fitted_delay_s": 0.03499999999999996,
+        "velocity_nrmse": 0.2067599454178255,
+        "peak_ratio": 1.5240636688487288,
+        "middle_minimum_ratio": 0.2594857170707667,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.39832762307647024,
+        "post_plan_excursion_px": 0.09270256400512385,
+        "final_window_excursion_px": 0.025647788190587578,
+        "cross_track_rms_px": 0.5738873836605705,
+        "completion_delay_s": 0.4207255840753148
+      },
+      "hold": {
+        "record": ".runtime/tcp-smooth/settling-line-z10-return-hold.json",
+        "passed": true,
+        "errors": []
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/settling-arc-yz20",
+      "controller_version": "freeze at reference end (rejected)",
+      "result": {
+        "id": "12c34d1eeefe429898892532e09a2269",
+        "kind": "movec",
+        "status": "aborted",
+        "progress": 1.0,
+        "duration": 2.945243112740429,
+        "error": "goal tracking error 0.0053 rad exceeds tolerance"
+      },
+      "failure": "motion did not succeed",
+      "completion_delay_s": 5.002439029517261,
+      "max_final_joint_error_rad": 0.005288308948058873,
+      "post_terminal_actuator_target_range_rad": 0.0,
+      "post_terminal_integral_range_rad": 0.0,
+      "camera": {
+        "velocity_nrmse": 0.23916920934219382,
+        "fitted_delay_s": 0.04499999999999994,
+        "peak_speed_ratio": 1.4026569586517412,
+        "middle_stopped_fraction": 0.0,
+        "position_rms_px": 1.478307131382093,
+        "projection_sources": [
+          ".runtime/tcp-smooth/hd-base-line-x20",
+          ".runtime/tcp-smooth/hd-base-line-y20",
+          ".runtime/tcp-smooth/hd-base-line-z20"
+        ],
+        "calibration_endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.26116833410199586,
+        "post_plan_excursion_px": 0.21920779312867159,
+        "final_window_excursion_px": 0.04830494666212558,
+        "completion_delay_s": 5.002439029517261
+      },
+      "hold": {
+        "record": ".runtime/tcp-smooth/settling-arc-yz20-hold.json",
+        "passed": true,
+        "errors": []
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/position-dwell-return",
+      "controller_version": "freeze inside goal position tolerance",
+      "result": {
+        "id": "ccd6322e851242319683467dadaf6a66",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8749999999965448,
+        "error": null
+      },
+      "failure": null,
+      "completion_delay_s": 0.16449689865457828,
+      "max_final_joint_error_rad": 0.00478220215088343,
+      "post_terminal_actuator_target_range_rad": 0.0,
+      "post_terminal_integral_range_rad": 0.0,
+      "camera": {
+        "translation_px": 9.781860322364299,
+        "fitted_delay_s": 0.06999999999999994,
+        "velocity_nrmse": 0.16930451592494458,
+        "peak_ratio": 1.446727216710505,
+        "middle_minimum_ratio": 0.3492981724956961,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.27754433096606124,
+        "post_plan_excursion_px": 0.09916720627502813,
+        "final_window_excursion_px": 0.05365699912679425,
+        "cross_track_rms_px": 0.13558342790072814,
+        "completion_delay_s": 0.16449689865457828
+      },
+      "hold": {
+        "record": ".runtime/tcp-smooth/position-dwell-return-hold.json",
+        "passed": true,
+        "errors": []
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/position-dwell-arc-yz20",
+      "controller_version": "freeze inside goal position tolerance",
+      "result": {
+        "id": "1a21f427e3874745896326ec9b44f09c",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "completion_delay_s": 0.16471577435978846,
+      "max_final_joint_error_rad": 0.0034906198048905157,
+      "post_terminal_actuator_target_range_rad": 0.0,
+      "post_terminal_integral_range_rad": 0.0,
+      "camera": {
+        "velocity_nrmse": 0.23638626017446135,
+        "fitted_delay_s": 0.05499999999999995,
+        "peak_speed_ratio": 1.3115737059266894,
+        "middle_stopped_fraction": 0.0,
+        "position_rms_px": 2.7049642830586786,
+        "projection_sources": [
+          ".runtime/tcp-smooth/hd-base-line-x20",
+          ".runtime/tcp-smooth/hd-base-line-y20",
+          ".runtime/tcp-smooth/hd-base-line-z20"
+        ],
+        "calibration_endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.2566958913804724,
+        "post_plan_excursion_px": 0.061492682168627646,
+        "final_window_excursion_px": 0.023787235837947,
+        "completion_delay_s": 0.16471577435978846
+      },
+      "hold": {
+        "record": ".runtime/tcp-smooth/position-dwell-arc-yz20-hold.json",
+        "passed": true,
+        "errors": []
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/position-dwell-arc-yz20-return",
+      "controller_version": "freeze inside goal position tolerance",
+      "result": {
+        "id": "5c72493f2f6440fbb8970831fe8ededa",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.875000000178915,
+        "error": null
+      },
+      "failure": null,
+      "completion_delay_s": 0.17057371121634857,
+      "max_final_joint_error_rad": 0.0021293016169226147,
+      "post_terminal_actuator_target_range_rad": 0.0,
+      "post_terminal_integral_range_rad": 0.0,
+      "camera": {
+        "translation_px": 9.731866814169168,
+        "fitted_delay_s": 0.06999999999999994,
+        "velocity_nrmse": 0.17333234078748241,
+        "peak_ratio": 1.4516193580632586,
+        "middle_minimum_ratio": 0.4604491153860251,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.2755436028680231,
+        "post_plan_excursion_px": 0.25076839625795355,
+        "final_window_excursion_px": 0.03374154020107424,
+        "cross_track_rms_px": 0.32184413185700395,
+        "completion_delay_s": 0.17057371121634857
+      },
+      "hold": {
+        "record": ".runtime/tcp-smooth/position-dwell-arc-yz20-return-hold.json",
+        "passed": true,
+        "errors": []
+      }
+    }
+  ],
+  "checks": {
+    "hardware_api": {
+      "record": ".runtime/tcp-smooth/position-dwell-hardware-acceptance.json",
+      "passed": true,
+      "tests": [
+        "movej",
+        "follow_trajectory",
+        "movel",
+        "movec",
+        "return_before_stream",
+        "servo_joints_watchdog",
+        "servo_tcp_watchdog",
+        "servo_twist_watchdog",
+        "stop_cancel",
+        "return_to_start"
+      ]
+    },
+    "simulation_api": {
+      "record": ".runtime/tcp-smooth/position-dwell-sim-acceptance.json",
+      "passed": true,
+      "tests": [
+        "movej",
+        "follow_trajectory",
+        "movel",
+        "movec",
+        "return_before_stream",
+        "servo_joints_watchdog",
+        "servo_tcp_watchdog",
+        "servo_twist_watchdog",
+        "stop_cancel",
+        "return_to_start"
+      ]
+    },
+    "ros": {
+      "record": ".runtime/tcp-smooth/position-dwell-ros-trajectory.json",
+      "passed": true,
+      "measured_excursion_rad": 0.011362093430483085,
+      "max_final_error_rad": 0.0037175513067480015,
+      "status": 4,
+      "error_code": 0
+    },
+    "stationary_can_audio": {
+      "record": ".runtime/tcp-smooth/position-dwell-final-hold.json",
+      "passed": true
+    },
+    "unit_regression": {
+      "passed": 88,
+      "log": ".runtime/tcp-smooth/position-dwell-full-tests.log"
+    },
+    "dashboard": {
+      "model_loaded": true,
+      "page_errors": [],
+      "record": ".runtime/tcp-smooth/position-dwell-dashboard.json"
+    }
+  }
+}

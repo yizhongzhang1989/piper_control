@@ -16,7 +16,7 @@ class FeedbackBackend:
         self.connected = True
 
     def read(self):
-        return {"positions": self.q.tolist(), "enabled": True,
+        return {"positions": self.q.tolist(), "velocities": [0.]*6, "enabled": True,
                 "connected": self.connected, "feedback_age": 0., "errors": []}
 
     def step(self, dt):
@@ -60,6 +60,7 @@ def test_stream_solver_fault_preserves_the_previous_successful_motion(monkeypatc
     motion = controller.movej(backend.q + [0.02, 0, 0, 0, 0, 0], duration=1)
     controller._tick(controller._start + 1.01, .005)
     controller._tick(controller._start + 1.02, .005)
+    controller._tick(controller._start + 1.18, .005)
     assert controller.motion(motion["id"])["status"] == "succeeded"
 
     def fail_solver(*args):

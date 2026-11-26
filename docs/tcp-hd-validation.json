@@ -1863,6 +1863,6 @@
   "later_scene_observation": {
     "record": ".runtime/tcp-smooth/terminal-current-state.json",
     "camera": ".runtime/tcp-smooth/terminal-current-scene.jpg",
-    "note": "People subsequently observed close to the arm; position changed while the commanded actuator target stayed fixed. Physical contact is not yet confirmed. No further autonomous motions initiated; user clarification pending."
+    "note": "User subsequently confirmed the arm was touched and the area is now clear. Fresh camera observation also shows the nearby workspace clear. Measured displacement after the previous validation is not classified as autonomous drift."
   }
 }

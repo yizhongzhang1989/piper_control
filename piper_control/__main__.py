@@ -26,6 +26,8 @@ def main():
     parser.add_argument("--stream-timeout", type=float, default=.2)
     parser.add_argument("--goal-tolerance", type=float, default=.01, help="measured terminal joint error tolerance, rad")
     parser.add_argument("--goal-timeout", type=float, default=5., help="settling time allowed after trajectory end, s")
+    parser.add_argument("--goal-velocity-tolerance", type=float, default=.02, help="maximum terminal joint speed, rad/s")
+    parser.add_argument("--goal-settle-time", type=float, default=.15, help="continuous position and speed dwell before success, s")
     parser.add_argument("--control-profile", default=str(Path(__file__).parent/"assets/position_control.yaml"),
                         help="kp/kd and optional friction_scale YAML; 'source' restores original arm settings")
     parser.add_argument("--workspace", default=os.environ.get("PIPER_WORKSPACE", str(Path.home()/"Documents/Piper_workspace")))
@@ -40,8 +42,11 @@ def main():
     if args.backend == "hardware" and args.arm_config:
         parser.error("--arm-config is for simulation; hardware uses --workspace and --arm configuration")
     if not 1 <= args.rate <= 200 or not all(math.isfinite(x) and x > 0 for x in (
-            args.max_velocity, args.stream_timeout, args.goal_tolerance, args.goal_timeout)):
+            args.max_velocity, args.stream_timeout, args.goal_tolerance, args.goal_timeout,
+            args.goal_velocity_tolerance, args.goal_settle_time)):
         parser.error("rate must be 1..200 Hz; velocity, timeout and tolerance must be positive and finite")
+    if args.goal_settle_time > args.goal_timeout:
+        parser.error("goal-settle-time cannot exceed goal-timeout")
     from .model import RobotModel
     from .controller import RobotController
     from .server import create_app
@@ -80,7 +85,9 @@ def main():
                 raise
     controller = RobotController(backend, model, rate_hz=args.rate, max_velocity=args.max_velocity,
                                  stream_timeout=args.stream_timeout, goal_tolerance=args.goal_tolerance,
-                                 goal_timeout=args.goal_timeout)
+                                 goal_timeout=args.goal_timeout,
+                                 goal_velocity_tolerance=args.goal_velocity_tolerance,
+                                 goal_settle_time=args.goal_settle_time)
     bridge = None
     try:
         if args.ros:

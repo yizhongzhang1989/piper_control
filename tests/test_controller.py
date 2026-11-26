@@ -48,6 +48,61 @@ def test_invalid_path_has_no_execution_and_goal_uses_measured_feedback():
     assert np.allclose(backend.command_velocities[-1], 0)
 
 
+def test_goal_waits_for_continuous_position_and_velocity_dwell(monkeypatch):
+    backend = StationaryFeedback()
+    velocity = [0.] * 6
+    read = backend.read
+    monkeypatch.setattr(backend, "read", lambda: dict(read(), velocities=velocity.copy()))
+    controller = RobotController(backend, RobotModel(), goal_tolerance=.005,
+                                 goal_velocity_tolerance=.02, goal_settle_time=.15)
+    motion = controller.movej(backend.q, duration=1)
+    start = controller._start
+    velocity[3] = .12  # Inside position tolerance, still physically moving.
+    for t in (1., 1.1, 1.2):
+        controller._tick(start+t, .005)
+        assert controller.motion(motion['id'])['status'] == 'running'
+    velocity[3] = 0.
+    controller._tick(start+1.21, .005)
+    controller._tick(start+1.30, .005)
+    velocity[3] = -.03  # A brief reversal must restart the dwell.
+    controller._tick(start+1.31, .005)
+    velocity[3] = 0.
+    controller._tick(start+1.32, .005)
+    controller._tick(start+1.46, .005)
+    assert controller.motion(motion['id'])['status'] == 'running'
+    controller._tick(start+1.48, .005)
+    assert controller.motion(motion['id'])['status'] == 'succeeded'
+    assert np.allclose(backend.command_velocities[-1], 0)
+
+
+@pytest.mark.parametrize('velocity', [[.03]*6, [], [float('nan')]*6])
+def test_goal_velocity_failure_cannot_be_reported_as_success(monkeypatch, velocity):
+    backend = StationaryFeedback()
+    read = backend.read
+    monkeypatch.setattr(backend, 'read', lambda: dict(read(), velocities=velocity))
+    controller = RobotController(backend, RobotModel(), goal_timeout=.3)
+    motion = controller.movej(backend.q, duration=1)
+    controller._tick(controller._start+1.01, .005)
+    controller._tick(controller._start+1.31, .005)
+    result = controller.motion(motion['id'])
+    assert result['status'] == 'aborted'
+    assert ('settle' if velocity and np.isfinite(velocity[0]) else 'velocity feedback') in result['error']
+    assert np.allclose(backend.commands[-1], backend.q)
+
+
+def test_goal_dwell_cannot_bridge_a_long_control_gap():
+    backend = StationaryFeedback()
+    controller = RobotController(backend, RobotModel(), feedback_timeout=.1)
+    motion = controller.movej(backend.q, duration=1)
+    start = controller._start
+    controller._tick(start+1.01, .005)
+    controller._tick(start+1.3, .005)
+    assert controller.motion(motion['id'])['status'] == 'running'
+    for t in (1.36, 1.42, 1.46):
+        controller._tick(start+t, .005)
+    assert controller.motion(motion['id'])['status'] == 'succeeded'
+
+
 def test_following_error_does_not_step_targets_at_command_boundaries():
     backend = StationaryFeedback()
     backend.initial_target = np.asarray(backend.q) + [0, 0, 0, .012, 0, 0]
