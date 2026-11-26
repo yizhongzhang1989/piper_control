@@ -48,8 +48,12 @@ J1–J3 的位置增益继续用于减小稳态偏差；低速位置控制保持
 `extra.friction_scale` 及 `extra.driver` 的 `applied_kp`、`applied_kd`、
 `gravity_scale_applied`、`friction_scale_applied` 可核对实际运行设置。
 
-真机示例显式使用 `--max-velocity 0.05`。它约束下发的关节目标速度，不能保证
-实际速度绝不超过 0.05 rad/s。当前参数完整 10 项真机运动复验通过，最大终点
+当前真机示例使用 `--max-velocity 3.141592653589793`，即服务上限 180°/s；
+J1–J5 的有效上限为 180°/s，J6 保留原 URDF 的 `3 rad/s`（约 171.9°/s）约束。
+Dashboard 按填写的运动时间规划轨迹，提高上限不会自动缩短已填写的时长。
+这项启动参数同样约束通用接口；历史真机验收仍使用 `0.05 rad/s`。
+它约束下发的关节目标速度，不能保证实际速度绝不超过设定值。
+以 `0.05 rad/s` 上限完成的 10 项真机运动复验通过，最大终点
 误差 `0.00955 rad`，记录的运动采样速度峰值 `0.113 rad/s`；各轮实测结果与
 对应参数见 [验证记录](validation.md)。旧参数的终点通过记录不能代替静止复验。
 
@@ -120,7 +124,7 @@ ROS 适配层。全过程保留 MIT 模式，不发送固件关节位置指令�
 ```bash
 source scripts/env.sh
 python -m piper_control --backend hardware --workspace "$PIPER_WORKSPACE" \
-  --arm arm_2 --launch-driver --ros --max-velocity 0.05 --port 8090
+  --arm arm_2 --launch-driver --ros --max-velocity 3.141592653589793 --port 8090
 ```
 
 构建仓库内的修订驱动仅供下一次有计划启动使用；不要在运行中的机械臂上热替换 CAN

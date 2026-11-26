@@ -48,7 +48,7 @@ source scripts/env.sh
 # 本机已有 control_msgs；新环境缺少时可用户目录安装：
 # bash scripts/install_ros_extras.sh && source scripts/env.sh
 python -m piper_control --backend hardware --arm arm_2 \
-  --launch-driver --ros --max-velocity 0.05 --port 8090
+  --launch-driver --ros --max-velocity 3.141592653589793 --port 8090
 ```
 
 真机 dashboard 为 <http://127.0.0.1:8090>。`--launch-driver` 会复用已运行驱动，
@@ -63,7 +63,7 @@ python -m piper_control --backend hardware --arm arm_2 \
 bash scripts/build_vendor.sh
 export PIPER_WORKSPACE="$PWD/vendor/Piper_workspace"
 source scripts/env.sh
-python -m piper_control --backend hardware --launch-driver --ros --max-velocity 0.05
+python -m piper_control --backend hardware --launch-driver --ros --max-velocity 3.141592653589793
 ```
 
 `scripts/env.sh` 优先选择已构建的仓库内修订驱动，否则复用已安装的原工作空间；
@@ -122,7 +122,10 @@ python examples/trajectory.py --url http://127.0.0.1:8090
 
 - 关节限位、惯性和三维模型来自同一套 URDF。笛卡尔轨迹在执行前完成全路径采样
   逆解、分支连续性及速度检查；上层到达时间不会被静默改写。
-- 默认软件关节速度上限为 `0.3 rad/s`，本次真机位置控制使用 `0.05 rad/s`。
+- 未指定参数时，软件关节速度上限为 `0.3 rad/s`。当前真机启动示例使用
+  `π rad/s`（180°/s）；J1–J5 生效为 180°/s，J6 受原模型的 `3 rad/s`
+  限制，生效约 171.9°/s。Dashboard 的运动时间仍决定实际规划速度。
+  文档中的低速真机验收使用 `0.05 rad/s`，不代表已验证 180°/s 的运动。
   `--max-velocity` 限制下发目标的速度，且不超过模型速度上限；实际速度受跟踪误差、
   阻尼和摩擦影响，可能短时超过指令上限。这不是硬件实际速度的保证值。
 - 新轨迹与实时流从最后下发的位置目标接续，避免静态跟踪误差变成目标跳变。
