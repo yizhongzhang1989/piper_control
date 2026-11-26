@@ -95,6 +95,7 @@ def test_target_handoff_and_runtime_profile_remain_continuous(tmp_path, monkeypa
         control = String()
         control.data = json.dumps({"mode": "mit", "mit_ready": True,
                                    "position_hold_on_timeout": persistent[0],
+                                   "gravity_scale_applied": config.get("gravity_scale", 1.),
                                    "friction_scale_applied": friction[0],
                                    "mit_target": received[-1][1] if received else actual})
         control_pub.publish(control)

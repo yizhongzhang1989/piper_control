@@ -1,0 +1,257 @@
+"""Hardware boundary tests with fake feedback: no ROS publisher or CAN socket."""
+import json
+from pathlib import Path
+from types import SimpleNamespace
+import threading
+import time
+
+import pytest
+import yaml
+
+from piper_control.backends.motor_feedback import EncoderSample
+from piper_control.backends.tracking import ReferenceFeedforward, TrackingBackend
+
+
+Q = (0., 1.53, -1.24, 1.35, 0., 0.)
+OFFSET = (.001, -.02, -.008, .001, -.004, -.002)
+MOTOR = tuple(q+o for q, o in zip(Q, OFFSET))
+
+
+class Raw:
+    config = {'can_port': 'fake_tracking'}
+    namespace = '/test_tracking'
+    kp, kd = [51, 64, 60, 32, 3, 3], [10, 12, 20, 1.6, .3, .08]
+
+    def __init__(self):
+        self.initial_target = list(MOTOR)
+        self.sent = []
+        self.enabled = True
+        self.enable_calls = []
+        self.held = None
+
+    def read(self):
+        return dict(positions=list(Q), enabled=self.enabled, command_ready=self.enabled,
+                    extra={'driver': {'applied_kd': self.kd, 'gravity_torque': [0, -7, -6, -.1, 0, 0]}})
+
+    def step(self, dt):
+        pass
+
+    def command(self, q, dq=None, torque=None):
+        self.sent.append((tuple(q), tuple(dq), tuple(torque)))
+
+    def enable(self, enabled, hold_target=None):
+        self.enable_calls.append((enabled, hold_target))
+        self.enabled = enabled
+
+    def hold(self):
+        self.held = self.sent[-1][0]
+
+    def close(self):
+        pass
+
+
+class Receiver:
+    value = EncoderSample(MOTOR, Q, (0.,)*6, .001)
+
+    def sample(self):
+        return self.value
+
+    def close(self):
+        pass
+
+
+class Feedforward:
+    last = {}
+
+    def evaluate(self, *args):
+        return [0.]*6
+
+
+def backend(tmp_path):
+    return TrackingBackend(Raw(), {}, receiver=Receiver(), feedforward=Feedforward(),
+                           state_path=tmp_path/'coordinates.json')
+
+
+def test_coordinate_target_and_restart_hold_do_not_double_apply_offset(tmp_path):
+    first = backend(tmp_path)
+    target = [v+.003 for v in Q]
+    try:
+        assert first.initial_target == pytest.approx(Q)
+        first.command(target)
+        first.hold()
+        held = first.raw.held
+        assert held == pytest.approx([q+o for q, o in zip(target, OFFSET)])
+    finally:
+        first.close()
+    raw = Raw()
+    raw.initial_target = held
+    # Changed measurement must not recapture a different public goal on restart.
+    receiver = Receiver()
+    receiver.value = EncoderSample(tuple(m+.004 for m in MOTOR), Q, (0.,)*6, .001)
+    second = TrackingBackend(raw, {}, receiver=receiver, feedforward=Feedforward(),
+                             state_path=tmp_path/'coordinates.json')
+    try:
+        assert second.initial_target == pytest.approx(target)
+        second.command(second.initial_target)
+        second.hold()
+        assert second.raw.held == pytest.approx(held)
+    finally:
+        second.close()
+
+
+def test_stale_feedback_rejects_command_and_preserves_last_raw_hold(tmp_path):
+    b = backend(tmp_path)
+    try:
+        b.command(Q)
+        previous = b.raw.sent.copy()
+        b.receiver.value = EncoderSample(MOTOR, Q, (0.,)*6, .2)
+        with pytest.raises(RuntimeError, match='Fresh'):
+            b.command([x+.01 for x in Q])
+        assert b.raw.sent == previous
+        b.hold()
+        assert b.raw.held == pytest.approx(MOTOR)
+    finally:
+        b.close()
+
+
+def test_fast_feedback_freezes_observer_and_repeated_enable_keeps_goal(tmp_path):
+    b = backend(tmp_path)
+    try:
+        b._freeze_until = 0
+        b.receiver.value = EncoderSample(tuple(m+.01 for m in MOTOR), Q, (1.,)*6, .001)
+        b.step(.005)
+        assert b.mapper.offset == pytest.approx(OFFSET)
+        b.enable(True)
+        assert not b.raw.enable_calls
+        b.receiver.value = EncoderSample(MOTOR, Q, (0.,)*6, .001)
+        b.raw.enabled = False
+        b.enable(True)
+        assert b.raw.enable_calls[-1][1] == pytest.approx(MOTOR)
+    finally:
+        b.close()
+
+
+def test_checkpoint_failure_cannot_prevent_native_hold(tmp_path, monkeypatch):
+    b = backend(tmp_path)
+    try:
+        b.command(Q)
+        with monkeypatch.context() as patch:
+            def fail():
+                raise OSError('disk full')
+            patch.setattr(b, '_checkpoint', fail)
+            b.hold()
+            assert b.raw.held == pytest.approx(MOTOR)
+            assert b.read()['extra']['motor_mapping']['checkpoint_error'] == 'disk full'
+    finally:
+        b.close()
+
+
+def test_corrupt_checkpoint_falls_back_without_actuator_jump(tmp_path):
+    (tmp_path/'coordinates.json').write_text('{broken')
+    b = backend(tmp_path)
+    try:
+        b.command(b.initial_target)
+        assert b.raw.sent[-1][0] == pytest.approx(MOTOR)
+    finally:
+        b.close()
+
+
+def make_feedforward(settings):
+    pytest.importorskip('piper_x_driver._core')
+    config_path = Path('vendor/Piper_workspace/config/arms/arm_2.yaml')
+    return ReferenceFeedforward(yaml.safe_load(config_path.read_text()), config_path,
+                                {k:v for k, v in settings.items() if k not in ('moving_kd', 'gain_ramp_rate')})
+
+
+def test_reference_feedforward_is_zero_at_rest_and_bounded_at_high_speed():
+    ff = make_feedforward({'spatial_harmonics': [{'joint': 3, 'omega': 540, 'a': -.06, 'b': .45}]})
+    raw = Raw()
+    for speed in (0., 1e-8, -.01, .03, -.1, 1.8, -3.):
+        effort = ff.evaluate(MOTOR, [speed]*6, raw.read(), Receiver.value, raw.kp, raw.kd)
+        assert all(abs(f) <= limit for f, limit in zip(effort, ff.limits))
+        if abs(speed) <= 1e-6:
+            assert effort == [0.]*6
+        if abs(speed) > 1:
+            assert max(map(abs, ff.last['spatial_torque'])) < 1e-10
+            assert not any(ff.last['clipped'])
+
+
+@pytest.mark.parametrize('settings', [
+    {'friction_scale': float('nan')}, {'velocity_remainder': 'true'},
+    {'spatial_harmonics': [{'joint': 3.0, 'omega': 540, 'b': .45}]},
+    {'spatial_harmonics': [{'joint': 3, 'omega': 540, 'b': .9}]},
+    {'spatial_harmonics': [{'joint': 3, 'omega': float('inf')}]},
+])
+def test_invalid_feedforward_configuration_rejected(settings):
+    with pytest.raises(ValueError):
+        make_feedforward(settings)
+
+
+def test_gravity_override_uses_real_service_and_retains_source_file(tmp_path):
+    from piper_control.backends.hardware import HardwareBackend
+
+    raw = HardwareBackend.__new__(HardwareBackend)
+    raw.gravity_scale, raw.friction_scale = .89, 0.
+    raw._lock = threading.RLock()
+    raw._control = {'mode': 'mit', 'gravity_scale_applied': 1., 'friction_scale_applied': 0.}
+    raw._control_received = time.monotonic()
+    raw._last_target, raw.initial_target = list(MOTOR), list(MOTOR)
+    raw.config = {'end_effector': 'gripper_with_wrench'}
+    raw.config_path = tmp_path/'arm.yaml'
+    original = b'gravity_scale: 1\nfriction_scale: 0.88\n'
+    raw.config_path.write_bytes(original)
+    raw.read = lambda: {'enabled': True}
+    raw._ConfigureArm = SimpleNamespace(Request=SimpleNamespace)
+    raw._configure_client = object()
+    sent, requested = [], []
+    raw.command = lambda q: sent.append(list(q))
+
+    def call(client, request, keepalive):
+        requested.append(request)
+        assert request.friction_scale == 0.  # A negative sentinel cannot change gravity.
+        keepalive()
+        raw.config_path.write_text('gravity_scale: 0.89\nfriction_scale: 0\n')
+        raw._control['gravity_scale_applied'] = request.gravity_scale
+        raw._control_received = time.monotonic()
+        return SimpleNamespace(success=True)
+
+    raw._call = call
+    raw._apply_gravity_scale()
+    assert raw.config_path.read_bytes() == original
+    assert sent and all(q == list(MOTOR) for q in sent)
+    assert raw._control['gravity_scale_applied'] == .89
+    raw._apply_gravity_scale()
+    assert len(requested) == 1  # Reconnecting to a matching controller changes nothing.
+
+
+def test_candidate_profile_loads_all_bounded_harmonics():
+    from piper_control.__main__ import load_control_profile
+    profile = load_control_profile('piper_control/assets/tcp_tracking.yaml')
+    ff = make_feedforward(profile['tracking'])
+    assert len(ff.harmonics) == 3
+    assert profile['gravity_scale'] == .89
+
+
+def test_motion_damping_ramps_and_shutdown_restores_hold_gain(tmp_path):
+    raw = Raw()
+    raw.kd = list(raw.kd)
+    raw.kd[3] = .53
+    moving = list(raw.kd)
+    moving[3] = 1.6
+    b = TrackingBackend(raw, {'moving_kd': moving}, receiver=Receiver(), feedforward=Feedforward(),
+                        state_path=tmp_path/'coordinates.json')
+    try:
+        prior = raw.kd[3]
+        for _ in range(20):
+            b.command(Q, [0., 0., 0., .04, 0., 0.])
+            assert 0 < raw.kd[3]-prior <= .01000001
+            prior = raw.kd[3]
+        held = raw.sent[-1][0]
+        count = len(raw.sent)
+        b.hold()
+        assert raw.kd[3] == pytest.approx(.53)
+        assert raw.held == held
+        assert all(q == held and dq == (0.,)*6 and torque == (0.,)*6
+                   for q, dq, torque in raw.sent[count:])
+    finally:
+        b.close()

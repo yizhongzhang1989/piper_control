@@ -10,3 +10,4 @@ config/local/
 *.log
 vendor/**/install/
 vendor/**/log/
+vendor/**/config/arms/*.yaml.lock

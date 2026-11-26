@@ -26,13 +26,14 @@ class HardwareBackend:
     name = "hardware"
 
     def __init__(self, workspace, arm_id="arm_2", launch_driver=False, timeout=12.0,
-                 kp=None, kd=None, friction_scale=None):
+                 kp=None, kd=None, friction_scale=None, gravity_scale=None):
         self.workspace = Path(workspace).expanduser().resolve()
         self.arm_id = arm_id
         config_path = self.workspace / "config" / "arms" / f"{arm_id}.yaml"
         if not config_path.is_file():
             raise FileNotFoundError(f"Arm configuration not found: {config_path}")
         self.config = yaml.safe_load(config_path.read_text())
+        self.config_path = config_path
         self.namespace = self.config.get("namespace", f"/{arm_id}").rstrip("/")
         self.kp = list(map(float, self.config["kp"] if kp is None else kp))
         self.kd = list(map(float, self.config["kd"] if kd is None else kd))
@@ -43,6 +44,9 @@ class HardwareBackend:
         self.friction_scale = None if friction_scale is None else float(friction_scale)
         if self.friction_scale is not None and not (math.isfinite(self.friction_scale) and 0 <= self.friction_scale <= 1):
             raise ValueError("friction_scale must be finite and within 0..1")
+        self.gravity_scale = None if gravity_scale is None else float(gravity_scale)
+        if self.gravity_scale is not None and not (math.isfinite(self.gravity_scale) and 0 <= self.gravity_scale <= 1):
+            raise ValueError("gravity_scale must be finite and within 0..1")
         self._lock = threading.RLock()
         self._positions = None
         self._velocities = []
@@ -97,6 +101,7 @@ class HardwareBackend:
                         self.command(self.initial_target)
                         if self._control.get("mode") != "mit":
                             self._set_mode("mit")
+                    self._apply_gravity_scale()
                     self._apply_friction_scale()
                     break
                 if self.driver_process and self.driver_process.poll() is not None:
@@ -278,17 +283,19 @@ class HardwareBackend:
                           "driver_pid": self.driver_process.pid if self.driver_process else None},
             }
 
-    def command(self, q, dq=None):
+    def command(self, q, dq=None, torque=None):
         values = list(map(float, q))
         velocity = [0.0] * 6 if dq is None else list(map(float, dq))
-        if len(values) != 6 or len(velocity) != 6 or not all(math.isfinite(v) for v in values + velocity):
-            raise ValueError("command requires six finite joint positions and velocities")
+        effort = [0.0] * 6 if torque is None else list(map(float, torque))
+        if (any(len(v) != 6 for v in (values, velocity, effort))
+                or not all(math.isfinite(v) for v in values + velocity + effort)):
+            raise ValueError("command requires six finite positions, velocities and torques")
         if self._closed:
             raise RuntimeError("Hardware backend is closed")
         message = self._MitCommand()
         message.position, message.velocity = values, velocity
         message.kp, message.kd = self.kp, self.kd
-        message.torque = [0.0] * 6
+        message.torque = effort
         self._publisher.publish(message)
         self._last_target = values
 
@@ -345,10 +352,57 @@ class HardwareBackend:
             time.sleep(.005)
         raise RuntimeError("Driver did not confirm the requested runtime friction_scale")
 
-    def enable(self, enabled):
+    def _apply_gravity_scale(self):
+        if self.gravity_scale is None:
+            return
+
+        def confirmed():
+            with self._lock:
+                value = self._control.get('gravity_scale_applied')
+                return (time.monotonic()-self._control_received < .2
+                        and isinstance(value, (int, float)) and math.isfinite(value)
+                        and abs(value-self.gravity_scale) < 1e-6)
+
+        if confirmed():
+            return
+        state = self.read()
+        target = list(self._last_target or self.initial_target)
+        keepalive = (lambda: self.command(target)) if state['enabled'] and self._control.get('mode') == 'mit' else None
+        request = self._ConfigureArm.Request()
+        request.end_effector = self.config['end_effector']
+        request.gravity_scale = self.gravity_scale
+        # The vendor's negative friction sentinel ignores gravity entirely.
+        # Its regular service applies gravity but also saves the source YAML.
+        # Keep this profile a local override: retain the original source bytes.
+        request.friction_scale = float(self.friction_scale if self.friction_scale is not None
+                                       else self._control['friction_scale_applied'])
+        original = self.config_path.read_bytes()
+        try:
+            response = self._call(self._configure_client, request, keepalive=keepalive)
+            if not response.success:
+                raise RuntimeError(response.message)
+        finally:
+            if self.config_path.read_bytes() != original:
+                temporary = self.config_path.with_suffix('.profile-restore.tmp')
+                temporary.write_bytes(original)
+                temporary.replace(self.config_path)
+        deadline = time.monotonic()+5.
+        while time.monotonic() < deadline:
+            if keepalive:
+                keepalive()
+            if confirmed():
+                return
+            time.sleep(.005)
+        raise RuntimeError('Driver did not confirm the requested runtime gravity_scale')
+
+    def enable(self, enabled, hold_target=None):
         state = self.read()
         if enabled and state["connected"] and state["enabled"] and state["command_ready"]:
             return
+        if hold_target is not None:
+            hold_target = list(map(float, hold_target))
+            if len(hold_target) != 6 or not all(math.isfinite(v) for v in hold_target):
+                raise ValueError("hold_target requires six finite joint positions")
         request = self._Enable.Request()
         request.enable_request = bool(enabled)
         response = self._call(self._enable_client, request)
@@ -356,7 +410,7 @@ class HardwareBackend:
             raise RuntimeError(getattr(response, "message", "Driver enable failed"))
         if enabled:
             state = self.read()
-            target = list(state["positions"])
+            target = list(state["positions"] if hold_target is None else hold_target)
             self.command(target)
             with self._lock:
                 self._ready_since = None

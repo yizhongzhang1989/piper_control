@@ -10,9 +10,10 @@ def load_control_profile(path, source_config=None):
         if source_config is None:
             return {}
         config = yaml.safe_load(Path(source_config).expanduser().read_text())
-        return {"friction_scale": float(config.get("friction_scale", 0.0))}
+        return {"friction_scale": float(config.get("friction_scale", 0.0)),
+                "gravity_scale": float(config.get("gravity_scale", 1.0))}
     profile = yaml.safe_load(Path(path).expanduser().read_text()) or {}
-    return {key: profile[key] for key in ("kp", "kd", "friction_scale") if key in profile}
+    return {key: profile[key] for key in ("kp", "kd", "friction_scale", "gravity_scale", "tracking") if key in profile}
 
 
 def main():
@@ -52,6 +53,7 @@ def main():
     source_config = (Path(args.workspace).expanduser()/"config/arms"/f"{args.arm}.yaml"
                      if args.backend == "hardware" else args.arm_config)
     gains = load_control_profile(args.control_profile, source_config)
+    tracking = gains.pop('tracking', None)
     end_effector = args.end_effector or "gripper_with_wrench"
     if args.arm_config and args.end_effector is None:
         import yaml
@@ -59,10 +61,21 @@ def main():
     model = RobotModel(tcp_offset=args.tcp_offset, tcp_orientation=args.tcp_orientation, end_effector=end_effector)
     if args.backend == "sim":
         from .backends.simulation import SimulationBackend
-        backend = SimulationBackend(model, arm_config=args.arm_config, **gains)
+        backend = SimulationBackend(model, arm_config=args.arm_config,
+                                    reference_friction_scale=None if tracking is None else tracking.get('friction_scale', .88),
+                                    moving_kd=None if tracking is None else tracking.get('moving_kd'),
+                                    gain_ramp_rate=2. if tracking is None else tracking.get('gain_ramp_rate', 2.), **gains)
     else:
         from .backends.hardware import HardwareBackend
         backend = HardwareBackend(workspace=args.workspace, arm_id=args.arm, launch_driver=args.launch_driver, **gains)
+        if tracking is not None:
+            from .backends.tracking import TrackingBackend
+            try:
+                backend = TrackingBackend(backend, tracking)
+            except Exception:
+                backend.hold()
+                backend.close()
+                raise
     controller = RobotController(backend, model, rate_hz=args.rate, max_velocity=args.max_velocity,
                                  stream_timeout=args.stream_timeout, goal_tolerance=args.goal_tolerance,
                                  goal_timeout=args.goal_timeout)

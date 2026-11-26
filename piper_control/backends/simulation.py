@@ -29,7 +29,8 @@ class SimulationBackend:
     name = "simulation"
 
     def __init__(self, model: RobotModel | None = None, initial_positions=None, arm_config=None,
-                 kp=None, kd=None, friction_scale=None):
+                 kp=None, kd=None, friction_scale=None, gravity_scale=None, reference_friction_scale=None,
+                 moving_kd=None, gain_ramp_rate=2.):
         import pybullet as bullet
 
         self._p = bullet
@@ -42,8 +43,18 @@ class SimulationBackend:
         self.kd = finite_vector(kd if kd is not None else self.config.get("kd", [5.99, 6.06, 3.16, 0.53, 0.30, 0.08]), 6, "kd")
         if np.any(self.kp < 0) or np.any(self.kd <= 0):
             raise ValueError("kp must be nonnegative and kd must be positive")
+        self._hold_kd = self.kd.copy()
+        self._moving_kd = finite_vector(self.kd if moving_kd is None else moving_kd, 6, 'moving_kd')
+        self._gain_rate = float(gain_ramp_rate)
+        if (not math.isfinite(self._gain_rate) or not .1 <= self._gain_rate <= 5
+                or np.any(self._moving_kd <= 0) or np.any(self._moving_kd > 100)
+                or np.max(np.abs(self._moving_kd-self._hold_kd)) > 2*self._gain_rate):
+            raise ValueError('Invalid motion/hold damping schedule')
         self._gravity_model = self._friction_model = None
-        self._gravity_scale = float(self.config.get("gravity_scale", 1))
+        self._gravity_scale = float(self.config.get("gravity_scale", 1) if gravity_scale is None else gravity_scale)
+        self._reference_friction_scale = reference_friction_scale
+        if reference_friction_scale is not None and not 0 <= reference_friction_scale <= 1:
+            raise ValueError('reference_friction_scale must be within 0..1')
         self._friction_scale = float(
             friction_scale if friction_scale is not None else self.config.get("friction_scale", 0)
         )
@@ -155,6 +166,7 @@ class SimulationBackend:
         if not self._connected:
             raise RuntimeError("simulation is closed")
         if enabled and not self._enabled:
+            self.kd = self._hold_kd.copy()
             self._target = np.asarray(self.read()["positions"])
             self._target_velocity = np.zeros(6)
             self._adaptive_applied = 0.0 if self._offset_ramp_s > 0 else self._adaptive_amount
@@ -180,6 +192,9 @@ class SimulationBackend:
         if not math.isfinite(dt) or dt <= 0:
             raise ValueError("simulation step must be positive and finite")
         if self._enabled:
+            wanted_kd = self._hold_kd + (self._moving_kd-self._hold_kd)*np.tanh(np.abs(self._target_velocity)/.003)
+            gain_step = self._gain_rate*min(dt, .02)
+            self.kd += np.clip(wanted_kd-self.kd, -gain_step, gain_step)
             # The source compensation loop runs at the outer control rate. Hold
             # its sampled gains/feedforward over the faster motor/physics steps.
             count = max(1, math.ceil(dt / 0.001))
@@ -219,6 +234,11 @@ class SimulationBackend:
                     arm_q, arm_dq, position_errors=error, target_velocities=self._target_velocity, **common
                 )
                 self._friction_efforts = self._friction_scale * np.asarray(compensation)
+                if self._reference_friction_scale is not None:
+                    desired = np.where(np.abs(self._target_velocity) > 1e-6, self._target_velocity, 0.)
+                    reference = self._friction_model.torques(
+                        arm_q, desired, target_velocities=desired, **common)
+                    self._friction_efforts += self._reference_friction_scale * np.where(desired != 0, reference, 0.)
             for index in range(count):
                 if index:
                     states = self._p.getJointStates(self._body, self._movable, physicsClientId=self._client)
@@ -273,6 +293,10 @@ class SimulationBackend:
                 "gravity_model": "upstream calibrated joint-load estimate" if self._gravity_model else "URDF",
                 "friction_model": "upstream fitted moving-friction load and compensation" if self._friction_model else "none",
                 "friction_scale": self._friction_scale,
+                "reference_friction_scale": self._reference_friction_scale,
+                "hold_kd": self._hold_kd.tolist(),
+                "moving_kd": self._moving_kd.tolist(),
+                "command_kd": self.kd.tolist(),
                 "effective_kp": self._effective_kp.tolist(),
                 "effective_kd": self._effective_kd.tolist(),
                 "gravity_compensation": self._gravity_efforts.tolist(),

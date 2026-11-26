@@ -57,6 +57,20 @@ python -m piper_control --backend hardware --arm arm_2 \
 原驱动启动时会配置从臂反馈，解决固件未主动上报的情况。仅附着已有驱动可省略
 `--launch-driver`，随后显式调用 `enable()` 进入控制模式。
 
+TCP 平滑性改进正在进行真机验证；本机当前 API 使用候选
+[跟踪 profile](piper_control/assets/tcp_tracking.yaml)，启动参数另加：
+
+```bash
+--control-profile piper_control/assets/tcp_tracking.yaml
+```
+
+该 profile 启用硬件边界的电机/输出关节坐标转换、目标速度摩擦前馈、速度编码
+余量和 J3 空间扰动补偿，并使用经过停车检查的阻尼。上层接口与 SI 单位保持一致。
+参数针对当前 `arm_2` 和工具；尚不能将局部路径结果外推到整个工作空间。
+当前进展、相机证据和未完成检查见 [TCP 排查记录](docs/tcp-motion-diagnosis.md)。
+仿真可以加载同一 profile，复用增益、重力比例和目标速度摩擦前馈；其刚体模型
+尚未复现电机空间扰动、双编码器弹性差值和 CAN 量化。
+
 原工作空间不存在时，也可以在本仓库独立构建五个底层包：
 
 ```bash
@@ -166,7 +180,17 @@ python scripts/diagnose_hold.py --can can1 --seconds 15 \
 
 # 短时原始总线检查
 python scripts/probe_can.py --interface can1 --duration 2
+
+# TCP 质量记录（会实际运动）；相机工具可用 pip install -e '.[diagnostics]' 安装
+python scripts/record_tcp_motion.py --case line_z --distance .03 --speed .02 \
+  --out .runtime/tcp-check
+python scripts/analyze_tcp_camera.py .runtime/tcp-check
+python scripts/analyze_tcp_timing.py .runtime/tcp-check
 ```
+
+相机分析使用本次 BRIO 机位的固定工具区域；换机位后先检查输出的
+`camera-tracking-features.jpg`。直线时间律分析不适用于圆弧；相机像素速度不是
+经过空间标定的 TCP 速度，记录中的实际到位状态与平顺性应分别检查。
 
 验收结果及实测误差见 [验证记录](docs/validation.md)。测试覆盖模型与原驱动一致性、
 动力学、直线/圆弧几何、命名关节轨迹、超限/不可达预检查、看门狗、停止、并发

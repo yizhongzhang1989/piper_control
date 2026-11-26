@@ -1,0 +1,18 @@
+# Candidate commissioned on arm_2 / gripper_with_wrench, still under broad-path
+# validation. Spatial residuals are identified locally; do not assume a payload
+# or a different arm shares these parameters. Original calibration is untouched.
+kp: [51.0, 64.0, 60.0, 32.0, 3.0, 3.0]
+kd: [8.0, 12.12, 20.0, 0.53, 0.30, 0.08]
+friction_scale: 0.0
+gravity_scale: 0.89
+tracking:
+  moving_kd: [8.0, 12.12, 20.0, 1.6, 0.30, 0.08]
+  gain_ramp_rate: 2.0
+  friction_scale: 0.88
+  velocity_remainder: true
+  spatial_prediction: 0.005
+  spatial_decay: 0.2
+  spatial_harmonics:
+    - {joint: 3, omega: 540, a: -0.06, b: 0.45}
+    - {joint: 3, omega: 360, a: -0.03, b: 0.03, c: 0.14, d: -0.056}
+    - {joint: 3, omega: 1080, a: -0.15, b: 0.025}
