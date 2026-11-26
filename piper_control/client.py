@@ -35,7 +35,10 @@ class RobotClient:
         return self._request("POST", "stream/twist", json=dict(linear=list(linear), angular=list(angular), frame=frame))
     def wait(self, motion, timeout=None):
         motion_id = motion if isinstance(motion, str) else motion["id"]
-        deadline = time.monotonic()+(timeout if timeout is not None else (motion.get("duration", 30)+10 if isinstance(motion, dict) else 60))
+        if timeout is None:
+            task = self.motion(motion_id) if isinstance(motion, str) else motion
+            timeout = task.get("duration", 30)+self.info().get("goal_timeout", 5.)+2.
+        deadline = time.monotonic()+timeout
         while time.monotonic() < deadline:
             result = self.motion(motion_id)
             if result["status"] == "succeeded":
