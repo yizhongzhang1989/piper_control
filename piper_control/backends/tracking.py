@@ -265,7 +265,9 @@ class TrackingBackend:
                     self._reconstruction.observe(sample)
                 inferred = self._reconstruction.affected(sample)
                 active = tuple(moving and not estimated for moving, estimated in zip(active, inferred))
-                sample = self._reconstruction.correct(sample, self.mapper.offset)
+                # Censored interpolation is excluded from offset learning.
+                # Reconstruct only raw samples in read()/command(); an aligned
+                # value spanning zero need not itself lie inside the zero band.
             # The legacy estimate freezes at high speed. Aligned histories can
             # follow coordinate changes without learning packet arrival skew.
             self._observer_frozen = (warming

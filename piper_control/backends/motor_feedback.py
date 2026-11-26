@@ -35,6 +35,7 @@ class EncoderSample:
     age: float
     error: str | None = None
     motor_age: tuple = ()
+    censored_joints: tuple = ()
 
     def validate(self, timeout=.1):
         if self.error:
@@ -46,6 +47,9 @@ class EncoderSample:
         if self.motor_age and (len(self.motor_age) != 6 or any(
                 not math.isfinite(v) or not 0 <= v <= timeout for v in self.motor_age)):
             raise RuntimeError('Fresh per-motor timestamps are required')
+        if self.censored_joints and (len(self.censored_joints) != 6 or any(
+                type(v) is not bool for v in self.censored_joints)):
+            raise RuntimeError('Invalid output encoder interpolation provenance')
 
 
 class EncoderCache:
@@ -96,7 +100,8 @@ class EncoderCache:
                 raise ValueError('incomplete encoder history')
             stamp = min(self.stamps)
             values = []
-            for history in self.history:
+            censored = []
+            for index, history in enumerate(self.history):
                 if not history or history[0][0] > stamp:
                     raise ValueError('encoder history does not cover common time')
                 left = history[0]
@@ -104,6 +109,8 @@ class EncoderCache:
                 for right in history:
                     if right[0] == stamp:
                         value = right[1:]
+                        if index >= 6:
+                            censored.extend(q == 0. for q in value)
                         break
                     if right[0] > stamp:
                         gap = right[0]-left[0]
@@ -111,6 +118,8 @@ class EncoderCache:
                             raise ValueError('encoder interpolation gap exceeds 50 ms')
                         u = (stamp-left[0])/gap
                         value = tuple(a+u*(b-a) for a, b in zip(left[1:], right[1:]))
+                        if index >= 6:
+                            censored.extend(a == 0. or b == 0. for a, b in zip(left[1:], right[1:]))
                         break
                     left = right
                 if value is None:
@@ -119,7 +128,8 @@ class EncoderCache:
             age = now-stamp
             return EncoderSample(tuple(v[0] for v in values[:6]),
                                  tuple(q for v in values[6:] for q in v),
-                                 tuple(v[1] for v in values[:6]), age, error, (age,)*6)
+                                 tuple(v[1] for v in values[:6]), age, error, (age,)*6,
+                                 tuple(censored))
         except ValueError as exc:
             return self.sample(now, error or str(exc))
 
@@ -210,7 +220,7 @@ class ZeroBandReconstructor:
         self.anchored = (False,)*6
 
     def observe(self, sample):
-        """Anchor only on an output reading outside the censored interval."""
+        """Anchor only on actual nonzero feedback, never a censored interpolation."""
         sample.validate()
         offsets, anchored = list(self.offset), list(self.anchored)
         for i, hidden in enumerate(self.affected(sample)):
@@ -233,7 +243,10 @@ class ZeroBandReconstructor:
         return dict(band=self.band, offset=list(self.offset), anchored=list(self.anchored))
 
     def affected(self, sample):
-        return tuple(abs(q) < self.band for q in sample.joints)
+        # A real nonzero reading remains valid even below the nominal zero
+        # band. Firmware can retain such a reading during settling. Only exact
+        # zeros and interpolations involving zero reports lack output data.
+        return sample.censored_joints or tuple(q == 0. for q in sample.joints)
 
     def correct(self, sample, offset):
         sample.validate()
