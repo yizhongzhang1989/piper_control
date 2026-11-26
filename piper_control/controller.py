@@ -106,10 +106,12 @@ class RobotController:
 
     def enable(self):
         with self._lock:
-            self._cancel()
             data = self.backend.read()
             if not data.get("connected") or data.get("feedback_age", 0) > self.feedback_timeout:
                 raise RuntimeError("fresh feedback required to enable")
+            if data.get("enabled") and data.get("command_ready", True):
+                return self.state()
+            self._cancel()
             self._q = np.array(data["positions"], dtype=float)
             self.backend.enable(True)
             self._error = None
@@ -128,16 +130,23 @@ class RobotController:
             self._cancel()
             data = self.backend.read()
             if data.get("positions") is not None:
-                self._q = np.array(data["positions"], dtype=float)
+                self._q = self._command_start(data)
             self._mode = "idle" if data.get("enabled") else "disabled"
         return self.state()
+
+    def _command_start(self, data):
+        # A following error must not become a position step at a command boundary.
+        if (self._q is not None and self._q.shape == (len(self.model.names),)
+                and np.all(np.isfinite(self._q))):
+            return self._q.copy()
+        return np.array(data["positions"], dtype=float)
 
     def _prepare(self):
         with self._lock:
             data = self._ready()
             if self._plan is not None or self._stream_time is not None:
                 raise RuntimeError("robot is executing; stop before submitting a new planned motion")
-            return np.array(data["positions"]), self._epoch
+            return self._command_start(data), self._epoch
 
     def _submit(self, plan, kind, epoch):
         with self._lock:
@@ -181,7 +190,7 @@ class RobotController:
         with self._lock:
             data = self._ready()
             if self._stream_time is None:
-                self._q = np.array(data["positions"])
+                self._q = self._command_start(data)
             self._cancel()
             self._stream_goal = q
             self._stream_time = time.monotonic()
@@ -192,7 +201,7 @@ class RobotController:
         from .planning import pose_matrix
         with self._lock:
             data = self._ready()
-            seed = self._q.copy() if self._q is not None else np.array(data["positions"])
+            seed = self._command_start(data)
             epoch = self._epoch
         q = self.model.inverse(pose_matrix(pose), seed)
         with self._lock:
@@ -209,7 +218,7 @@ class RobotController:
         with self._lock:
             data = self._ready()
             if self._stream_time is None:
-                self._q = np.array(data["positions"])
+                self._q = self._command_start(data)
             self._cancel()
             self._twist = (v, w, frame)
             self._stream_time = time.monotonic()
@@ -272,11 +281,10 @@ class RobotController:
                     elif elapsed > self._plan.duration+self.goal_timeout:
                         self._record("aborted", f"goal tracking error {error:.4f} rad exceeds tolerance")
                         self._plan = None
-                        self._q = measured.copy()
+                        dq.fill(0.)
                         self._mode = "idle"
             elif self._stream_time is not None:
                 if now-self._stream_time > self.stream_timeout:
-                    self._q = measured.copy()
                     self._stream_time = None
                     self._stream_goal = self._twist = None
                     self._mode = "idle"

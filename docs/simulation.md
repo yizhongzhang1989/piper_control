@@ -24,6 +24,10 @@
 `gravity_config`、`friction_config` 按臂配置文件所在目录解析，仿真不修改这些文件。
 指定配置时末端类型随配置选择；显式给出的 `--end-effector` 必须与它一致。
 真机继续用 `--workspace`、`--arm` 选择原驱动配置，不能使用 `--arm-config` 改写它。
+通用服务的控制 profile 可额外设置 `friction_scale: 0.0`，覆盖臂配置中的补偿比例；
+Python 对应 `SimulationBackend(arm_config=..., friction_scale=0.0)`。这个覆盖只关闭
+控制器的摩擦前馈，仿真中的标定摩擦负载、重力补偿和自适应增益仍然保留。
+不传覆盖值时沿用臂配置；原配置文件不变。
 
 | 参数/行为 | 对应关系 |
 | --- | --- |
@@ -33,7 +37,7 @@
 | MIT 基础增益 | 来源为原臂配置；通用服务的 position control profile 可覆盖 kp/kd，仿真与真机应用同一覆盖值；原工作空间文件不变 |
 | 自适应刚度 | 使用原驱动公式 `1+s_a/(1+(abs(error)/b)^power)`；默认 `s_a=2, b=0.08, power=3`，使能后默认 2 s 渐入；kd 按刚度倍率平方根调整，并复用原驱动 kp/kd 上限 |
 | 重力标定 | 提供配置时直接调用原 `ArmGravityModel.torques()`，包括 scale、angle_offset、bias 与 payload；不重新实现公式 |
-| 摩擦标定 | 提供配置时直接调用原 `ArmFrictionModel.torques()`，包括 Stribeck、速度门控、周期项、负载项与静摩擦补偿；补偿乘以配置 `friction_scale` |
+| 摩擦标定 | 提供配置时直接调用原 `ArmFrictionModel.torques()`，包括 Stribeck、速度门控、周期项、负载项与静摩擦补偿；前馈乘以有效 `friction_scale`，拟合的物理负载不受这个补偿比例影响 |
 | 启动/失能 | 仿真失能时暂停积分并清零速度，便于等待控制器；真机失能行为由原驱动和机构决定 |
 
 拟合的各关节重力倍率不能唯一转换为一组真实连杆质量。因此，标定仿真保留
@@ -57,5 +61,7 @@ Python `RobotModel(angle_offsets=...)` 可显式传入经过确认的几何偏�
 
 `/api/state` 的 `simulation` 对象报告引擎、配置来源、重力/摩擦模型、有效增益和
 补偿力矩，便于辨别当前运行的是名义 URDF 模型还是带标定的近似模型。
+其中 `friction_scale` 是有效补偿比例，`friction_compensation` 是控制器前馈，
+`friction_load` 是仿真的拟合摩擦负载；关闭前馈后运动中的负载仍可非零。
 普通离线仿真不依赖 ROS 或原工作空间；使用标定模型时需保留仓库 `vendor`，或
 安装/加载原 `piper_x_driver` Python 包。

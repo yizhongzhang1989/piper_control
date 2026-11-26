@@ -1,6 +1,6 @@
 {
   "recorded_at": "2026-11-26T08:57:30.850575+08:00",
-  "hardware_acceptance_passed": false,
+  "hardware_acceptance_passed": true,
   "physical_button": "User confirmed released and not stuck",
   "isolation": {
     "description": "Original driver paused <=0.4s while exact captured six MIT frames repeated at200Hz and same mode requested at10Hz; original driver resumed. No reset/power command in this first experiment.",
@@ -302,5 +302,96 @@
     },
     "result": "Control authority not restored"
   },
-  "next_physical_prerequisite": "Reliable support such that disabling motors cannot cause a fall; pending user confirmation. No further reset while unsupported."
+  "next_physical_prerequisite": "Physical support was subsequently confirmed by the user before further reset attempts; commissioning is complete.",
+  "supported_followup": {
+    "physical_support_confirmed": true,
+    "reset_trials": [
+      {
+        "name": "reset",
+        "transmitted": [
+          {
+            "t": 4.8909016186371446e-05,
+            "tx": "0x150",
+            "data": "0200000000000000"
+          },
+          {
+            "t": 1.506855285988422,
+            "tx": "0x470",
+            "data": "fc00000000000000"
+          }
+        ],
+        "status_counts": {
+          "0000060100000000": 1,
+          "0200060100000000": 68
+        },
+        "final_positions": [
+          -0.03497639820996636,
+          -0.0318871654339364,
+          0.03892084231947355,
+          0.61868431324695,
+          0.04410447019789671,
+          1.0945657870957237
+        ],
+        "final_enabled": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "follower-reset",
+        "transmitted": [
+          {
+            "t": 2.8898997697979212e-05,
+            "tx": "0x150",
+            "data": "0200000000000000"
+          }
+        ],
+        "status_counts": {
+          "0200060000000000": 1,
+          "0000060000000000": 1,
+          "0000060100000000": 1,
+          "0200060100000000": 368,
+          "020506010000000e": 1,
+          "000506010000003f": 2,
+          "020506010000003f": 2,
+          "0005060100000000": 1
+        },
+        "final_positions": [
+          -0.03497639820996636,
+          -0.04028219913602912,
+          0.039461894387591796,
+          0.6163455720492775,
+          0.043580871422298405,
+          1.094199267952805
+        ],
+        "final_enabled": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      }
+    ]
+  },
+  "resolution": {
+    "operator_confirmation": "The green teaching LED was on; user single-clicked the button and confirmed the LED turned off. Released button did not mean recording ended.",
+    "manual": "https://cdn.shopify.com/s/files/1/0551/0630/6141/files/PIPER_X_USER_MANUAL.pdf?v=1791861496",
+    "manual_pages": "25-26",
+    "sequence": "LED off, then standby, then CAN/MIT. Stable ctrl_mode1/mode_feedback6/teach_status2 was confirmed.",
+    "driver_fixes": "Fresh readiness, persistent target across reconnect, idempotent enable, continuous target across motion/stream/stop boundaries.",
+    "position_profile": "piper_control/assets/position_control.yaml",
+    "friction_compensation": "Default position profile sets runtime friction feedforward0; fitted model/calibration remain unchanged and source profile restores original settings.",
+    "final_evidence": [
+      "hardware-acceptance.json",
+      "hardware-lifecycle-final.json",
+      "ros-hardware-trajectory.json",
+      "hardware-return-final.json"
+    ]
+  }
 }

@@ -86,6 +86,7 @@ def test_arm_configuration_reuses_calibrated_loads_and_compensation():
         sim.step(0.001)
         state = sim.read()
         calibration = state["simulation"]
+        assert calibration["friction_scale"] == 0.88
         # Source arm_2 gravity fit at this known pose differs materially from
         # nominal URDF gravity; verify it is active in both plant and controller.
         assert calibration["gravity_compensation"][2] == pytest.approx(-8.3754762, abs=1e-6)
@@ -99,6 +100,22 @@ def test_arm_configuration_reuses_calibrated_loads_and_compensation():
         sim.step(0.001)
         assert sim.read()["simulation"]["friction_compensation"][0] > 0.1
         assert np.array_equal(sim.model.angle_offsets, np.zeros(6))
+    finally:
+        sim.close()
+    sim = SimulationBackend(arm_config=config, kp=kp, kd=kd, friction_scale=0)
+    try:
+        assert sim.config["friction_scale"] == 0.88  # The source profile remains intact.
+        sim.enable(True)
+        target = np.asarray(sim.read()["positions"]) + [0.02, 0, 0, 0, 0, 0]
+        sim.command(target)
+        for _ in range(20):
+            sim.step(0.001)
+        calibration = sim.read()["simulation"]
+        assert calibration["friction_scale"] == 0
+        assert np.array_equal(calibration["friction_compensation"], np.zeros(6))
+        assert calibration["friction_load"][0] > 0.01
+        assert abs(calibration["gravity_compensation"][2]) > 8
+        assert calibration["effective_kp"][0] > kp[0]
     finally:
         sim.close()
     with pytest.raises(ValueError, match="kd must be positive"):

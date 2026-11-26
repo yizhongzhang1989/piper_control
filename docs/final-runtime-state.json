@@ -1,0 +1,60 @@
+{
+  "hardware": {
+    "mode": "idle",
+    "enabled": true,
+    "command_ready": true,
+    "control_rate_hz": 199.9992512310073,
+    "positions": [
+      -0.07764969842122772,
+      0.9208008067671685,
+      -0.8501847852314779,
+      0.7730412322933284,
+      0.0713490598215282,
+      1.1541338744662901
+    ],
+    "target_positions": [
+      -0.07801621756414652,
+      0.9206786337195287,
+      -0.8507956504696759,
+      0.7798480163761063,
+      0.0736878010192006,
+      1.153889528371011
+    ],
+    "firmware": {
+      "ctrl_mode": 1,
+      "mode_feedback": 6,
+      "teach_status": 2,
+      "arm_status": 0,
+      "err_code": 0,
+      "command_ready": true
+    },
+    "profile": {
+      "kp": [
+        51.0,
+        64.0,
+        60.0,
+        64.0,
+        3.0,
+        3.0
+      ],
+      "kd": [
+        10.375,
+        12.12,
+        6.32,
+        2.12,
+        0.3,
+        0.08
+      ]
+    },
+    "friction": {
+      "requested": 0.0,
+      "applied": 0.0
+    }
+  },
+  "simulation": {
+    "mode": "disabled",
+    "enabled": false,
+    "connected": true,
+    "friction_scale": 0.0
+  }
+}

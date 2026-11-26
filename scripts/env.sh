@@ -6,7 +6,9 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 fi
 PIPER_CONTROL_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)" || return
 if [[ -z "${PIPER_WORKSPACE:-}" ]]; then
-    if [[ -f "$HOME/Documents/Piper_workspace/install/local_setup.bash" ]]; then
+    if [[ -f "$PIPER_CONTROL_ROOT/vendor/Piper_workspace/install/local_setup.bash" ]]; then
+        export PIPER_WORKSPACE="$PIPER_CONTROL_ROOT/vendor/Piper_workspace"
+    elif [[ -f "$HOME/Documents/Piper_workspace/install/local_setup.bash" ]]; then
         export PIPER_WORKSPACE="$HOME/Documents/Piper_workspace"
     else
         export PIPER_WORKSPACE="$PIPER_CONTROL_ROOT/vendor/Piper_workspace"

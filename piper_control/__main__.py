@@ -4,6 +4,17 @@ import os
 from pathlib import Path
 
 
+def load_control_profile(path, source_config=None):
+    import yaml
+    if path == "source":
+        if source_config is None:
+            return {}
+        config = yaml.safe_load(Path(source_config).expanduser().read_text())
+        return {"friction_scale": float(config.get("friction_scale", 0.0))}
+    profile = yaml.safe_load(Path(path).expanduser().read_text()) or {}
+    return {key: profile[key] for key in ("kp", "kd", "friction_scale") if key in profile}
+
+
 def main():
     parser = argparse.ArgumentParser(description="Common robot control service and 3D dashboard")
     parser.add_argument("--backend", choices=("sim", "hardware"), default="sim")
@@ -15,7 +26,7 @@ def main():
     parser.add_argument("--goal-tolerance", type=float, default=.01, help="measured terminal joint error tolerance, rad")
     parser.add_argument("--goal-timeout", type=float, default=5., help="settling time allowed after trajectory end, s")
     parser.add_argument("--control-profile", default=str(Path(__file__).parent/"assets/position_control.yaml"),
-                        help="position kp/kd profile YAML; use 'source' for original arm gains")
+                        help="kp/kd and optional friction_scale YAML; 'source' restores original arm settings")
     parser.add_argument("--workspace", default=os.environ.get("PIPER_WORKSPACE", str(Path.home()/"Documents/Piper_workspace")))
     parser.add_argument("--arm", default="arm_2")
     parser.add_argument("--arm-config", help="simulation: reuse arm YAML gains and fitted gravity/friction models")
@@ -38,9 +49,9 @@ def main():
             from control_msgs.action import FollowJointTrajectory  # noqa: F401
         except ImportError:
             parser.error("ROS action messages missing: run scripts/install_ros_extras.sh and source scripts/env.sh")
-    import yaml
-    gains = {} if args.control_profile == "source" else yaml.safe_load(Path(args.control_profile).read_text())
-    gains = {key: gains[key] for key in ("kp", "kd") if key in gains}
+    source_config = (Path(args.workspace).expanduser()/"config/arms"/f"{args.arm}.yaml"
+                     if args.backend == "hardware" else args.arm_config)
+    gains = load_control_profile(args.control_profile, source_config)
     end_effector = args.end_effector or "gripper_with_wrench"
     if args.arm_config and args.end_effector is None:
         import yaml

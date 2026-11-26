@@ -147,7 +147,11 @@ function updateState(next) {
   if (motion.error && motion.error !== latestFault) feedback(motion.error, 'error');
   latestFault = motion.error || '';
   const errors = Array.isArray(next.errors) ? next.errors : next.errors ? [next.errors] : [];
-  showNotice(errors.map(e => typeof e === 'string' ? e : JSON.stringify(e)).join(' · '));
+  const notices = errors.map(e => typeof e === 'string' ? e : JSON.stringify(e));
+  if (next.backend === 'hardware' && next.command_ready === false && next.extra?.firmware?.teach_status === 1) {
+    notices.unshift('示教录制尚未结束：按钮绿灯常亮表示正在录制，松开按钮不会结束录制。请短按一次示教按钮，确认绿灯熄灭；不要双击，双击会回放轨迹。');
+  }
+  showNotice(notices.join(' · '));
 
   const limits = info?.joint_limits || [];
   (next.positions || []).forEach((q, i) => {

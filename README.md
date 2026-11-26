@@ -6,8 +6,12 @@ AgileX Piper X 的通用机械臂服务：启动后等待上层命令，通过�
 
 本仓库复用 `~/Documents/Piper_workspace` 的 C++ SocketCAN 驱动、重力/摩擦补偿
 与标定代码。`vendor/Piper_workspace` 只保留驱动、接口、模型及两种标定包，
-附可选的超时位置保持补丁，以及就绪状态失效修复；本机原工作空间不改动。无需启动原工作空间的
-摄像头、插孔、示教等应用。
+附可选的超时位置保持补丁，以及就绪状态失效修复；本机原工作空间不改动。
+无需启动原工作空间的摄像头、插孔、示教等应用。
+
+真机完整 10 项验收、标准 ROS 轨迹和保持/重连接管已通过。最大终点误差
+`0.00864 rad`；实测速度峰值 `0.262 rad/s`，与指令限速分开记录，见
+[验证记录](docs/validation.md)。
 
 ![Dashboard](docs/dashboard-desktop.png)
 
@@ -32,7 +36,7 @@ uv pip install --python .venv/bin/python -e .
 
 ```bash
 .venv/bin/python -m piper_control --backend sim \
-  --arm-config vendor/Piper_workspace/config/arms/arm_2.yaml
+  --arm-config vendor/Piper_workspace/config/arms/arm_2.yaml --max-velocity 0.05
 ```
 
 本机真机（`arm_2`，`can1`，带 PX6D 的夹爪）：
@@ -42,11 +46,12 @@ source scripts/env.sh
 # 本机已有 control_msgs；新环境缺少时可用户目录安装：
 # bash scripts/install_ros_extras.sh && source scripts/env.sh
 python -m piper_control --backend hardware --arm arm_2 \
-  --launch-driver --ros --max-velocity 0.08 --port 8090
+  --launch-driver --ros --max-velocity 0.05 --port 8090
 ```
 
 真机 dashboard 为 <http://127.0.0.1:8090>。`--launch-driver` 会复用已运行驱动，
-否则启动该臂的原 C++ 驱动；它会使能电机，以实测位置开始保持，不自动归零。
+否则启动该臂的 C++ 驱动。首次启动底层驱动会使能电机，以实测位置初始化保持，
+不自动归零；重连已有持久保持时继承原目标，不用静态跟踪误差重新设置目标。
 原驱动启动时会配置从臂反馈，解决固件未主动上报的情况。仅附着已有驱动可省略
 `--launch-driver`，随后显式调用 `enable()` 进入控制模式。
 
@@ -56,10 +61,11 @@ python -m piper_control --backend hardware --arm arm_2 \
 bash scripts/build_vendor.sh
 export PIPER_WORKSPACE="$PWD/vendor/Piper_workspace"
 source scripts/env.sh
-python -m piper_control --backend hardware --launch-driver --ros --max-velocity 0.08
+python -m piper_control --backend hardware --launch-driver --ros --max-velocity 0.05
 ```
 
-`scripts/env.sh` 默认选择已安装的原工作空间，也支持上述 `PIPER_WORKSPACE`。
+`scripts/env.sh` 优先选择已构建的仓库内修订驱动，否则复用已安装的原工作空间；
+显式设置的 `PIPER_WORKSPACE` 始终优先。本次最终真机验收使用仓库内修订驱动。
 CAN 应为已启用的 1 Mbps SocketCAN 接口；更换设备时修改所选工作空间的臂配置，
 并使用该设备自己的标定。仓库内的标定是当前这台 `arm_2` 的快照。
 
@@ -114,16 +120,21 @@ python examples/trajectory.py --url http://127.0.0.1:8090
 
 - 关节限位、惯性和三维模型来自同一套 URDF。笛卡尔轨迹在执行前完成全路径采样
   逆解、分支连续性及速度检查；上层到达时间不会被静默改写。
-- 默认软件关节速度上限为 `0.3 rad/s`，本次真机验收显式使用 `0.08 rad/s`。
-  `--max-velocity` 可配置，且不超过模型速度上限。这是服务配置，不是硬件极限。
-- 实时流默认 `0.2 s` 没有新指令后保持实测位置，使用 `--stream-timeout` 配置。
+- 默认软件关节速度上限为 `0.3 rad/s`，本次真机位置控制使用 `0.05 rad/s`。
+  `--max-velocity` 限制下发目标的速度，且不超过模型速度上限；实际速度受跟踪误差、
+  阻尼和摩擦影响，可能短时超过指令上限。这不是硬件实际速度的保证值。
+- 新轨迹与实时流从最后下发的位置目标接续，避免静态跟踪误差变成目标跳变。
+  停止、取消和实时流超时会保持最后目标并将目标速度归零。实时流默认超时
+  `0.2 s`，使用 `--stream-timeout` 配置。
   反馈中断或硬件报错会中止任务。停止后新输入可重新开始，生产者应停止旧流。
 - 默认终点容差 `0.01 rad`、轨迹结束后最多等 `5 s`，可用 `--goal-tolerance` 和
   `--goal-timeout` 调整。失败会报告 `aborted`，不会把未到达伪报成成功。
-- 默认 [位置控制 profile](piper_control/assets/position_control.yaml) 增加了 J1、J4 的
-  kp 和相应阻尼，减少原柔顺参数在位置控制中的稳态误差；只影响适配层下发的
-  命令，不改原驱动或标定。`--control-profile source` 使用原始增益，自定义 YAML
-  可同时用于仿真与真机。`extra.command_gains` 和驱动遥测可核对实际增益。
+- 默认 [位置控制 profile](piper_control/assets/position_control.yaml) 调整 J1–J4 的
+  kp/kd，并以 `friction_scale=0` 关闭摩擦前馈，改善原柔顺参数的稳态误差与低速
+  黏滑。重力补偿和自适应刚度仍使用原设置；所有覆盖仅在运行时应用，不改臂配置、
+  模型或标定文件。`--control-profile source` 恢复原增益和所选臂的摩擦补偿比例
+  （当前 `arm_2` 为 `0.88`）。自定义 YAML 同样适用于真机与仿真，关闭摩擦前馈
+  不会移除仿真中的物理摩擦负载。具体参数及遥测字段见 [真机文档](docs/hardware.md)。
 - 正常退出 API 持续使用 MIT 固定目标保持，不切换固件运动模式。新驱动可自行
   保持超时目标；未修改的旧驱动由独立 ROS 保持进程接管，重启 API 后交回控制。
   保留底层驱动，显式失能不同于保持，见 [真机文档](docs/hardware.md)。

@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "module": "/tmp/piper-control-final-wheel-check/piper_control/__init__.py",
+  "profile": {
+    "kp": [
+      51.0,
+      64.0,
+      60.0,
+      64.0,
+      3.0,
+      3.0
+    ],
+    "kd": [
+      10.375,
+      12.12,
+      6.32,
+      2.12,
+      0.3,
+      0.08
+    ],
+    "friction_scale": 0.0
+  },
+  "checks": [
+    "isolated wheel import",
+    "shipped final profile",
+    "simulation startup",
+    "HTTP state and enable",
+    "dashboard HTML",
+    "URDF asset"
+  ],
+  "wheel_sha256": "71a87f9bf7bbe94a1c32cbd534ac5ee2dddcf2a3f3bf0382dbecec611d6f769b",
+  "final_payload_matches_tested_install": true,
+  "verified_payload_files": 51
+}

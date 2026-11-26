@@ -2,10 +2,12 @@
   "page_errors": [],
   "failed_responses": [],
   "joint_goal_deg": 1.0,
-  "joint_feedback_deg": "1.00",
+  "joint_feedback_deg": 0.99,
   "connection": "实时连接",
   "model_loaded": true,
   "horizontal_overflow": false,
   "movel_dashboard": "succeeded",
-  "movec_dashboard": "succeeded"
+  "movec_dashboard": "succeeded",
+  "timestamp": "2026-11-26T09:36:36.594206+08:00",
+  "joint_before_deg": 0.0
 }

@@ -26,7 +26,7 @@ class HardwareBackend:
     name = "hardware"
 
     def __init__(self, workspace, arm_id="arm_2", launch_driver=False, timeout=12.0,
-                 kp=None, kd=None):
+                 kp=None, kd=None, friction_scale=None):
         self.workspace = Path(workspace).expanduser().resolve()
         self.arm_id = arm_id
         config_path = self.workspace / "config" / "arms" / f"{arm_id}.yaml"
@@ -40,6 +40,9 @@ class HardwareBackend:
             raise ValueError("kp requires six finite values within the driver range 0..500 Nm/rad")
         if len(self.kd) != 6 or not all(math.isfinite(v) and (v == -1 or 0 <= v <= 100) for v in self.kd):
             raise ValueError("kd requires six finite values: -1 for automatic damping or 0..100 Nm/(rad/s)")
+        self.friction_scale = None if friction_scale is None else float(friction_scale)
+        if self.friction_scale is not None and not (math.isfinite(self.friction_scale) and 0 <= self.friction_scale <= 1):
+            raise ValueError("friction_scale must be finite and within 0..1")
         self._lock = threading.RLock()
         self._positions = None
         self._velocities = []
@@ -85,11 +88,22 @@ class HardwareBackend:
                 state = self.read()
                 if state["connected"] and self._control:
                     self._take_over_guardian()
+                    with self._lock:
+                        target = self._last_target
+                        held = self._control.get("mit_target")
+                        if (target is None and state["enabled"]
+                                and self._control.get("mode") == "mit"
+                                and self._control.get("position_hold_on_timeout")
+                                and time.monotonic() - self._control_received < .2
+                                and isinstance(held, list) and len(held) == 6
+                                and all(isinstance(v, (int, float)) and math.isfinite(v) for v in held)):
+                            target = held
+                        self.initial_target = list(target if target is not None else state["positions"])
                     if launch_driver and state["enabled"]:
-                        self.command(self._last_target or state["positions"])
+                        self.command(self.initial_target)
                         if self._control.get("mode") != "mit":
                             self._set_mode("mit")
-                    self.initial_target = list(self._last_target or self._control.get("mit_target") or state["positions"])
+                    self._apply_friction_scale()
                     break
                 if self.driver_process and self.driver_process.poll() is not None:
                     raise RuntimeError(f"Driver exited; see {self.driver_log}")
@@ -112,7 +126,7 @@ class HardwareBackend:
             from sensor_msgs.msg import JointState
             from std_msgs.msg import String
             from piper_x_interfaces.msg import ArmStatus, MitCommand
-            from piper_x_interfaces.srv import Enable, SetMode
+            from piper_x_interfaces.srv import ConfigureArm, Enable, SetMode
         except ImportError as exc:
             raise RuntimeError(
                 "Hardware requires ROS 2 Humble and piper_x_interfaces. "
@@ -120,6 +134,7 @@ class HardwareBackend:
             ) from exc
         self._rclpy = rclpy
         self._MitCommand, self._Enable, self._SetMode = MitCommand, Enable, SetMode
+        self._ConfigureArm = ConfigureArm
         self._context = Context()
         rclpy.init(context=self._context, signal_handler_options=SignalHandlerOptions.NO)
         self._node = rclpy.create_node("piper_control_hardware", context=self._context)
@@ -131,6 +146,7 @@ class HardwareBackend:
         self._publisher = self._node.create_publisher(MitCommand, topic("command/mit"), qos)
         self._enable_client = self._node.create_client(Enable, topic("enable_srv"))
         self._mode_client = self._node.create_client(SetMode, topic("set_mode"))
+        self._configure_client = self._node.create_client(ConfigureArm, topic("configure_arm"))
         self._executor = SingleThreadedExecutor(context=self._context)
         self._executor.add_node(self._node)
         self._thread = threading.Thread(target=self._spin, name="piper-feedback", daemon=True)
@@ -224,6 +240,8 @@ class HardwareBackend:
                               "err_code": int(status.err_code), "command_ready": command_ready,
                           },
                           "command_gains": {"kp": list(self.kp), "kd": list(self.kd)},
+                          "friction_scale": {"requested": self.friction_scale,
+                                             "applied": self._control.get("friction_scale_applied")},
                           "driver": copy.deepcopy(self._control), "status_age": status_age if math.isfinite(status_age) else None,
                           "driver_pid": self.driver_process.pid if self.driver_process else None},
             }
@@ -243,17 +261,62 @@ class HardwareBackend:
         self._last_target = values
 
     @staticmethod
-    def _call(client, request, timeout=5.0):
-        if not client.wait_for_service(timeout_sec=timeout):
-            raise TimeoutError(f"Driver service unavailable: {client.srv_name}")
+    def _call(client, request, timeout=5.0, keepalive=None):
+        deadline = time.monotonic() + timeout
+        while not client.wait_for_service(timeout_sec=.005 if keepalive else timeout):
+            if time.monotonic() >= deadline:
+                raise TimeoutError(f"Driver service unavailable: {client.srv_name}")
+            if keepalive:
+                keepalive()
         done = threading.Event()
         future = client.call_async(request)
         future.add_done_callback(lambda _: done.set())
-        if not done.wait(timeout):
-            raise TimeoutError(f"Driver service timeout: {client.srv_name}")
+        deadline = time.monotonic() + timeout
+        while not done.wait(.005 if keepalive else timeout):
+            if time.monotonic() >= deadline:
+                raise TimeoutError(f"Driver service timeout: {client.srv_name}")
+            if keepalive:
+                keepalive()
         return future.result()
 
+    def _apply_friction_scale(self):
+        if self.friction_scale is None:
+            return
+
+        def confirmed():
+            with self._lock:
+                applied = self._control.get("friction_scale_applied")
+                return (time.monotonic() - self._control_received < .2
+                        and isinstance(applied, (int, float))
+                        and math.isfinite(applied) and abs(applied-self.friction_scale) < 1e-6)
+
+        if confirmed():
+            return
+        state = self.read()
+        target = list(self._last_target or self.initial_target)
+        keepalive = (lambda: self.command(target)) if state["enabled"] and self._control.get("mode") == "mit" else None
+        request = self._ConfigureArm.Request()
+        request.end_effector = self.config["end_effector"]
+        request.gravity_scale = float(self.config.get("gravity_scale", 1.0))
+        # Upstream's restore branch preserves adaptive stiffness; -2.0 would
+        # additionally turn it off for friction calibration. Neither writes files.
+        request.friction_scale = -4.0-self.friction_scale
+        response = self._call(self._configure_client, request, keepalive=keepalive)
+        if not response.success:
+            raise RuntimeError(response.message)
+        deadline = time.monotonic() + 2.0
+        while time.monotonic() < deadline:
+            if keepalive:
+                keepalive()
+            if confirmed():
+                return
+            time.sleep(.005)
+        raise RuntimeError("Driver did not confirm the requested runtime friction_scale")
+
     def enable(self, enabled):
+        state = self.read()
+        if enabled and state["connected"] and state["enabled"] and state["command_ready"]:
+            return
         request = self._Enable.Request()
         request.enable_request = bool(enabled)
         response = self._call(self._enable_client, request)

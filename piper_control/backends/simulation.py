@@ -29,7 +29,7 @@ class SimulationBackend:
     name = "simulation"
 
     def __init__(self, model: RobotModel | None = None, initial_positions=None, arm_config=None,
-                 kp=None, kd=None):
+                 kp=None, kd=None, friction_scale=None):
         import pybullet as bullet
 
         self._p = bullet
@@ -44,7 +44,9 @@ class SimulationBackend:
             raise ValueError("kp must be nonnegative and kd must be positive")
         self._gravity_model = self._friction_model = None
         self._gravity_scale = float(self.config.get("gravity_scale", 1))
-        self._friction_scale = float(self.config.get("friction_scale", 0))
+        self._friction_scale = float(
+            friction_scale if friction_scale is not None else self.config.get("friction_scale", 0)
+        )
         self._adaptive_amount = float(self.config.get("s_a", 2))
         self._adaptive_b = float(self.config.get("adaptive_stiffness_b", 0.08))
         self._adaptive_power = float(self.config.get("adaptive_stiffness_power", 3))
@@ -67,6 +69,7 @@ class SimulationBackend:
         ]
         self._gravity_efforts = np.zeros(6)
         self._friction_efforts = np.zeros(6)
+        self._plant_friction = np.zeros(6)
         self._effective_kp, self._effective_kd = self.kp.copy(), self.kd.copy()
         self._client = bullet.connect(bullet.DIRECT)
         self._connected = True
@@ -204,7 +207,7 @@ class SimulationBackend:
                            if self._gravity_model else gravity[self._arm_slots])
             gravity_disturbance = raw_gravity - gravity[self._arm_slots]
             self._gravity_efforts = self._gravity_scale * raw_gravity
-            plant_friction = np.zeros(6)
+            self._plant_friction = np.zeros(6)
             self._friction_efforts = np.zeros(6)
             if self._friction_model is not None:
                 common = dict(gravity_torques=raw_gravity, static_frictions=self._static_frictions,
@@ -213,7 +216,7 @@ class SimulationBackend:
                 # The fitted moving-friction curve is an estimated plant load.
                 # Breakaway terms driven by error/target velocity belong only
                 # to compensation. Both sampled estimates update once per tick.
-                plant_friction = np.asarray(self._friction_model.torques(arm_q, arm_dq, **common))
+                self._plant_friction = np.asarray(self._friction_model.torques(arm_q, arm_dq, **common))
                 compensation = self._friction_model.torques(
                     arm_q, arm_dq, position_errors=error, target_velocities=self._target_velocity, **common
                 )
@@ -236,7 +239,7 @@ class SimulationBackend:
                 # Joint-wise calibrated gravity scales cannot be represented by
                 # a unique rigid-body mass model. Add their difference as an
                 # explicit estimated plant load; retain the URDF mass matrix.
-                torque[self._arm_slots] = self._efforts - plant_friction - gravity_disturbance
+                torque[self._arm_slots] = self._efforts - self._plant_friction - gravity_disturbance
                 for slot in self._finger_slots:
                     torque[slot] += -100 * q[slot] - 2 * dq[slot]
                     torque[slot] = np.clip(torque[slot], -10, 10)
@@ -267,10 +270,12 @@ class SimulationBackend:
                 "arm_config": str(self.config_path) if self.config_path else None,
                 "gravity_model": "upstream calibrated joint-load estimate" if self._gravity_model else "URDF",
                 "friction_model": "upstream fitted moving-friction load and compensation" if self._friction_model else "none",
+                "friction_scale": self._friction_scale,
                 "effective_kp": self._effective_kp.tolist(),
                 "effective_kd": self._effective_kd.tolist(),
                 "gravity_compensation": self._gravity_efforts.tolist(),
                 "friction_compensation": self._friction_efforts.tolist(),
+                "friction_load": self._plant_friction.tolist(),
             },
         }
 
