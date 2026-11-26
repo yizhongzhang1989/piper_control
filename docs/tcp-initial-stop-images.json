@@ -1,0 +1,54 @@
+{
+  "measurement": "Rigid tool image displacement after fixed background registration",
+  "units": "pixels normalized to full frame width 960; no millimetre calibration",
+  "tool_region": [
+    821.0,
+    246.0,
+    866.0,
+    284.0
+  ],
+  "background_regions": [
+    [
+      505.0,
+      420.0,
+      567.0,
+      500.0
+    ],
+    [
+      690.0,
+      445.0,
+      790.0,
+      515.0
+    ]
+  ],
+  "maximum_pairwise_displacement_px": 0.9046658289534101,
+  "records": [
+    {
+      "folder": ".runtime/tcp-smooth/repeat-full-line-01-return",
+      "displacement_px": [
+        0.0,
+        0.0
+      ],
+      "tool_features": 15,
+      "background_inliers": 76
+    },
+    {
+      "folder": ".runtime/tcp-smooth/repeat-full-line-02-return",
+      "displacement_px": [
+        -0.033203125,
+        -0.022857666015625
+      ],
+      "tool_features": 15,
+      "background_inliers": 76
+    },
+    {
+      "folder": ".runtime/tcp-smooth/repeat-full-arc-01-return",
+      "displacement_px": [
+        0.43359375,
+        0.7520751953125
+      ],
+      "tool_features": 15,
+      "background_inliers": 76
+    }
+  ]
+}

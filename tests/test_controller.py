@@ -31,6 +31,35 @@ class StationaryFeedback:
         pass
 
 
+def test_per_joint_goal_tolerances_wait_for_strict_axes_and_report_the_failed_joint():
+    backend = StationaryFeedback()
+    tolerances = [.001, .001, .001, .005, .005, .005]
+    controller = RobotController(backend, RobotModel(), goal_tolerance=.005,
+                                 joint_goal_tolerances=tolerances, goal_timeout=.2, goal_settle_time=.05)
+    target = np.array(backend.q)+[.002, 0, 0, 0, .003, 0]
+    task = controller.movej(target, duration=1)
+    start = controller._start
+    controller._tick(start+1.01, .005)
+    assert controller.motion(task['id'])['status'] == 'running'
+    backend.q[0] = target[0]
+    controller._tick(start+1.02, .005)
+    controller._tick(start+1.08, .005)
+    assert controller.motion(task['id'])['status'] == 'succeeded'
+    assert controller.info()['joint_goal_tolerances'] == tolerances
+    target[1] += .002
+    task = controller.movej(target, duration=1)
+    controller._tick(controller._start+1.21, .005)
+    result = controller.motion(task['id'])
+    assert result['status'] == 'aborted'
+    assert 'joint2' in result['error'] and '0.0010 rad' in result['error']
+
+
+@pytest.mark.parametrize('tolerances', [[.001]*5, [.001]*5+[0], [.001]*5+[float('nan')]])
+def test_invalid_per_joint_goal_tolerances(tolerances):
+    with pytest.raises(ValueError):
+        RobotController(StationaryFeedback(), RobotModel(), joint_goal_tolerances=tolerances)
+
+
 @pytest.mark.parametrize('kind', ['movel', 'movec'])
 def test_tcp_goal_requires_cartesian_accuracy_and_restarts_dwell(kind):
     backend = StationaryFeedback()

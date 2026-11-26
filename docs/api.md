@@ -36,6 +36,11 @@ TCP 固定变换由启动参数确定。默认是上游驱动原始 `link6` 坐�
 任务状态为 `running`、`succeeded`、`cancelled` 或 `aborted`。`progress=1` 表示指令轨迹已走完，可能仍等待机械臂稳定。默认要求所有关节的终点误差不超过 0.01 rad、速度不超过 0.02 rad/s，并连续保持 0.15 s；位置或速度再次超限会重新计时。缺失或无效的速度反馈不能判定成功。轨迹结束后额外等待最多 5 s；这些参数分别由 `--goal-tolerance`、`--goal-velocity-tolerance`、`--goal-settle-time`、`--goal-timeout` 配置，并在 `/api/info` 中报告。
 
 可用 `--tcp-position-tolerance 0.001` 为 `movel`/`movec` 额外要求 TCP 位置误差不超过 1 mm。
+
+`--joint-goal-tolerances T1 T2 T3 T4 T5 T6` 可按 `/api/info.joint_names` 的顺序设置
+不同关节的到位容差（rad），覆盖统一的 `--goal-tolerance`；有效数组在
+`/api/info.joint_goal_tolerances` 中报告。所有关节都必须分别满足其容差，超时时报告
+具体关节及阈值。它是服务配置，不改变 ROS action 对每请求容差字段的支持范围。
 该检查使用实测关节反馈和当前 TCP 模型，与关节误差、速度及持续稳定时间同时满足才成功；
 `motion.tcp_position_error` 报告终点检查时的误差（m）。默认不启用这项附加检查，
 `movej` 和 `trajectory` 仍使用关节到位条件。此值是控制反馈误差，不代表已完成外部绝对精度标定。

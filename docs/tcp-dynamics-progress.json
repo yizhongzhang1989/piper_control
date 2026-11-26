@@ -920,5 +920,132 @@
     "return_max_pairwise_mm": 1.1348224011831736,
     "passed": false
   },
-  "next_goal_tolerance_m": 0.0005
+  "next_goal_tolerance_m": 0.0005,
+  "additional_rejected_candidates": [
+    {
+      "name": "0.5mm endpoint with faster settling integral",
+      "reason": "limit cycles and endpoint timeout; removed"
+    },
+    {
+      "name": "conditional settling integral based on motor velocity",
+      "reason": "did not meet endpoint tolerance; removed"
+    }
+  ],
+  "tolerance_075_first3": {
+    "measurement": "Output encoders + configured FK, not external 3D metrology",
+    "acceptance": "Maximum pairwise distance between repeated settled endpoints",
+    "groups": [
+      {
+        "records": [
+          ".runtime/tcp-smooth/repeat-075-arc-01-out/",
+          ".runtime/tcp-smooth/repeat-075-arc-02-out/",
+          ".runtime/tcp-smooth/repeat-075-arc-03-out/",
+          ".runtime/tcp-smooth/repeat-075-line-01-out/",
+          ".runtime/tcp-smooth/repeat-075-line-02-out/",
+          ".runtime/tcp-smooth/repeat-075-line-03-out/"
+        ],
+        "count": 6,
+        "target_position_mm": [
+          269.6328443670492,
+          -262.3997483031177,
+          219.57096470662438
+        ],
+        "centroid_mm": [
+          269.51020446316306,
+          -262.46759205872894,
+          219.7026856668485
+        ],
+        "centroid_error_mm": 0.19233754850003545,
+        "maximum_radius_mm": 0.5827360827163437,
+        "maximum_pairwise_distance_mm": 1.0416743566311644,
+        "mean_radius_plus_3sd_mm": 0.92335190412747,
+        "endpoint_errors_mm": [
+          0.6150369755001956,
+          0.25726721763793436,
+          0.6011593686739989,
+          0.4618035543694296,
+          0.37244660466692847,
+          0.26404655070129934
+        ],
+        "completion_delays_s": [
+          3.926885386562137,
+          3.498166342830448,
+          4.094396849727421,
+          3.1123473431529103,
+          2.1196701313914357,
+          3.37100384492293
+        ],
+        "limit_mm": 1.0,
+        "enough_repetitions": true,
+        "pairwise_limit_passed": false
+      },
+      {
+        "records": [
+          ".runtime/tcp-smooth/repeat-075-arc-01-return/",
+          ".runtime/tcp-smooth/repeat-075-arc-02-return/",
+          ".runtime/tcp-smooth/repeat-075-arc-03-return/",
+          ".runtime/tcp-smooth/repeat-075-line-01-return/",
+          ".runtime/tcp-smooth/repeat-075-line-02-return/",
+          ".runtime/tcp-smooth/repeat-075-line-03-return/"
+        ],
+        "count": 6,
+        "target_position_mm": [
+          376.2038540893353,
+          5.114571275779645,
+          219.57096470662438
+        ],
+        "centroid_mm": [
+          376.23781551667844,
+          5.33186794636184,
+          219.57265422609146
+        ],
+        "centroid_error_mm": 0.2199410740842156,
+        "maximum_radius_mm": 0.8366939725996351,
+        "maximum_pairwise_distance_mm": 1.234309775668378,
+        "mean_radius_plus_3sd_mm": 1.3037153277072078,
+        "endpoint_errors_mm": [
+          0.6265844435652158,
+          0.5501918743062676,
+          0.4708071886014917,
+          0.672996873090336,
+          0.6961072764103452,
+          0.18331869002993909
+        ],
+        "completion_delays_s": [
+          2.6518018446919243,
+          1.5105858050343315,
+          1.8336267672535698,
+          2.6298618103926534,
+          1.9034757401411886,
+          2.156636693662917
+        ],
+        "limit_mm": 1.0,
+        "enough_repetitions": true,
+        "pairwise_limit_passed": false
+      }
+    ]
+  },
+  "current_trial": {
+    "joint_goal_tolerances_rad": [
+      0.0012,
+      0.0012,
+      0.0012,
+      0.005,
+      0.005,
+      0.005
+    ],
+    "tcp_tolerance_m": 0.00075,
+    "profile": "highspeed-dynamics-stiff.yaml",
+    "kp": [
+      102,
+      120,
+      120,
+      32,
+      3,
+      3
+    ],
+    "handoff": 2.4424906541753444e-15,
+    "initial_10s_hold_passed": true,
+    "initial_return_mm": 0.25111619343073016
+  }
 }

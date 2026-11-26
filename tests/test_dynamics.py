@@ -72,3 +72,32 @@ def test_feedforward_coupling_survives_stationary_axis_gate_and_total_torque_lim
         json.dumps(ff.last, allow_nan=False)
     finally:
         ff.close()
+
+
+def test_simulated_stationary_wrist_tracks_during_fast_base_sweep():
+    from piper_control.backends.simulation import SimulationBackend
+    from piper_control.planning import Planner
+
+    model = RobotModel()
+    end = np.array(Q)
+    end[0] -= np.pi/4
+    plan = Planner(model, np.pi).movej(Q, end, duration=.56)
+    peaks = []
+    for dynamics in (None, {'scale': 1.}):
+        sim = SimulationBackend(model, initial_positions=Q, kp=[51, 64, 60, 32, 3, 3],
+                                kd=[8, 12.12, 20, .53, .3, .08], dynamics=dynamics)
+        try:
+            sim.enable()
+            for _ in range(500):
+                sim.step(.005)
+            errors = []
+            for t in np.arange(0, plan.duration+.3, .005):
+                q, v = plan.sample(t)
+                sim.command(q, v)
+                sim.step(.005)
+                errors.append(abs(sim.read()['positions'][4]-q[4]))
+            peaks.append(max(errors))
+        finally:
+            sim.close()
+    assert peaks[0] > .03
+    assert peaks[1] < .004 and peaks[1] < peaks[0]/8

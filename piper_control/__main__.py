@@ -25,6 +25,8 @@ def main():
     parser.add_argument("--max-velocity", type=float, default=.3, help="configured joint speed cap, rad/s")
     parser.add_argument("--stream-timeout", type=float, default=.2)
     parser.add_argument("--goal-tolerance", type=float, default=.01, help="measured terminal joint error tolerance, rad")
+    parser.add_argument("--joint-goal-tolerances", type=float, nargs=6,
+                        help="optional per-joint terminal tolerances in model order, rad; overrides --goal-tolerance")
     parser.add_argument("--goal-timeout", type=float, default=5., help="settling time allowed after trajectory end, s")
     parser.add_argument("--goal-velocity-tolerance", type=float, default=.02, help="maximum terminal joint speed, rad/s")
     parser.add_argument("--goal-settle-time", type=float, default=.15, help="continuous position and speed dwell before success, s")
@@ -48,6 +50,8 @@ def main():
         parser.error("rate must be 1..200 Hz; velocity, timeout and tolerance must be positive and finite")
     if args.goal_settle_time > args.goal_timeout:
         parser.error("goal-settle-time cannot exceed goal-timeout")
+    if args.joint_goal_tolerances is not None and not all(math.isfinite(x) and x > 0 for x in args.joint_goal_tolerances):
+        parser.error("joint-goal-tolerances must be positive and finite")
     if args.tcp_position_tolerance is not None and (not math.isfinite(args.tcp_position_tolerance) or args.tcp_position_tolerance <= 0):
         parser.error("tcp-position-tolerance must be positive and finite")
     from .model import RobotModel
@@ -93,7 +97,8 @@ def main():
                                  goal_timeout=args.goal_timeout,
                                  goal_velocity_tolerance=args.goal_velocity_tolerance,
                                  goal_settle_time=args.goal_settle_time,
-                                 tcp_position_tolerance=args.tcp_position_tolerance)
+                                 tcp_position_tolerance=args.tcp_position_tolerance,
+                                 joint_goal_tolerances=args.joint_goal_tolerances)
     bridge = None
     try:
         if args.ros:

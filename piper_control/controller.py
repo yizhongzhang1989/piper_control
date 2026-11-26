@@ -13,7 +13,7 @@ class RobotController:
     def __init__(self, backend, model, rate_hz=200., max_velocity=.3,
                  stream_timeout=.2, feedback_timeout=.2, goal_tolerance=.01,
                  goal_timeout=5., goal_velocity_tolerance=.02, goal_settle_time=.15,
-                 tcp_position_tolerance=None):
+                 tcp_position_tolerance=None, joint_goal_tolerances=None):
         for name, value in dict(rate_hz=rate_hz, stream_timeout=stream_timeout,
                                 feedback_timeout=feedback_timeout, goal_tolerance=goal_tolerance,
                                 goal_timeout=goal_timeout, goal_velocity_tolerance=goal_velocity_tolerance,
@@ -28,6 +28,10 @@ class RobotController:
         self.rate_hz = rate_hz
         self.stream_timeout, self.feedback_timeout = stream_timeout, feedback_timeout
         self.goal_tolerance, self.goal_timeout = goal_tolerance, goal_timeout
+        self.joint_goal_tolerances = (np.full(len(model.names), goal_tolerance) if joint_goal_tolerances is None
+                                      else vector(joint_goal_tolerances, len(model.names), 'joint_goal_tolerances'))
+        if np.any(self.joint_goal_tolerances <= 0):
+            raise ValueError('joint_goal_tolerances must be positive')
         self.goal_velocity_tolerance, self.goal_settle_time = goal_velocity_tolerance, goal_settle_time
         self.tcp_position_tolerance = tcp_position_tolerance
         self._tcp_goal = None
@@ -126,6 +130,7 @@ class RobotController:
                     model_url="/robot/model.urdf", base_frame="base_link", tcp_frame="tcp",
                     control_rate_hz=self.rate_hz, stream_timeout=self.stream_timeout,
                     feedback_timeout=self.feedback_timeout, goal_tolerance=self.goal_tolerance,
+                    joint_goal_tolerances=self.joint_goal_tolerances.tolist(),
                     goal_velocity_tolerance=self.goal_velocity_tolerance,
                     goal_settle_time=self.goal_settle_time, goal_timeout=self.goal_timeout,
                     tcp_position_tolerance=self.tcp_position_tolerance,
@@ -317,11 +322,12 @@ class RobotController:
                 self._q, dq = self._plan.sample(elapsed)
                 self._motion["progress"] = min(1., elapsed/self._plan.duration)
                 if elapsed >= self._plan.duration:
-                    error = float(np.max(np.abs(measured-self._q)))
+                    errors = np.abs(measured-self._q)
+                    joints_within = bool(np.all(errors <= self.joint_goal_tolerances))
                     tcp_error = (float(np.linalg.norm(self.model.forward(measured)[:3, 3]-self._tcp_goal))
                                  if self._tcp_goal is not None else None)
                     tcp_within = tcp_error is None or tcp_error <= self.tcp_position_tolerance
-                    self._goal_position_reached = error <= self.goal_tolerance and tcp_within
+                    self._goal_position_reached = joints_within and tcp_within
                     if tcp_error is not None:
                         self._motion['tcp_position_error'] = tcp_error
                     velocity = np.asarray(data.get("velocities", []), dtype=float)
@@ -341,8 +347,10 @@ class RobotController:
                         self._plan = None
                         self._mode = "idle"
                     elif elapsed > self._plan.duration+self.goal_timeout:
-                        if error > self.goal_tolerance:
-                            reason = f"goal tracking error {error:.4f} rad exceeds tolerance"
+                        if not joints_within:
+                            axis = int(np.argmax(errors/self.joint_goal_tolerances))
+                            reason = (f"goal tracking error {errors[axis]:.4f} rad on {self.model.names[axis]} "
+                                      f"exceeds tolerance {self.joint_goal_tolerances[axis]:.4f} rad")
                         elif not tcp_within:
                             reason = f"TCP position error {tcp_error:.6f} m exceeds tolerance"
                         elif not math.isfinite(speed):
