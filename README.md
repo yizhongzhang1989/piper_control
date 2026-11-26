@@ -71,6 +71,8 @@ TCP 平滑性改进正在进行真机验证；本机当前 API 使用候选
 静止关节保留最后的坐标转换，避免编码器细小变化推动保持目标。电机相位
 融合速度与带时间戳的位置反馈，避免放大位置量化。J4 按目标速度平滑切换运动和
 静止阻尼；API 退出保持时冻结转换与积分，所有保活命令使用同一目标。
+任务成功、超时、停止或实时流失联后也冻结积分，保留最后修正值；下一条运动
+才继续修正，避免已报告结束的动作数秒后又因积分累积产生补动。
 上层接口与 SI 单位保持一致。
 参数针对当前 `arm_2` 和工具；尚不能将局部路径结果外推到整个工作空间。
 当前进展、相机证据和未完成检查见 [TCP 排查记录](docs/tcp-motion-diagnosis.md)。
@@ -192,11 +194,21 @@ python scripts/record_tcp_motion.py --case line_z --distance .03 --speed .02 \
   --out .runtime/tcp-check
 python scripts/analyze_tcp_camera.py .runtime/tcp-check
 python scripts/analyze_tcp_timing.py .runtime/tcp-check
+
+# 本机 BRIO 以原生 1920x1080 采集，保存工具附近区域，保留约 60 fps
+python scripts/record_tcp_motion.py --case line_z --distance .02 --speed .02 \
+  --camera-focus 10 --camera-resolution 1920 1080 --camera-roi 300 420 1000 660 \
+  --post-motion-seconds 5 --out .runtime/tcp-hd-check
+python scripts/stabilize_tcp_camera.py .runtime/tcp-hd-check
+python scripts/analyze_tcp_timing.py --camera-data camera-stabilized.npz .runtime/tcp-hd-check
 ```
 
 相机分析使用本次 BRIO 机位的固定工具区域；换机位后先检查输出的
 `camera-tracking-features.jpg`。直线时间律分析不适用于圆弧；相机像素速度不是
 经过空间标定的 TCP 速度，记录中的实际到位状态与平顺性应分别检查。
+背景校正的像素位移统一归一化到完整 960 像素宽画面；提高采集分辨率不会
+改变指标单位。时间律分析读取实际关节参考及 Jacobian，并单独报告完整录像的
+速度误差、计划结束 0.5 秒后的补动和最后 0.5 秒稳定性，不能只看计划时段。
 
 验收结果及实测误差见 [验证记录](docs/validation.md)。测试覆盖模型与原驱动一致性、
 动力学、直线/圆弧几何、命名关节轨迹、超限/不可达预检查、看门狗、停止、并发

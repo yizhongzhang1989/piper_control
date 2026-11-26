@@ -31,6 +31,7 @@ class Raw:
 
     def read(self):
         return dict(positions=list(Q), enabled=self.enabled, command_ready=self.enabled,
+                    connected=True, feedback_age=.001,
                     extra={'driver': {'applied_kd': self.kd, 'gravity_torque': [0, -7, -6, -.1, 0, 0]}})
 
     def step(self, dt):
@@ -97,6 +98,52 @@ def test_stationary_encoder_changes_cannot_move_a_held_actuator_target(tmp_path)
         assert b.mapper.offset == offset
     finally:
         b.close()
+
+
+@pytest.mark.parametrize('ending', ['succeeded', 'aborted', 'stop', 'watchdog'])
+def test_terminal_command_freezes_residual_integral_until_next_motion(tmp_path, ending):
+    from piper_control.controller import RobotController
+    from piper_control.model import RobotModel
+
+    b = TrackingBackend(Raw(), {'position_integral': {'gains': [1.]*6, 'deadband': .003}},
+                        receiver=Receiver(), feedforward=Feedforward(), state_path=tmp_path/'hold.json')
+    b._freeze_until = 0
+    controller = RobotController(b, RobotModel(), goal_tolerance=.005, goal_timeout=.2)
+    try:
+        target = [q+(.004 if i == 0 else 0.) for i, q in enumerate(Q)]
+        if ending == 'aborted':
+            target[0] += .01
+        if ending == 'watchdog':
+            controller.servo_joints(target)
+            begin = controller._stream_time
+        else:
+            controller.movej(target, duration=.5)
+            begin = controller._start
+        for i in range(1, 100 if ending != 'watchdog' else 30):
+            controller._tick(begin+i*.005, .005)
+        assert any(abs(x) > 0 for x in b.integral.bias)
+        if ending == 'stop':
+            controller.stop()
+        controller._tick(begin+.71, .005)
+        assert controller.state()['mode'] == 'idle'
+        if ending in ('succeeded', 'aborted'):
+            assert controller.state()['motion']['status'] == ending
+        saved_bias, saved_target = b.integral.bias, b.raw.sent[-1][0]
+        # Residual error and changing feedback used to accumulate integral after
+        # completion, eventually breaking stiction seconds after "succeeded".
+        b.receiver.value = EncoderSample(tuple(m-.002 for m in MOTOR),
+                                         tuple(q-.002 for q in Q), (0.,)*6, .001)
+        for i in range(400):
+            controller._tick(begin+1+i*.005, .005)
+        assert b.integral.bias == saved_bias
+        assert b.raw.sent[-1][0] == saved_target
+        assert not controller.state()['extra']['position_integral']['active']
+        controller.movej([q+.015 for q in target], duration=1.)
+        controller._tick(controller._start+.8, .005)
+        assert b.integral.bias != saved_bias
+        assert controller.state()['extra']['position_integral']['active']
+    finally:
+        controller.close()
 
 
 def test_coordinate_target_and_restart_hold_do_not_double_apply_offset(tmp_path):

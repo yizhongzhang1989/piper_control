@@ -11,7 +11,12 @@ import cv2,numpy as np
 from piper_control.client import RobotClient
 from piper_control.model import RobotModel
 from piper_control.planning import Planner,matrix_pose
-parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--url',default='http://127.0.0.1:8090');parser.add_argument('--camera',default='/dev/video0');parser.add_argument('--camera-focus',type=float);parser.add_argument('--case',choices=['line_x','line_y','line_z','line_xy','line_xz','arc_xz','arc_xy','arc_yz','return','joint2','joint3','joint4'],required=True);parser.add_argument('--distance',type=float,default=.03);parser.add_argument('--speed',type=float,default=.02);parser.add_argument('--out',required=True);parser.add_argument('--return-pose');a=parser.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
+parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--url',default='http://127.0.0.1:8090');parser.add_argument('--camera',default='/dev/video0');parser.add_argument('--camera-focus',type=float);parser.add_argument('--camera-resolution',type=int,nargs=2,default=[1280,720],metavar=('WIDTH','HEIGHT'));parser.add_argument('--camera-roi',type=int,nargs=4,metavar=('X','Y','WIDTH','HEIGHT'),help='record this full-resolution region instead of resizing to 960x540');parser.add_argument('--case',choices=['line_x','line_y','line_z','line_xy','line_xz','arc_xz','arc_xy','arc_yz','return','joint2','joint3','joint4'],required=True);parser.add_argument('--distance',type=float,default=.03);parser.add_argument('--speed',type=float,default=.02);parser.add_argument('--out',required=True);parser.add_argument('--return-pose')
+parser.add_argument('--post-motion-seconds',type=float,default=5.,help='record 2..30 seconds after the terminal motion result')
+a=parser.parse_args()
+if not math.isfinite(a.post_motion_seconds) or not 2 <= a.post_motion_seconds <= 30:
+ parser.error('--post-motion-seconds must be within 2..30')
+out=Path(a.out);out.mkdir(parents=True,exist_ok=False)
 r=RobotClient(a.url,timeout=30);before=r.state();info=r.info();assert info['backend']=='hardware';assert before['command_ready'] and before['mode']=='idle' and not before['errors']
 m=RobotModel(tcp_offset=info['tcp_offset'],tcp_orientation=info['tcp_orientation'],end_effector=info['end_effector'],angle_offsets=info['angle_offsets']);q=np.array(before['target_positions']);T=m.forward(q);E=T.copy();V=T.copy();dist=a.distance;planr=Planner(m,min(x['velocity'] for x in info['joint_limits']))
 if a.case=='return':E=m.forward(json.loads(Path(a.return_pose).read_text())['target_positions'])
@@ -45,18 +50,26 @@ def camera():
  cap=cv2.VideoCapture(a.camera,cv2.CAP_V4L2);writer=None
  try:
   if not cap.isOpened():raise RuntimeError('camera unavailable')
-  cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc(*'MJPG'));cap.set(cv2.CAP_PROP_FRAME_WIDTH,1280);cap.set(cv2.CAP_PROP_FRAME_HEIGHT,720);cap.set(cv2.CAP_PROP_FPS,60);cap.set(cv2.CAP_PROP_BUFFERSIZE,2)
+  cap.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc(*'MJPG'));cap.set(cv2.CAP_PROP_FRAME_WIDTH,a.camera_resolution[0]);cap.set(cv2.CAP_PROP_FRAME_HEIGHT,a.camera_resolution[1]);cap.set(cv2.CAP_PROP_FPS,60);cap.set(cv2.CAP_PROP_BUFFERSIZE,2)
   if a.camera_focus is not None:
    if not cap.set(cv2.CAP_PROP_AUTOFOCUS,0) or not cap.set(cv2.CAP_PROP_FOCUS,a.camera_focus):raise RuntimeError('could not set fixed camera focus')
   camera_controls.update({key:cap.get(getattr(cv2,key)) for key in ['CAP_PROP_AUTOFOCUS','CAP_PROP_FOCUS','CAP_PROP_AUTO_EXPOSURE','CAP_PROP_EXPOSURE','CAP_PROP_FPS']})
   for _ in range(30):ok,fr=cap.read()
   if not ok:raise RuntimeError('camera read failed')
-  writer=cv2.VideoWriter(str(out/'camera.avi'),cv2.VideoWriter_fourcc(*'MJPG'),cap.get(cv2.CAP_PROP_FPS),(960,540))
+  camera_controls['capture_resolution']=[fr.shape[1],fr.shape[0]]
+  camera_controls['recording_roi']=a.camera_roi
+  size=(960,540)
+  if a.camera_roi:
+   x,y,w,h=a.camera_roi
+   if min(x,y)<0 or min(w,h)<=0 or x+w>fr.shape[1] or y+h>fr.shape[0]:raise ValueError('camera ROI is outside the captured frame')
+   size=(w,h)
+  writer=cv2.VideoWriter(str(out/'camera.avi'),cv2.VideoWriter_fourcc(*'MJPG'),cap.get(cv2.CAP_PROP_FPS),size)
+  if not writer.isOpened():raise RuntimeError('camera video writer could not open')
   cv2.imwrite(str(out/'camera-start.jpg'),fr);camera_ready.set()
   while not stop.is_set():
    ok,fr=cap.read()
    if not ok:raise RuntimeError('camera lost frames')
-   frame_times.append(time.time());writer.write(cv2.resize(fr,(960,540)))
+   frame_times.append(time.time());writer.write(fr[y:y+h,x:x+w] if a.camera_roi else cv2.resize(fr,size))
   cv2.imwrite(str(out/'camera-end.jpg'),fr)
  except Exception as exc:camera_errors.append(repr(exc));camera_ready.set()
  finally:
@@ -64,11 +77,11 @@ def camera():
   if writer:writer.release()
 threads=[threading.Thread(target=can_rx),threading.Thread(target=camera)]
 for th in threads:th.start()
-report={'timestamp':datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),'case':a.case,'requested_speed':a.speed,'target_pose':matrix_pose(E),'via':via,'before':before,'info':info,'samples':[],'camera_timing_note':'Host read timestamps; no calibrated exposure/CAN alignment','capture_transmitted_frames':0};failure=None;motion=None
+report={'timestamp':datetime.datetime.now(ZoneInfo('Asia/Shanghai')).isoformat(),'case':a.case,'requested_speed':a.speed,'target_pose':matrix_pose(E),'via':via,'before':before,'info':info,'samples':[],'camera_timing_note':'Host read timestamps; no calibrated exposure/CAN alignment','capture_transmitted_frames':0,'post_motion_seconds':a.post_motion_seconds};failure=None;motion=None
 try:
  if not camera_ready.wait(5) or camera_errors:raise RuntimeError(str(camera_errors))
  time.sleep(.5);report['submitted_unix']=time.time()
- motion=r.movej(end_q.tolist(),duration=plan.duration) if a.case.startswith('joint') else (r.movec(via,matrix_pose(E),speed=a.speed) if via else r.movel(matrix_pose(E),speed=a.speed));report['motion']=motion;report['accepted_unix']=time.time();deadline=time.monotonic()+motion['duration']+9;finished=None
+ motion=r.movej(end_q.tolist(),duration=plan.duration) if a.case.startswith('joint') else (r.movec(via,matrix_pose(E),speed=a.speed) if via else r.movel(matrix_pose(E),speed=a.speed));report['motion']=motion;report['accepted_unix']=time.time();deadline=time.monotonic()+motion['duration']+7+a.post_motion_seconds;finished=None
  while time.monotonic()<deadline:
   st=r.state();report['samples'].append(st)
   if not st['command_ready'] or st['errors']:raise RuntimeError('feedback or readiness failure')
@@ -76,7 +89,7 @@ try:
   result=r.motion(motion['id'])
   if result['status']!='running':
    if finished is None:finished=time.monotonic();report['motion_finished_unix']=time.time();report['result']=result
-   if time.monotonic()-finished>2:break
+   if time.monotonic()-finished>a.post_motion_seconds:break
   time.sleep(.02)
  if finished is None:raise RuntimeError('motion did not finish within timeout')
 except Exception as exc:
@@ -88,6 +101,8 @@ finally:
  report['after']=r.state();report['capture_finished_unix']=time.time();stop.set()
  for th in threads:th.join(timeout=3)
  receiver.close();r.close();report['camera_controls']=camera_controls;report['camera_errors']=camera_errors;report['camera_frames']=len(frame_times)
+ if len(frame_times)>1:
+  gaps=np.diff(frame_times);report['camera_actual_timing']={'fps':(len(frame_times)-1)/(frame_times[-1]-frame_times[0]),'p99_gap_seconds':float(np.quantile(gaps,.99)),'max_gap_seconds':float(max(gaps))}
  if not failure and (camera_errors or not frame_times):failure='camera acquisition failed'
  if not failure and report.get('result',{}).get('status')!='succeeded':failure='motion did not succeed'
  report['failure']=failure

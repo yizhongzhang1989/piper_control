@@ -1,0 +1,1868 @@
+{
+  "date": "2026-11-26",
+  "overall_smoothness_goal_complete": false,
+  "current_change": "Freeze residual position integral while idle or after success, abort, stop and watchdog timeout; re-enable for the next active command. No gain changes retained.",
+  "measurement_units": "Pixels normalized to a full 960-pixel-wide image; not calibrated 3D precision. Camera host timestamps are not hardware synchronized.",
+  "camera_metric_note": "Final 0.5 s endpoint estimate. Full velocity error covers post-plan motion with a fixed planned-duration denominator. Trials have different initial integral biases.",
+  "tests": "82 passed; .runtime/tcp-smooth/terminal-integral-full-tests.log",
+  "rejected_trials": [
+    "Global friction velocity epsilon .003",
+    "J1 motion damping 10.375",
+    "Quintic velocity ramps with constant-speed cruise"
+  ],
+  "trials": [
+    {
+      "record": ".runtime/tcp-smooth/hd-base-arc-yz20",
+      "case": "arc_yz",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "7952f8b8614749aca24b6fad50ff8acc",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 2.9452431127404313,
+      "completion_delay_s": 0.012587793173875372,
+      "camera": {
+        "fps": 59.96969987561267,
+        "p99_gap_seconds": 0.02108516693115234,
+        "max_gap_seconds": 0.0212099552154541
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015103755273603175,
+          0.010718496501104895,
+          0.0019302178853160608,
+          -0.0008717596149881211,
+          0.0009901960581544726,
+          0.001323723451598917
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "velocity_nrmse": 0.21541613441197724,
+        "fitted_delay_s": 0.03499999999999996,
+        "peak_speed_ratio": 1.3189088868455443,
+        "middle_stopped_fraction": 0.0,
+        "position_rms_px": 0.7900230313081483,
+        "projection_sources": [
+          ".runtime/tcp-smooth/hd-base-line-x20",
+          ".runtime/tcp-smooth/hd-base-line-y20",
+          ".runtime/tcp-smooth/hd-base-line-z20"
+        ],
+        "calibration_endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.23337300720648857,
+        "post_plan_excursion_px": 0.03449919849244415,
+        "final_window_excursion_px": 0.026936208091347603,
+        "completion_delay_s": 0.012587793173875372
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.0046331432095284945,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-arc-yz20-return",
+      "case": "return",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "f0d874fe28ec461581b3911297f2c8d3",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.874999999996612,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.874999999996612,
+      "completion_delay_s": 0.001599788669159441,
+      "camera": {
+        "fps": 60.00948714047587,
+        "p99_gap_seconds": 0.02039090156555176,
+        "max_gap_seconds": 0.02100539207458496
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015561542402997134,
+          0.009636096029040107,
+          0.0018914625289591798,
+          -0.0008635393724678671,
+          0.0009901960581544726,
+          0.0016672165566942632
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 10.589161216155048,
+        "fitted_delay_s": 0.07499999999999994,
+        "velocity_nrmse": 0.14996057737681887,
+        "peak_ratio": 1.4063562466878088,
+        "middle_minimum_ratio": 0.4408906258548595,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.2387396117000045,
+        "post_plan_excursion_px": 0.09614256903756387,
+        "final_window_excursion_px": 0.030343590345952475,
+        "cross_track_rms_px": 0.14788459610701502,
+        "completion_delay_s": 0.001599788669159441
+      },
+      "post_motion_hold": {
+        "passed": false,
+        "errors": [
+          "joint2 current_ac_rms_a=0.0408084 exceeds 0.02"
+        ],
+        "max_speed_rms_rad_s": 0.0016431676725154982,
+        "max_current_ac_rms_a": 0.04080838987267201,
+        "max_motor_position_ptp_rad": 0.0009999999999998899
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-line-x20",
+      "case": "line_x",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "c90d5349863f439aa4e12ebda8006de0",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8750000000000016,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.8750000000000016,
+      "completion_delay_s": 2.2879974842071515,
+      "camera": {
+        "fps": 60.034702062370556,
+        "p99_gap_seconds": 0.020656390190124514,
+        "max_gap_seconds": 0.021600723266601562
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015318060062375972,
+          -0.0022976715088294823,
+          0.0019460001420886165,
+          -0.0008974049726684594,
+          0.0009901960581544726,
+          0.0012806171944466697
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 25.63689453128255,
+        "fitted_delay_s": 0.04999999999999995,
+        "velocity_nrmse": 0.10418340882837925,
+        "peak_ratio": 1.213602724789732,
+        "middle_minimum_ratio": 0.5816452329846438,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.2131817052781913,
+        "post_plan_excursion_px": 1.3627807392319597,
+        "final_window_excursion_px": 0.03720345861762588,
+        "cross_track_rms_px": 1.1470230289691543,
+        "completion_delay_s": 2.2879974842071515
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.00058309518948453,
+        "max_current_ac_rms_a": 0.010695284007449263,
+        "max_motor_position_ptp_rad": 0.001000000000000112
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-line-x20-return",
+      "case": "return",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "26d26c3be501409ab88f62dd50e2533a",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.874999999806292,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.874999999806292,
+      "completion_delay_s": 1.264810562327497,
+      "camera": {
+        "fps": 60.05431559903171,
+        "p99_gap_seconds": 0.02068467140197754,
+        "max_gap_seconds": 0.020913362503051758
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015318060062375972,
+          0.008985932256713637,
+          0.0019450537509545286,
+          -0.0008974049726684594,
+          0.0009901960581544726,
+          0.0012806171944466697
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 23.8429915362958,
+        "fitted_delay_s": 0.05999999999999994,
+        "velocity_nrmse": 0.08126810161079792,
+        "peak_ratio": 1.261987989742316,
+        "middle_minimum_ratio": 0.7693172998018428,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.29246268048669627,
+        "post_plan_excursion_px": 2.3105845766143713,
+        "final_window_excursion_px": 0.03687266653544564,
+        "cross_track_rms_px": 2.1657543837357993,
+        "completion_delay_s": 1.264810562327497
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.00863351701220308,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-line-y20",
+      "case": "line_y",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "b06e858ce8ab4f0b8e0b4cc10abdcec4",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.875,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.875,
+      "completion_delay_s": 0.01611471176147461,
+      "camera": {
+        "fps": 60.05487120674088,
+        "p99_gap_seconds": 0.02070262432098389,
+        "max_gap_seconds": 0.020882606506347656
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015318060062375972,
+          -0.0023022171971265964,
+          0.0019450537509545286,
+          -0.0008974049726684594,
+          0.0009901960581544726,
+          0.0012806171944466697
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 11.305547898990422,
+        "fitted_delay_s": 0.06999999999999994,
+        "velocity_nrmse": 0.2455417011977804,
+        "peak_ratio": 1.8183751450817787,
+        "middle_minimum_ratio": 0.37001516779953103,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.3212942077985223,
+        "post_plan_excursion_px": 0.05943045069702166,
+        "final_window_excursion_px": 0.021849236084122155,
+        "cross_track_rms_px": 0.11448709335557548,
+        "completion_delay_s": 0.01611471176147461
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.0049219065411687775,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-line-y20-return",
+      "case": "return",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "e6ca6ea81ea841dc89fdfe346ec7ef54",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8749999998222944,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.8749999998222944,
+      "completion_delay_s": 0.014881849466646058,
+      "camera": {
+        "fps": 59.97750352353963,
+        "p99_gap_seconds": 0.020649242401123046,
+        "max_gap_seconds": 0.02153301239013672
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.001546698445939807,
+          -0.0023022171971265964,
+          0.0019450537509545286,
+          -0.0008974049726684594,
+          0.0009901960581544726,
+          0.0015066169241677067
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 10.771245921630387,
+        "fitted_delay_s": 0.06499999999999993,
+        "velocity_nrmse": 0.14806905698697356,
+        "peak_ratio": 1.5471692408726843,
+        "middle_minimum_ratio": 0.4329781731855996,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.23273259644331776,
+        "post_plan_excursion_px": 0.10068317869930808,
+        "final_window_excursion_px": 0.04513716605599623,
+        "cross_track_rms_px": 0.1537771375368038,
+        "completion_delay_s": 0.014881849466646058
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.007091093004607965,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-line-z10",
+      "case": "line_z",
+      "speed_m_s": 0.01,
+      "motion": {
+        "id": "8c47189167984f6c9aaadf8841a963f8",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.7500000000000004,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 3.7500000000000004,
+      "completion_delay_s": 0.023939371109008345,
+      "camera": {
+        "fps": 60.00542948991838,
+        "p99_gap_seconds": 0.020714335441589356,
+        "max_gap_seconds": 0.02180957794189453
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015136774438692434,
+          0.0004586293505872751,
+          0.004325748506812387,
+          -0.0008635393724678671,
+          0.0009901960581544726,
+          0.0014715586996876487
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 22.37840801893719,
+        "fitted_delay_s": 0.11499999999999992,
+        "velocity_nrmse": 0.29476849789131115,
+        "peak_ratio": 2.138408316286923,
+        "middle_minimum_ratio": -0.15509924855717744,
+        "middle_stopped_fraction": 0.037037037037037035,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.4151015779147747,
+        "post_plan_excursion_px": 0.08527804205339902,
+        "final_window_excursion_px": 0.05971526990897951,
+        "cross_track_rms_px": 0.6679813227028347,
+        "completion_delay_s": 0.023939371109008345
+      },
+      "post_motion_hold": {
+        "passed": false,
+        "errors": [
+          "joint3 current_ac_rms_a=0.0240933 exceeds 0.02"
+        ],
+        "max_speed_rms_rad_s": 0.002771642112539063,
+        "max_current_ac_rms_a": 0.02409327632348911,
+        "max_motor_position_ptp_rad": 0.0020000000000000018
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-line-z10-return",
+      "case": "return",
+      "speed_m_s": 0.01,
+      "motion": {
+        "id": "ae0dc5bb875b43b8bb94a2b239c43d03",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.7499999999537335,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 3.7499999999537335,
+      "completion_delay_s": 4.565927028702273,
+      "camera": {
+        "fps": 59.924600055857674,
+        "p99_gap_seconds": 0.02084635734558106,
+        "max_gap_seconds": 0.03744316101074219
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015136774438692434,
+          -0.0012206437843578094,
+          -0.002507847386176542,
+          -0.0008456498387669382,
+          0.0009901960581544726,
+          0.0014715586996876487
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 22.231500152824356,
+        "fitted_delay_s": 0.06499999999999993,
+        "velocity_nrmse": 0.18639988646059227,
+        "peak_ratio": 1.3871044510269326,
+        "middle_minimum_ratio": 0.33256705006258636,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.37661854265836986,
+        "post_plan_excursion_px": 2.9602272058421706,
+        "final_window_excursion_px": 0.03015611309469529,
+        "cross_track_rms_px": 0.4416923628538114,
+        "completion_delay_s": 4.565927028702273
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.005975931391841778,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-line-z20",
+      "case": "line_z",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "549d23d3ed424173998cfcc499dd34b4",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8750000000000002,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.8750000000000002,
+      "completion_delay_s": 0.003196716308593528,
+      "camera": {
+        "fps": 60.02263207259722,
+        "p99_gap_seconds": 0.020730459690093996,
+        "max_gap_seconds": 0.020851612091064453
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015103755273603175,
+          -0.0023022171971265964,
+          0.0019450537509545286,
+          -0.0008974049726684594,
+          0.0009901960581544726,
+          0.001323723451598917
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 23.48929896429508,
+        "fitted_delay_s": 0.05499999999999995,
+        "velocity_nrmse": 0.13643972038334928,
+        "peak_ratio": 1.5425282505222508,
+        "middle_minimum_ratio": 0.313517218981563,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.22581068476473723,
+        "post_plan_excursion_px": 0.08334444495417404,
+        "final_window_excursion_px": 0.04226799830095832,
+        "cross_track_rms_px": 0.34225716009959056,
+        "completion_delay_s": 0.003196716308593528
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.007281998352100885,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-base-line-z20-return",
+      "case": "return",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "f3d0b6ae449d4de2945bb90bb4040562",
+        "kind": "movel",
+        "status": "aborted",
+        "progress": 1.0,
+        "duration": 1.8749999998159288,
+        "error": "goal tracking error 0.0052 rad exceeds tolerance"
+      },
+      "failure": "motion did not succeed",
+      "planned_duration_s": 1.8749999998159288,
+      "completion_delay_s": 5.017099142258656,
+      "camera": {
+        "fps": 59.99429376236779,
+        "p99_gap_seconds": 0.020700693130493168,
+        "max_gap_seconds": 0.02815103530883789
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015103755273603175,
+          -0.0023022171971265964,
+          0.0019302178853160608,
+          -0.0008715840147776636,
+          0.0009901960581544726,
+          0.001323723451598917
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 23.52892745145378,
+        "fitted_delay_s": 0.00499999999999997,
+        "velocity_nrmse": 0.0989544965825365,
+        "peak_ratio": 1.129517332486623,
+        "middle_minimum_ratio": 0.6682251660115137,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.2334719587360919,
+        "post_plan_excursion_px": 2.887539683659814,
+        "final_window_excursion_px": 0.06081657001674031,
+        "cross_track_rms_px": 0.6339372388807644,
+        "completion_delay_s": 5.017099142258656
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.005762171812780316,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-cruise-line-z10",
+      "case": "line_z",
+      "speed_m_s": 0.01,
+      "motion": {
+        "id": "93d3e4ec4175449d9bc0ea3e3ff26f45",
+        "kind": "trajectory",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.2402811478247933,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 2.2402811478247933,
+      "completion_delay_s": 0.02805085672232588,
+      "camera": {
+        "fps": 59.96974069545581,
+        "p99_gap_seconds": 0.021103305816650392,
+        "max_gap_seconds": 0.02316880226135254
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          10.375,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.001442088745898419,
+          -0.004466676601091634,
+          0.00285383645098825,
+          -0.0008331357786862987,
+          0.0009901960581544726,
+          0.0015951454748511756
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": {
+        "type": "quintic_velocity_ramps_with_cruise",
+        "ramp_s": 0.24028114782479296,
+        "peak_speed_m_s": 0.01
+      },
+      "camera_metrics": {
+        "translation_px": 22.509786334953922,
+        "fitted_delay_s": 0.06999999999999994,
+        "velocity_nrmse": 0.2832778970433621,
+        "peak_ratio": 2.1065375253783,
+        "middle_minimum_ratio": 0.5434881510303796,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.4586034937058199,
+        "post_plan_excursion_px": 0.11401598988638506,
+        "final_window_excursion_px": 0.04008515511465471,
+        "cross_track_rms_px": 0.5023654348563144,
+        "completion_delay_s": 0.02805085672232588
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.007814082415741467,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-cruise-line-z10-return",
+      "case": "return",
+      "speed_m_s": 0.01,
+      "motion": {
+        "id": "66d06d0d30f34c3e86588da4ae5917de",
+        "kind": "trajectory",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.2402811478001006,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 2.2402811478001006,
+      "completion_delay_s": 4.507955508388864,
+      "camera": {
+        "fps": 60.033458921079124,
+        "p99_gap_seconds": 0.02164228439331052,
+        "max_gap_seconds": 0.02751469612121582
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          10.375,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.001442088745898419,
+          -0.004450553768794592,
+          0.002830832705575864,
+          -0.0008211382268716378,
+          0.0009901960581544726,
+          0.0015951454748511756
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": {
+        "type": "quintic_velocity_ramps_with_cruise",
+        "ramp_s": 0.24028114782479296,
+        "peak_speed_m_s": 0.01
+      },
+      "camera_metrics": {
+        "translation_px": 23.694862999619897,
+        "fitted_delay_s": 0.024999999999999953,
+        "velocity_nrmse": 0.19263121703781105,
+        "peak_ratio": 1.3006202242884357,
+        "middle_minimum_ratio": 0.28961109510639016,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.4578998694654974,
+        "post_plan_excursion_px": 2.7916660726844023,
+        "final_window_excursion_px": 0.03227721723382734,
+        "cross_track_rms_px": 0.6926353924536367,
+        "completion_delay_s": 4.507955508388864
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.006118169660936186,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-eps003-line-y20",
+      "case": "line_y",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "e91a95314b384777ac907fc841b30140",
+        "kind": "movel",
+        "status": "aborted",
+        "progress": 1.0,
+        "duration": 1.875,
+        "error": "goal tracking error 0.0054 rad exceeds tolerance"
+      },
+      "failure": "motion did not succeed",
+      "planned_duration_s": 1.875,
+      "completion_delay_s": 5.005771160125732,
+      "camera": {
+        "fps": 59.891443459090326,
+        "p99_gap_seconds": 0.0209561824798584,
+        "max_gap_seconds": 0.02979111671447754
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.003,
+        "initial_integral_bias": [
+          0.0015136774438692434,
+          0.009850986915629575,
+          0.00285383645098825,
+          -0.0008331357786862987,
+          0.0009901960581544726,
+          0.0014715586996876487
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 11.066197951928856,
+        "fitted_delay_s": 0.06499999999999993,
+        "velocity_nrmse": 0.3437892342113861,
+        "peak_ratio": 2.3390285982252212,
+        "middle_minimum_ratio": 0.46279526728316084,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.5978134410737617,
+        "post_plan_excursion_px": 3.049459549749074,
+        "final_window_excursion_px": 0.06356275814413216,
+        "cross_track_rms_px": 1.1972973682300638,
+        "completion_delay_s": 5.005771160125732
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.005094820507142523,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-eps003-line-y20-return-reverted",
+      "case": "return",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "e3c9db0030714b5494cc268aec0a0244",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8749999998222682,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.8749999998222682,
+      "completion_delay_s": 0.0054275991309789,
+      "camera": {
+        "fps": 59.96804159114397,
+        "p99_gap_seconds": 0.020924835205078127,
+        "max_gap_seconds": 0.021077871322631836
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.001541087234664572,
+          -0.004466676601091634,
+          0.00285383645098825,
+          -0.0008331357786862987,
+          0.0009901960581544726,
+          0.0016883713822449487
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 10.928628392862166,
+        "fitted_delay_s": 0.07499999999999994,
+        "velocity_nrmse": 0.15477211280992723,
+        "peak_ratio": 1.2386578899182565,
+        "middle_minimum_ratio": 0.4745568014599497,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.2409883396622337,
+        "post_plan_excursion_px": 0.12704372357078822,
+        "final_window_excursion_px": 0.04467441894437981,
+        "cross_track_rms_px": 0.2160494611397696,
+        "completion_delay_s": 0.0054275991309789
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.007813578949495551,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-eps003-line-z10",
+      "case": "line_z",
+      "speed_m_s": 0.01,
+      "motion": {
+        "id": "b93e591e5e924c82b7115039b676b0d9",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.7500000000000004,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 3.7500000000000004,
+      "completion_delay_s": 1.5942189693450923,
+      "camera": {
+        "fps": 59.9874405658643,
+        "p99_gap_seconds": 0.02065246820449829,
+        "max_gap_seconds": 0.021546125411987305
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.003,
+        "initial_integral_bias": [
+          0.0015136774438692434,
+          0.010380597919582462,
+          0.0033490957812365918,
+          -0.0008456498387669382,
+          0.0009901960581544726,
+          0.0014715586996876487
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 23.242820910836173,
+        "fitted_delay_s": 0.1299999999999999,
+        "velocity_nrmse": 0.17610764717480598,
+        "peak_ratio": 1.311300868365032,
+        "middle_minimum_ratio": -0.18348005947345522,
+        "middle_stopped_fraction": 0.014814814814814815,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.3750678472709138,
+        "post_plan_excursion_px": 2.0004932609370734,
+        "final_window_excursion_px": 0.026239672915806093,
+        "cross_track_rms_px": 0.7174153266831591,
+        "completion_delay_s": 1.5942189693450923
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.008084899504632077,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-eps003-line-z10-return",
+      "case": "return",
+      "speed_m_s": 0.01,
+      "motion": {
+        "id": "738218cf6ccb415990a16bb5c5ccefb7",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.750000000003628,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 3.750000000003628,
+      "completion_delay_s": 3.614413022991367,
+      "camera": {
+        "fps": 59.8851588454447,
+        "p99_gap_seconds": 0.02075865745544434,
+        "max_gap_seconds": 0.03870415687561035
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.003,
+        "initial_integral_bias": [
+          0.0015136774438692434,
+          -0.001951265902958716,
+          0.00285383645098825,
+          -0.0008331357786862987,
+          0.0009901960581544726,
+          0.0014715586996876487
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 22.952333681682866,
+        "fitted_delay_s": -0.05,
+        "velocity_nrmse": 0.1635052106447641,
+        "peak_ratio": 1.3304846586567742,
+        "middle_minimum_ratio": -0.07038308787818134,
+        "middle_stopped_fraction": 0.014814814814814815,
+        "endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.3698848707285916,
+        "post_plan_excursion_px": 2.7650785955064565,
+        "final_window_excursion_px": 0.025844406641819494,
+        "cross_track_rms_px": 0.6084185673334604,
+        "completion_delay_s": 3.614413022991367
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.006202456287633151,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-movingj1-arc-yz20",
+      "case": "arc_yz",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "a408428476ac42c681529eb080c2a34c",
+        "kind": "movec",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 2.9452431127404313,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 2.9452431127404313,
+      "completion_delay_s": 0.023490674796189825,
+      "camera": {
+        "fps": 59.99928735365717,
+        "p99_gap_seconds": 0.020867354869842526,
+        "max_gap_seconds": 0.0212247371673584
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          10.375,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.001442088745898419,
+          0.009496019839385179,
+          0.002830832705575864,
+          -0.0008228775949292096,
+          0.0009901960581544726,
+          0.0015951454748511756
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "velocity_nrmse": 0.24347537366815378,
+        "fitted_delay_s": 0.029999999999999957,
+        "peak_speed_ratio": 1.4832912751085985,
+        "middle_stopped_fraction": 0.018867924528301886,
+        "position_rms_px": 0.9037157826936708,
+        "projection_sources": [
+          ".runtime/tcp-smooth/hd-base-line-x20",
+          ".runtime/tcp-smooth/hd-base-line-y20",
+          ".runtime/tcp-smooth/hd-base-line-z20"
+        ],
+        "calibration_endpoint_window": "final 0.5 s of capture",
+        "full_velocity_error": 0.26367336124413426,
+        "post_plan_excursion_px": 0.05438125690196352,
+        "final_window_excursion_px": 0.02724939761578388,
+        "completion_delay_s": 0.023490674796189825
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 4.472135954999579e-05,
+        "max_current_ac_rms_a": 0.0050762521607973735,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-movingj1-arc-yz20-return",
+      "case": "return",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "c83b9d0c6fb44be5ac87bbaeb387f0a1",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8749999999968945,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.8749999999968945,
+      "completion_delay_s": 0.023257493975883836,
+      "camera": {
+        "fps": 60.035665877319055,
+        "p99_gap_seconds": 0.02066704034805298,
+        "max_gap_seconds": 0.02089858055114746
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          10.375,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0015070447751477664,
+          0.009045213651444176,
+          0.002660610500380144,
+          -0.0008074342331665498,
+          0.0009901960581544726,
+          0.0020492615671954626
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 11.182544791652665,
+        "fitted_delay_s": 0.07499999999999994,
+        "velocity_nrmse": 0.1800203660977188,
+        "peak_ratio": 1.5813829397692707,
+        "middle_minimum_ratio": 0.5114896008712347,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.2709006186742678,
+        "post_plan_excursion_px": 0.3837947964055922,
+        "final_window_excursion_px": 0.036829416031166115,
+        "cross_track_rms_px": 0.36316100948426133,
+        "completion_delay_s": 0.023257493975883836
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.006126509936334063,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-movingj1-line-y20",
+      "case": "line_y",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "42bbcf3ed01242dc822438493280e2f0",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.875,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.875,
+      "completion_delay_s": 0.011111259460449219,
+      "camera": {
+        "fps": 60.02866710491836,
+        "p99_gap_seconds": 0.02090891838073731,
+        "max_gap_seconds": 0.021455049514770508
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          10.375,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0014209259100281082,
+          -0.004466676601091634,
+          0.00285383645098825,
+          -0.0008331357786862987,
+          0.0009901960581544726,
+          0.0014444663664098677
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 11.473563889706789,
+        "fitted_delay_s": 0.05999999999999994,
+        "velocity_nrmse": 0.22709008578908946,
+        "peak_ratio": 1.8569356667972008,
+        "middle_minimum_ratio": 0.4124293990282565,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.31999334863233203,
+        "post_plan_excursion_px": 0.05537971807280198,
+        "final_window_excursion_px": 0.04123079153351931,
+        "cross_track_rms_px": 0.23010393305760057,
+        "completion_delay_s": 0.011111259460449219
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.005127923556372501,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-movingj1-line-y20-return",
+      "case": "return",
+      "speed_m_s": 0.02,
+      "motion": {
+        "id": "aee67c5491a94dc1ac58ff817ccec3d7",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 1.8750000000011924,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 1.8750000000011924,
+      "completion_delay_s": 0.008146286009549808,
+      "camera": {
+        "fps": 59.9612382233024,
+        "p99_gap_seconds": 0.020907812118530274,
+        "max_gap_seconds": 0.021305561065673828
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          10.375,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.0014506974805227812,
+          -0.004466676601091634,
+          0.00285383645098825,
+          -0.0008331357786862987,
+          0.0009901960581544726,
+          0.0018461013495729096
+        ],
+        "controller_reports_integral_activity": false
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 10.57923598667052,
+        "fitted_delay_s": 0.07499999999999994,
+        "velocity_nrmse": 0.15177525833814404,
+        "peak_ratio": 1.4147137608313105,
+        "middle_minimum_ratio": 0.5388176011226928,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.26543484107187854,
+        "post_plan_excursion_px": 0.12383757555883944,
+        "final_window_excursion_px": 0.055753657025671345,
+        "cross_track_rms_px": 0.18374740960131888,
+        "completion_delay_s": 0.008146286009549808
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.00796459565828674,
+        "max_motor_position_ptp_rad": 0.0
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-terminal-line-z10",
+      "case": "line_z",
+      "speed_m_s": 0.01,
+      "motion": {
+        "id": "140d16a1b3264f27b903e75ccbb14e24",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.7500000000000004,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 3.7500000000000004,
+      "completion_delay_s": 0.4662656784057613,
+      "camera": {
+        "fps": 59.89510054731614,
+        "p99_gap_seconds": 0.020632963180541992,
+        "max_gap_seconds": 0.031317710876464844
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.001490958579394159,
+          0.009045213651444176,
+          0.0037550096906533367,
+          -0.0008074342331665498,
+          0.0009901960581544726,
+          0.0016845486865532178
+        ],
+        "controller_reports_integral_activity": true
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 22.813098388630426,
+        "fitted_delay_s": 0.09499999999999993,
+        "velocity_nrmse": 0.17145982345546115,
+        "peak_ratio": 1.3186132001797997,
+        "middle_minimum_ratio": 0.2172403831745678,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.37054322301877307,
+        "post_plan_excursion_px": 1.6184872403647008,
+        "final_window_excursion_px": 0.042136180134991714,
+        "cross_track_rms_px": 0.759997375076181,
+        "completion_delay_s": 0.4662656784057613
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.007826236899046693,
+        "max_motor_position_ptp_rad": 0.0
+      },
+      "after_terminal_plus_100ms": {
+        "duration_s": 4.891846418380737,
+        "integral_bias_max_ptp_rad": 0.0,
+        "actuator_target_max_ptp_rad": 0.0,
+        "measured_joint_max_ptp_rad": 0.0027227136331111623,
+        "maximum_measured_velocity_rad_s": 0.031
+      }
+    },
+    {
+      "record": ".runtime/tcp-smooth/hd-terminal-line-z10-return",
+      "case": "return",
+      "speed_m_s": 0.01,
+      "motion": {
+        "id": "ddd09f3f1fa94b739a889ef9f6eb2780",
+        "kind": "movel",
+        "status": "succeeded",
+        "progress": 1.0,
+        "duration": 3.749999999953707,
+        "error": null
+      },
+      "failure": null,
+      "planned_duration_s": 3.749999999953707,
+      "completion_delay_s": 3.389429807709257,
+      "camera": {
+        "fps": 59.92161338863684,
+        "p99_gap_seconds": 0.020690841674804686,
+        "max_gap_seconds": 0.03128337860107422
+      },
+      "configuration": {
+        "hold_kd": [
+          8.0,
+          12.12,
+          20.0,
+          0.53,
+          0.3,
+          0.08
+        ],
+        "moving_kd": [
+          8.0,
+          12.12,
+          20.0,
+          1.6,
+          0.3,
+          0.08
+        ],
+        "friction_factors": [
+          1.0,
+          1.75,
+          1.0,
+          1.0,
+          1.0,
+          1.5
+        ],
+        "friction_velocity_epsilon": 0.02,
+        "initial_integral_bias": [
+          0.001490958579394159,
+          -0.001525851058609522,
+          0.001609891247198532,
+          -0.0007938288397040054,
+          0.0009901960581544726,
+          0.0016845486865532178
+        ],
+        "controller_reports_integral_activity": true
+      },
+      "timing_profile": "original quintic progress",
+      "camera_metrics": {
+        "translation_px": 21.033349544407013,
+        "fitted_delay_s": 0.024999999999999953,
+        "velocity_nrmse": 0.1756348683394059,
+        "peak_ratio": 1.2780874150463564,
+        "middle_minimum_ratio": 0.16278881754390917,
+        "middle_stopped_fraction": 0.0,
+        "endpoint_window": "final 0.5 s of capture",
+        "expected_timing": "recorded joint reference via TCP Jacobian",
+        "full_velocity_error": 0.39143078857150876,
+        "post_plan_excursion_px": 2.6990086120223364,
+        "final_window_excursion_px": 0.034071196681873056,
+        "cross_track_rms_px": 0.49895266732224086,
+        "completion_delay_s": 3.389429807709257
+      },
+      "post_motion_hold": {
+        "passed": true,
+        "errors": [],
+        "max_speed_rms_rad_s": 0.0,
+        "max_current_ac_rms_a": 0.006171061497019779,
+        "max_motor_position_ptp_rad": 0.0
+      },
+      "after_terminal_plus_100ms": {
+        "duration_s": 4.903034925460815,
+        "integral_bias_max_ptp_rad": 0.0,
+        "actuator_target_max_ptp_rad": 0.0,
+        "measured_joint_max_ptp_rad": 0.0019722220547535585,
+        "maximum_measured_velocity_rad_s": 0.12
+      }
+    }
+  ],
+  "interface_validation": {
+    "hardware": {
+      "path": ".runtime/tcp-smooth/terminal-hardware-interfaces/acceptance.json",
+      "passed": true,
+      "tests": [
+        "movej",
+        "follow_trajectory",
+        "movel",
+        "movec",
+        "return_before_stream",
+        "servo_joints_watchdog",
+        "servo_tcp_watchdog",
+        "servo_twist_watchdog",
+        "stop_cancel",
+        "return_to_start"
+      ]
+    },
+    "simulation": {
+      "path": ".runtime/tcp-smooth/terminal-simulation-acceptance.json",
+      "passed": true,
+      "tests": [
+        "movej",
+        "follow_trajectory",
+        "movel",
+        "movec",
+        "return_before_stream",
+        "servo_joints_watchdog",
+        "servo_tcp_watchdog",
+        "servo_twist_watchdog",
+        "stop_cancel",
+        "return_to_start"
+      ]
+    },
+    "ros": {
+      "passed": true,
+      "status": 4,
+      "error_code": 0,
+      "measured_excursion_rad": 0.013020156219877697,
+      "max_final_error_rad": 0.00275762021815118
+    },
+    "terminal-hardware-interfaces-hold.json": {
+      "passed": true,
+      "errors": []
+    },
+    "terminal-ros-hold.json": {
+      "passed": true,
+      "errors": []
+    }
+  },
+  "dashboard": {
+    "backend": "真机 HARDWARE",
+    "connection": "实时连接",
+    "mode": "等待指令",
+    "model_loaded": true,
+    "page_errors": [],
+    "non_readonly_requests": [],
+    "joint_velocity_caps_rad_s": [
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3.141592653589793,
+      3
+    ]
+  },
+  "restart_validation": {
+    "record": ".runtime/tcp-smooth/production-restart-318885.json",
+    "target_preserved": true,
+    "max_actual_change_during_12s_observation_rad": 0.0,
+    "subsequent_hold_passed": true
+  },
+  "later_scene_observation": {
+    "record": ".runtime/tcp-smooth/terminal-current-state.json",
+    "camera": ".runtime/tcp-smooth/terminal-current-scene.jpg",
+    "note": "People subsequently observed close to the arm; position changed while the commanded actuator target stayed fixed. Physical contact is not yet confirmed. No further autonomous motions initiated; user clarification pending."
+  }
+}

@@ -121,6 +121,7 @@ class TrackingBackend:
         self.raw = raw
         self._command_lock = threading.RLock()
         self._holding = False
+        self._tracking_active = True
         settings = dict(settings)
         integral_settings = settings.pop('position_integral', {})
         self.integral = PositionIntegral(**integral_settings)
@@ -232,6 +233,12 @@ class TrackingBackend:
         with self._command_lock:
             return self._command(q, dq)
 
+    def set_tracking_active(self, active):
+        with self._command_lock:
+            self._tracking_active = bool(active)
+            if not active:
+                self._last_velocity = (0.,)*6
+
     def _command(self, q, dq=None):
         q, dq = _six(q), _six([0.]*6 if dq is None else dq)
         if self._holding:
@@ -247,7 +254,7 @@ class TrackingBackend:
                   for h, m, v in zip(self._hold_kd, self._moving_kd, dq)]
         self._ramp_damping(wanted, self._dt)
         state = self.raw.read()
-        if (time.monotonic() >= self._freeze_until and state.get('command_ready', False)
+        if (self._tracking_active and time.monotonic() >= self._freeze_until and state.get('command_ready', False)
                 and state.get('connected', True) and state['enabled']):
             self.integral.advance(q, sample.joints, self._dt)
         target = self.integral.apply(self.mapper.to_motor(q))
@@ -283,7 +290,7 @@ class TrackingBackend:
                                                  command=list(self.raw.kd), ramp_rate=self._gain_rate)
         state['extra']['position_integral'] = dict(gains=self.integral.gains, bias=self.integral.bias,
                                                   limit=self.integral.limit, rate=self.integral.rate,
-                                                  deadband=self.integral.deadband)
+                                                  deadband=self.integral.deadband, active=self._tracking_active)
         return state
 
     def enable(self, enabled):

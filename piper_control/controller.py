@@ -39,6 +39,14 @@ class RobotController:
         self._error = None
         self._epoch = 0
         self._cycle_times = deque(maxlen=max(2, int(rate_hz*2)))
+        self._tracking(False)
+
+    def _tracking(self, active):
+        # Optional backend correction loops may refine an active goal, but must
+        # not keep changing the actuator target after success, stop or timeout.
+        update = getattr(self.backend, 'set_tracking_active', None)
+        if update is not None:
+            update(active)
 
     def start(self):
         if self._thread is None:
@@ -114,6 +122,7 @@ class RobotController:
             self._cancel()
             self._q = np.array(data["positions"], dtype=float)
             self.backend.enable(True)
+            self._tracking(False)
             self._error = None
             self._mode = "idle"
         return self.state()
@@ -122,12 +131,14 @@ class RobotController:
         with self._lock:
             self._cancel()
             self.backend.enable(False)
+            self._tracking(False)
             self._mode = "disabled"
         return self.state()
 
     def stop(self):
         with self._lock:
             self._cancel()
+            self._tracking(False)
             data = self.backend.read()
             if data.get("positions") is not None:
                 self._q = self._command_start(data)
@@ -228,10 +239,13 @@ class RobotController:
     def _tick(self, now, dt):
         with self._lock:
             self._cycle_times.append(now)
+            self._tracking(self._plan is not None or
+                           (self._stream_time is not None and now-self._stream_time <= self.stream_timeout))
             self.backend.step(dt)
             data = self.backend.read()
             fresh = data.get("connected") and data.get("feedback_age", 0) <= self.feedback_timeout
             if not fresh or data.get("errors"):
+                self._tracking(False)
                 if self._plan is not None:
                     self._record("aborted", "feedback lost or hardware fault")
                 self._plan = None
@@ -245,6 +259,7 @@ class RobotController:
                 return
             measured = np.asarray(data["positions"])
             if not data.get("enabled"):
+                self._tracking(False)
                 if self._plan is not None:
                     self._record("aborted", "robot disabled during motion")
                 self._plan = None
@@ -259,6 +274,7 @@ class RobotController:
                 self._mode = "idle"
             dq = np.zeros(len(measured))
             if not data.get("command_ready", True):
+                self._tracking(False)
                 if self._plan is not None:
                     self._record("aborted", "firmware left external joint control")
                 self._plan = None
@@ -307,6 +323,7 @@ class RobotController:
                     scale = max(1., float(np.max(np.abs(delta)/(self.planner.velocity*dt))))
                     dq = delta/(scale*dt)
                     self._q = self._q+dq*dt
+            self._tracking(self._plan is not None or self._stream_time is not None)
             self.backend.command(self._q.tolist(), dq.tolist())
 
     def _run(self):
@@ -318,6 +335,7 @@ class RobotController:
                 self._tick(now, min(max(now-previous, .00001), period*4))
             except Exception as exc:
                 with self._lock:
+                    self._tracking(False)
                     if self._plan is not None:
                         self._record("aborted", str(exc))
                     self._plan = None

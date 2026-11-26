@@ -46,6 +46,7 @@ class SimulationBackend:
             raise ValueError("kp must be nonnegative and kd must be positive")
         self._hold_kd = self.kd.copy()
         self._integral = PositionIntegral(**(position_integral or {}))
+        self._tracking_active = True
         self._moving_kd = finite_vector(self.kd if moving_kd is None else moving_kd, 6, 'moving_kd')
         self._gain_rate = float(gain_ramp_rate)
         if (not math.isfinite(self._gain_rate) or not .1 <= self._gain_rate <= 5
@@ -185,6 +186,11 @@ class SimulationBackend:
             self._efforts[:] = 0
         self._enabled = bool(enabled)
 
+    def set_tracking_active(self, active):
+        self._tracking_active = bool(active)
+        if not active:
+            self._target_velocity = np.zeros(6)
+
     def command(self, positions, velocities=None):
         if not self._enabled:
             raise RuntimeError("robot is disabled")
@@ -214,7 +220,8 @@ class SimulationBackend:
                 self._body, q.tolist(), zeros, zeros, physicsClientId=self._client
             ))
             arm_q, arm_dq = q[self._arm_slots], dq[self._arm_slots]
-            self._integral.advance(self._target, arm_q, dt)
+            if self._tracking_active:
+                self._integral.advance(self._target, arm_q, dt)
             servo_target = np.asarray(self._integral.apply(self._target))
             error = servo_target - arm_q
             if self._offset_ramp_s > 0:
@@ -308,6 +315,7 @@ class SimulationBackend:
                 "moving_kd": self._moving_kd.tolist(),
                 "command_kd": self.kd.tolist(),
                 "position_integral_bias": list(self._integral.bias),
+                "position_integral_active": self._tracking_active,
                 "effective_kp": self._effective_kp.tolist(),
                 "effective_kd": self._effective_kd.tolist(),
                 "gravity_compensation": self._gravity_efforts.tolist(),
